@@ -1,5 +1,4 @@
-""" Updated 2024-05-28 by JCr
-    https://github.com/JoeCrook/DBArranger"""
+# Updated 2024-05-28
 
 import csv
 import os.path

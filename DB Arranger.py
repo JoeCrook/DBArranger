@@ -1,3 +1,6 @@
+""" Updated 2024-05-28 by JCr
+    https://github.com/JoeCrook/DBArranger"""
+
 import csv
 import os.path
 
@@ -57,7 +60,7 @@ def findFunction(functionCheck):
     # Function that creates a new DI supertag
     elif functionCheck in ["di"]:
         # Checks how many new tags being created
-        newDINum = int(input("How many new tags needed: "))
+        newDINum = int(input("How many new tags needed (answer as int only): "))
         # Creates the number of classes required
         newDIs = []
         for i in range (newDINum):

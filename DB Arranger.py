@@ -1,10 +1,26 @@
 import csv
 import os.path
 
+def findFile():
+    fileLoop = True
+    while fileLoop == True:
+        # Gathers the name of the csv file to be checked
+        fileName = input("Name of the CSV file: ").lower()
+        if fileName.endswith(".csv"):
+            fileName = fileName[:-4]
+        # Loops asking for the file name if the given one doesn't exist
+        if not os.path.isfile(fileName+".csv"):
+            print("File doesn't exist!")
+        else:
+            fileLoop = False
+    return fileName
+
+
 # Finds the function required, and gathers/passes the information needed to run
 def findFunction(functionCheck):
     # Function that finds a given tag in a database, and optionally saves it to a file
     if functionCheck in ["findtag", "ft"]:
+        fileName = findFile()
         moreTags = True
         tagList = []
         while moreTags == True:
@@ -15,10 +31,11 @@ def findFunction(functionCheck):
                 tagList += [requiredTag]
             moreTags = checkAnother("tag")
 
-        print(findTag(createFile(), tagList))
+        print(findTag(fileName, createFile(), tagList))
     
     # Function that selects a certain section of tags, and saves them only to a file
     elif functionCheck in ["selectsection", "selsec", "ss"]:
+        fileName = findFile()
         # Discovers which section is required
         moreSections = True
         sections = []
@@ -26,7 +43,7 @@ def findFunction(functionCheck):
             sections.append(input("Which section to keep: ").lower())
             moreSections = checkAnother("section")
             
-        print(selectSection(createFile(), sections))
+        print(selectSection(fileName, createFile(), sections))
 
     elif functionCheck in ["di"]:
         newDIName = input("New DI Name: ")
@@ -42,7 +59,7 @@ def findFunction(functionCheck):
     return
 
 # Function that finds a given tag in a database, and optionally saves it to a file
-def findTag(newFileName, requiredTag):
+def findTag(fileName, newFileName, requiredTag):
     tagCount = 0
     # Opens the given base file
     with open(fileName+".csv", newline='') as DBInput:
@@ -59,7 +76,11 @@ def findTag(newFileName, requiredTag):
                 continue
             # If the first cell (the "tag") in the row contains the given requiredTag, increments the tag count, prints the whole row, and writes it to the output file if enabled)
             for tag in requiredTag:
-                if tag in row[0].lower():
+                # If the row is a section header, and an output file is required, write the row to the output file
+                if row[0].lower().startswith(":"):
+                    headerWritten = False
+                    currentHeader = row
+                elif tag in row[0].lower():                    
                     if headerWritten == False:
                         if newFileName != "":
                             DBWriter.writerow(currentHeader)
@@ -68,10 +89,6 @@ def findTag(newFileName, requiredTag):
                     print(', '.join(row))
                     if newFileName != "":
                         DBWriter.writerow(row)
-                # If the row is a section header, and an output file is required, write the row to the output file
-                elif row[0].lower().startswith(":"):
-                    headerWritten = False
-                    currentHeader = row
     
     # Closes the output file if used
     if newFileName != "":
@@ -88,7 +105,7 @@ def findTag(newFileName, requiredTag):
         return "Error: Tag not found "
 
 # Function that selects a certain section of tags, and saves them only to a file
-def selectSection(newFileName, sections):
+def selectSection(fileName, newFileName, sections):
     correctSection = False
     with open(fileName+".csv", newline="") as DBInput:
         DBReader = csv.reader(DBInput, delimiter=',')
@@ -181,19 +198,6 @@ def checkAnother(type):
 # Loops until the user states otherwise
 loop = True
 while loop == True:
-    fileLoop = True
-    while fileLoop == True:
-        # Gathers the name of the csv file to be checked
-        fileName = input("Name of the CSV file: ").lower()
-        if fileName.endswith(".csv"):
-            fileName = fileName[:-4]
-        # Loops asking for the file name if the given one doesn't exist
-        if not os.path.isfile(fileName+".csv"):
-            print("File doesn't exist!")
-        else:
-            fileLoop = False
-
-
     # Gathers which function is wanted, and runs the function to find/start it
     findFunction(input("Function type required: ").lower().replace(" ",""))
 

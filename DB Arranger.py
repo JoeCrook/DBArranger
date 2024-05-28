@@ -5,6 +5,7 @@ import os.path
 
 class NewDI:
     """A Class to store information about a new DI supertag"""
+    # Runs when class is used
     def __init__(self, num):
         self.Name = input("New DI #" + num + " Name: ")
         self.Group = input("New DI #" + num + " Group: ")
@@ -12,10 +13,9 @@ class NewDI:
         self.AccessName = input("New DI #" + num + " AccessName: ")
         self.ItemName = input("New DI #" + num + " ItemName: ")
 
-# Function that finds the base CSV file and loops if not correct
+# Finds the base CSV file and loops if not correct
 def findFile():
-    fileLoop = True
-    while fileLoop == True:
+    while True:
         # Gathers the name of the csv file to be checked
         fileName = input("Name of the CSV file: ").lower()
         if fileName.endswith(".csv"):
@@ -24,7 +24,7 @@ def findFile():
         if not os.path.isfile(fileName+".csv"):
             print("File doesn't exist!")
         else:
-            fileLoop = False
+            break
     return fileName
 
 # Finds the function required, and gathers/passes the information needed to run
@@ -125,7 +125,7 @@ def findTag(fileName, newFileName, requiredTag):
     else:
         return "Error: Tag not found "
 
-# Function that selects a certain section of tags, and saves them only to a file
+# Selects a certain section of tags, and saves them only to a file
 def selectSection(fileName, newFileName, sections):
     correctSection = False
     with open(fileName+".csv", newline="") as DBInput:
@@ -173,7 +173,7 @@ def selectSection(fileName, newFileName, sections):
     else:
         return "Finished searching"
 
-# Function that creats a new DI supertag
+# Creates a new DI supertag
 def createDI(newFileName, newDINum, newDIs):
     # Opens the output file and preps to write to it
     DIOutput = open(newFileName+".csv", "w", newline = "")

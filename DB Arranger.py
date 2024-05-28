@@ -27,14 +27,19 @@ def findFunction(functionCheck):
             moreSections = checkAnother("section")
             
         print(selectSection(createFile(), sections))
+
+    elif functionCheck in ["di"]:
+        newDIName = input("New DI Name: ")
+        newDIComment = input("New DI Comment: ")
+        newDIAccessName = input("New DI AccessName: ")
+        newDIItemName = input("New DI ItemName: ")
+        createDI(createFile(), newDIName, newDIComment, newDIAccessName, newDIItemName)
     
     # Loops if the given function doesn't exist/isn't recognised
     else:
         print("Functions: \"Find Tag\", \"Select Section\"")
         findFunction(input("Function type required: ").lower().replace(" ",""))
-    
     return
-
 
 # Function that finds a given tag in a database, and optionally saves it to a file
 def findTag(newFileName, requiredTag):
@@ -81,7 +86,6 @@ def findTag(newFileName, requiredTag):
     # Returns an error if no tags located in the file
     else:
         return "Error: Tag not found "
-
 
 # Function that selects a certain section of tags, and saves them only to a file
 def selectSection(newFileName, sections):
@@ -131,6 +135,16 @@ def selectSection(newFileName, sections):
     else:
         return "Finished searching"
 
+def createDI(newFileName, newDIName, newDIComment, newDIAccessName, newDIItemName):
+    DIOutput = open(newFileName+".csv", "w", newline = "")
+    DIWriter = csv.writer(DIOutput)
+    DIWriter.writerow([":mode=ask"])
+    DIWriter.writerow([":IODisc","Group","Comment","Logged","EventLogged","EventLoggingPriority","RetentiveValue","InitialDisc","OffMsg","OnMsg","AlarmState","AlarmPri","Dconversion","AccessName","ItemUseTagname","ItemName","ReadOnly","AlarmComment","AlarmAckModel","DSCAlarmDisable","DSCAlarmInhibitor","SymbolicName"])
+    DIWriter.writerow([newDIName+"\GI","$System",newDIComment + " - General Inhibit","No","No","0","No","Off","","","None","3","Direct",newDIAccessName,"No",newDIItemName+".HMI.STW.02","No",newDIComment + " - General Inhibit","1","0","","","No"])
+    DIWriter.writerow([newDIName+"\GA","$System",newDIComment + " - General Alarm","Yes","No","0","No","Off","","","None","3","Direct",newDIAccessName,"No",newDIItemName+".HMI.STW.05","No",newDIComment + " - General Alarm","0","0","","","No"])
+    DIWriter.writerow([newDIName+"\DIW","$System",newDIComment + " - Digital Input Warning","No","No","0","No","Off","","","None","3","Direct",newDIAccessName,"No",newDIItemName+".HMI.CMDW.9","No",newDIComment + " - Digital Input Warning","0","0","","","No"])
+    DIWriter.writerow([newDIName+"\DIA","$System",newDIComment + " - Digital Input Alarm","No","No","0","No","Off","","","On","1","Direct",newDIAccessName,"No",newDIItemName+".HMI.CMDW.8","No",newDIComment + " - Digital Input Alarm","0","0","","","No"])
+    return
 
 # Asks if an output file is required, and generates the name if so
 def createFile():
@@ -152,7 +166,6 @@ def createFile():
         else:
             print("Error: Expected answer \"yes\" or \"no\"")
 
-
 # Checks if more than one input is required
 def checkAnother(type):
     moreInputs = input("Another "+type+"? ").lower().replace(" ","")
@@ -163,7 +176,6 @@ def checkAnother(type):
     else:
         print("Error: \"Yes\" or \"No\" answer required")
         return checkAnother(type)
-
 
 # Loops until the user states otherwise
 loop = True

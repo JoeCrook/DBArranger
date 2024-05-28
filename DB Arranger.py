@@ -58,8 +58,14 @@ def findFunction(functionCheck):
 
     # Function that creates a new DI supertag
     elif functionCheck in ["di"]:
-        # Checks how many new tags being created
-        newDINum = int(input("How many new tags needed (answer as int only): "))
+        # Checks how many new tags being created, and checks answer is given in a correct format
+        while True:
+            try:
+                newDINum = int(input("How many new tags needed: "))
+                break
+            except ValueError:
+                print("Answer must be an int")
+
         # Creates the number of classes required
         newDIs = []
         for i in range (newDINum):

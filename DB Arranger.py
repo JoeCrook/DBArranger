@@ -5,7 +5,6 @@ from os.path import isfile
 
 class NewDI:
     """A Class to store information about a new DI supertag"""
-    # Runs when class is used
     def __init__(self, num):
         self.Name = input("New DI #" + num + " Name: ")
         self.Group = input("New DI #" + num + " Group: ")

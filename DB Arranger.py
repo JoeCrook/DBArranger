@@ -2,6 +2,8 @@ import csv
 import os.path
 
 class NewDI:
+    """A Class to store information about a new DI supertag"""
+    
     Name = ""
     Group = ""
     Comment = ""

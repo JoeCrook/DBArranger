@@ -60,11 +60,15 @@ def findFunction(functionCheck):
     elif functionCheck in ["di"]:
         # Checks how many new tags being created, and checks answer is given in a correct format
         while True:
-            try:
-                newDINum = int(input("How many new tags needed: "))
+            while True:
+                try:
+                    newDINum = int(input("How many new tags needed: "))
+                    break
+                except ValueError:
+                    print("Answer must be an int")
+            if newDINum > 0:
                 break
-            except ValueError:
-                print("Answer must be an int")
+            else: print("Answer must be 1 or more")
 
         # Creates the number of classes required
         newDIs = []

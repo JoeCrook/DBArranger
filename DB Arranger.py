@@ -6,11 +6,11 @@ import os.path
 class NewDI:
     """A Class to store information about a new DI supertag"""
     def __init__(self, num):
-        self.Name = input("New DI #" + str(num) + " Name: ")
-        self.Group = input("New DI #" + str(num) + " Group: ")
-        self.Comment = input("New DI #" + str(num) + " Comment: ")
-        self.AccessName = input("New DI #" + str(num) + " AccessName: ")
-        self.ItemName = input("New DI #" + str(num) + " ItemName: ")
+        self.Name = input("New DI #" + num + " Name: ")
+        self.Group = input("New DI #" + num + " Group: ")
+        self.Comment = input("New DI #" + num + " Comment: ")
+        self.AccessName = input("New DI #" + num + " AccessName: ")
+        self.ItemName = input("New DI #" + num + " ItemName: ")
 
 # Function that finds the base CSV file and loops if not correct
 def findFile():
@@ -68,8 +68,8 @@ def findFunction(functionCheck):
 
         # Creates the number of classes required
         newDIs = []
-        for i in range (newDINum):
-            newDIs.append (NewDI(i + 1))
+        for i in range(newDINum):
+            newDIs.append(NewDI(str(i + 1)))
         # Gathers required info
         createDI(createFile(True), newDINum, newDIs)
     

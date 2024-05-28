@@ -16,7 +16,6 @@ def findFile():
             fileLoop = False
     return fileName
 
-
 # Finds the function required, and gathers/passes the information needed to run
 def findFunction(functionCheck):
     # Function that finds a given tag in a database, and optionally saves it to a file
@@ -46,12 +45,21 @@ def findFunction(functionCheck):
             
         print(selectSection(fileName, createFile(), sections))
 
+    # Function that creates a new DI supertag
     elif functionCheck in ["di"]:
-        newDIName = input("New DI Name: ")
-        newDIComment = input("New DI Comment: ")
-        newDIAccessName = input("New DI AccessName: ")
-        newDIItemName = input("New DI ItemName: ")
-        createDI(createFile(), newDIName, newDIComment, newDIAccessName, newDIItemName)
+        newDI = {
+            "Name": "",
+            "Group": "",
+            "Comment": "",
+            "AccessName": "",
+            "ItemName": ""
+        }
+        newDI["Name"] = input("New DI Name: ")
+        newDI["Group"] = input("New DI Group: ")
+        newDI["Comment"] = input("New DI Comment: ")
+        newDI["AccessName"] = input("New DI AccessName: ")
+        newDI["ItemName"] = input("New DI ItemName: ")
+        createDI(createFile(), newDI)
     
     # Loops if the given function doesn't exist/isn't recognised
     else:
@@ -154,15 +162,15 @@ def selectSection(fileName, newFileName, sections):
         return "Finished searching"
 
 # Function that creats a new DI supertag
-def createDI(newFileName, newDIName, newDIComment, newDIAccessName, newDIItemName):
+def createDI(newFileName, newDI):
     DIOutput = open(newFileName+".csv", "w", newline = "")
     DIWriter = csv.writer(DIOutput)
     DIWriter.writerow([":mode=ask"])
     DIWriter.writerow([":IODisc","Group","Comment","Logged","EventLogged","EventLoggingPriority","RetentiveValue","InitialDisc","OffMsg","OnMsg","AlarmState","AlarmPri","Dconversion","AccessName","ItemUseTagname","ItemName","ReadOnly","AlarmComment","AlarmAckModel","DSCAlarmDisable","DSCAlarmInhibitor","SymbolicName"])
-    DIWriter.writerow([newDIName+"\GI","$System",newDIComment + " - General Inhibit","No","No","0","No","Off","","","None","3","Direct",newDIAccessName,"No",newDIItemName+".HMI.STW.02","No",newDIComment + " - General Inhibit","1","0","","","No"])
-    DIWriter.writerow([newDIName+"\GA","$System",newDIComment + " - General Alarm","Yes","No","0","No","Off","","","None","3","Direct",newDIAccessName,"No",newDIItemName+".HMI.STW.05","No",newDIComment + " - General Alarm","0","0","","","No"])
-    DIWriter.writerow([newDIName+"\DIW","$System",newDIComment + " - Digital Input Warning","No","No","0","No","Off","","","None","3","Direct",newDIAccessName,"No",newDIItemName+".HMI.CMDW.9","No",newDIComment + " - Digital Input Warning","0","0","","","No"])
-    DIWriter.writerow([newDIName+"\DIA","$System",newDIComment + " - Digital Input Alarm","No","No","0","No","Off","","","On","1","Direct",newDIAccessName,"No",newDIItemName+".HMI.CMDW.8","No",newDIComment + " - Digital Input Alarm","0","0","","","No"])
+    DIWriter.writerow([newDI["Name"]+"\GI","$System",newDI["Comment"] + " - General Inhibit","No","No","0","No","Off","","","None","3","Direct",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.STW.02","No",newDI["Comment"] + " - General Inhibit","1","0","","","No"])
+    DIWriter.writerow([newDI["Name"]+"\GA","$System",newDI["Comment"] + " - General Alarm","Yes","No","0","No","Off","","","None","3","Direct",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.STW.05","No",newDI["Comment"] + " - General Alarm","0","0","","","No"])
+    DIWriter.writerow([newDI["Name"]+"\DIW","$System",newDI["Comment"] + " - Digital Input Warning","No","No","0","No","Off","","","None","3","Direct",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.CMDW.9","No",newDI["Comment"] + " - Digital Input Warning","0","0","","","No"])
+    DIWriter.writerow([newDI["Name"]+"\DIA","$System",newDI["Comment"] + " - Digital Input Alarm","No","No","0","No","Off","","","On","1","Direct",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.CMDW.8","No",newDI["Comment"] + " - Digital Input Alarm","0","0","","","No"])
     DIWriter.writerow([":MemoryInt","Group","Comment","Logged","EventLogged","EventLoggingPriority","RetentiveValue","RetentiveAlarmParameters","AlarmValueDeadband","AlarmDevDeadband","EngUnits","InitialValue","MinValue","MaxValue","Deadband","LogDeadband","LoLoAlarmState","LoLoAlarmValue","LoLoAlarmPri","LoAlarmState","LoAlarmValue","LoAlarmPri","HiAlarmState","HiAlarmValue","HiAlarmPri","HiHiAlarmState","HiHiAlarmValue","HiHiAlarmPri","MinorDevAlarmState","MinorDevAlarmValue","MinorDevAlarmPri","MajorDevAlarmState","MajorDevAlarmValue","MajorDevAlarmPri","DevTarget","ROCAlarmState","ROCAlarmValue","ROCAlarmPri","ROCTimeBase","AlarmComment","AlarmAckModel","LoLoAlarmDisable","LoAlarmDisable","HiAlarmDisable","HiHiAlarmDisable","MinDevAlarmDisable","MajDevAlarmDisable","RocAlarmDisable","LoLoAlarmInhibitor","LoAlarmInhibitor","HiAlarmInhibitor","HiHiAlarmInhibitor","MinDevAlarmInhibitor","MajDevAlarmInhibitor","RocAlarmInhibitor","SymbolicName","LocalTag"])
     return
 

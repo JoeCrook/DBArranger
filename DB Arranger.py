@@ -47,23 +47,25 @@ def findFunction(functionCheck):
 
     # Function that creates a new DI supertag
     elif functionCheck in ["di"]:
+        # Creates the dict required
         newDI = {
-            "Name": "D4DT74V01LSL01",
-            "Group": "BM06",
-            "Comment": "Selox 30S dense phase buffer hopper level switch",
-            "AccessName": "PLC18",
-            "ItemName": "D4_DT74_V01_LSL01"
+            "Name": "",
+            "Group": "",
+            "Comment": "",
+            "AccessName": "",
+            "ItemName": ""
         }
-        #newDI["Name"] = input("New DI Name: ")
-        #newDI["Group"] = input("New DI Group: ")
-        #newDI["Comment"] = input("New DI Comment: ")
-        #newDI["AccessName"] = input("New DI AccessName: ")
-        #newDI["ItemName"] = input("New DI ItemName: ")
+        # Gathers required info
+        newDI["Name"] = input("New DI Name: ")
+        newDI["Group"] = input("New DI Group: ")
+        newDI["Comment"] = input("New DI Comment: ")
+        newDI["AccessName"] = input("New DI AccessName: ")
+        newDI["ItemName"] = input("New DI ItemName: ")
         createDI(createFile(True), newDI)
     
     # Loops if the given function doesn't exist/isn't recognised
     else:
-        print("Functions: \"Find Tag\", \"Select Section\"")
+        print("Functions: \"Find Tag\", \"Select Section\", \"DI\"")
         findFunction(input("Function type required: ").lower().replace(" ",""))
     return
 
@@ -163,8 +165,11 @@ def selectSection(fileName, newFileName, sections):
 
 # Function that creats a new DI supertag
 def createDI(newFileName, newDI):
+    # Opens the output file and preps to write to it
     DIOutput = open(newFileName+".csv", "w", newline = "")
     DIWriter = csv.writer(DIOutput)
+    
+    # Writes all the rows required
     DIWriter.writerow([":mode=ask"])
     DIWriter.writerow([":IODisc","Group","Comment","Logged","EventLogged","EventLoggingPriority","RetentiveValue","InitialDisc","OffMsg","OnMsg","AlarmState","AlarmPri","Dconversion","AccessName","ItemUseTagname","ItemName","ReadOnly","AlarmComment","AlarmAckModel","DSCAlarmDisable","DSCAlarmInhibitor","SymbolicName"])
     DIWriter.writerow([newDI["Name"]+"\DIW",newDI["Group"],newDI["Comment"] + " - Digital Input Warning","No","Yes","1","No","Off","","","On","1","Direct",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.CMDW.09","No",newDI["Comment"] + " - Digital Input Warning","0","0","","","No"])
@@ -183,7 +188,6 @@ def createDI(newFileName, newDI):
     DIWriter.writerow([newDI["Name"]+"\HMIFIELDW",newDI["Group"],newDI["Comment"] + " - HMIFIELDW","No","No","0","No","No","0","0","","0","0","65535","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","0","Off","0","1","Min","0","65535","Linear",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.FIELDW","No","","0","0","0","0","0","0","0","0","","","","","","","","","No"])
     DIWriter.writerow([":MemoryMsg","Group","Comment","Logged","EventLogged","EventLoggingPriority","RetentiveValue","MaxLength","InitialMessage","AlarmComment","SymbolicName","LocalTag"])
     DIWriter.writerow([newDI["Name"]+"\OBJ",newDI["Group"],newDI["Comment"] + " - OBJ","No","No","0","No","131","OP_DI_10","","","No"])
-
     return
 
 # Asks if an output file is required, and generates the name if so

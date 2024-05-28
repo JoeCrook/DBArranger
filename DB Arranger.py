@@ -1,7 +1,7 @@
 # Updated 2024-05-28
 
-import csv
-import os.path
+from csv import writer, reader
+from os.path import isfile
 
 class NewDI:
     """A Class to store information about a new DI supertag"""
@@ -21,7 +21,7 @@ def findFile():
         if fileName.endswith(".csv"):
             fileName = fileName[:-4]
         # Loops asking for the file name if the given one doesn't exist
-        if not os.path.isfile(fileName+".csv"):
+        if not isfile(fileName+".csv"):
             print("File doesn't exist!")
         else:
             break
@@ -91,8 +91,8 @@ def findTag(fileName, newFileName, requiredTag):
         # If an output file is required, creates one and prepares to write to it
         if newFileName != "":
             DBOutput = open(newFileName+".csv", "w", newline = "")
-            DBWriter = csv.writer(DBOutput)
-        DBReader = csv.reader(DBInput, delimiter=',')
+            DBWriter = writer(DBOutput)
+        DBReader = reader(DBInput, delimiter=',')
         # Reads the given base file row by row
         for row in DBReader:
             if row[0].lower().startswith(":mode="):
@@ -133,10 +133,10 @@ def findTag(fileName, newFileName, requiredTag):
 def selectSection(fileName, newFileName, sections):
     correctSection = False
     with open(fileName+".csv", newline="") as DBInput:
-        DBReader = csv.reader(DBInput, delimiter=',')
+        DBReader = reader(DBInput, delimiter=',')
         with open(newFileName+".csv", "w", newline = "") as DBOutput:
             if newFileName != "":
-                DBWriter = csv.writer(DBOutput)
+                DBWriter = writer(DBOutput)
             # Iterates through the input file, row by row
             for row in DBReader:
                 # Checks if the row being looked at is the first one, if so saves that row to the top of the file
@@ -181,7 +181,7 @@ def selectSection(fileName, newFileName, sections):
 def createDI(newFileName, newDINum, newDIs):
     # Opens the output file and preps to write to it
     DIOutput = open(newFileName+".csv", "w", newline = "")
-    DIWriter = csv.writer(DIOutput)
+    DIWriter = writer(DIOutput)
     
     # Writes all the rows required
     DIWriter.writerow([":mode=ask"])

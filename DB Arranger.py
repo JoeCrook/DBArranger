@@ -13,8 +13,8 @@ class NewDI:
         self.AccessName = input("New DI #" + num + " AccessName: ")
         self.ItemName = input("New DI #" + num + " ItemName: ")
 
-# Finds the base CSV file and loops if not correct
 def findFile():
+    """Finds the base CSV file and loops if not correct"""
     while True:
         # Gathers the name of the csv file to be checked
         fileName = input("Name of the CSV file: ").lower()
@@ -27,8 +27,8 @@ def findFile():
             break
     return fileName
 
-# Finds the function required, and gathers/passes the information needed to run
 def findFunction(functionCheck):
+    """Finds the function required, and gathers/passes the information needed to run"""
     # Function that finds a given tag in a database, and optionally saves it to a file
     if functionCheck in ["findtag", "ft"]:
         fileName = findFile()
@@ -83,8 +83,8 @@ def findFunction(functionCheck):
         findFunction(input("Function type required: ").lower().replace(" ",""))
     return
 
-# Function that finds a given tag in a database, and optionally saves it to a file
 def findTag(fileName, newFileName, requiredTag):
+    """Finds a given tag in a database, and optionally saves it to a file"""
     tagCount = 0
     # Opens the given base file
     with open(fileName+".csv", newline='') as DBInput:
@@ -129,8 +129,8 @@ def findTag(fileName, newFileName, requiredTag):
     else:
         return "Error: Tag not found "
 
-# Selects a certain section of tags, and saves them only to a file
 def selectSection(fileName, newFileName, sections):
+    """Selects a certain section of tags, and saves them only to a file"""
     correctSection = False
     with open(fileName+".csv", newline="") as DBInput:
         DBReader = reader(DBInput, delimiter=',')
@@ -177,8 +177,8 @@ def selectSection(fileName, newFileName, sections):
     else:
         return "Finished searching"
 
-# Creates a new DI supertag
 def createDI(newFileName, newDINum, newDIs):
+    """Creates a new DI supertag"""
     # Opens the output file and preps to write to it
     DIOutput = open(newFileName+".csv", "w", newline = "")
     DIWriter = writer(DIOutput)
@@ -208,8 +208,8 @@ def createDI(newFileName, newDINum, newDIs):
         DIWriter.writerow([newDIs[i].Name+"\OBJ",newDIs[i].Group,newDIs[i].Comment+" - OBJ","No","No","0","No","131","OP_DI_10","","","No"])
     return
 
-# Asks if an output file is required, and generates the name if so
 def createFile(override):
+    """Asks if an output file is required, and generates the name if so"""
     fileLoop = True
     while fileLoop == True:
         # Checks if a file is needed to be created without asking
@@ -233,8 +233,8 @@ def createFile(override):
         else:
             print("Error: Expected answer \"yes\" or \"no\"")
 
-# Checks if more than one input is required
 def checkAnother(item):
+    """Checks if more than one input is required"""
     moreInputs = input("Another "+item+"? ").lower().replace(" ","")
     if moreInputs in ["y", "ye", "yes", "1"]:
         return True
@@ -244,11 +244,9 @@ def checkAnother(item):
         print("Error: \"Yes\" or \"No\" answer required")
         return checkAnother(item)
 
-# Loops until the user states otherwise
-moreFunctions = True
-while moreFunctions == True:
-    # Gathers which function is wanted, and runs the function to find/start it
-    findFunction(input("Function type required (\"Find Tag\", \"Select Section\" or \"DI\"): ").lower().replace(" ",""))
+# Gathers which function is wanted, and runs the function to find/start it
+findFunction(input("Function type required (\"Find Tag\", \"Select Section\" or \"DI\"): ").lower().replace(" ",""))
 
-    # Determines if a loop is needed for another function
-    moreFunctions = checkAnother("function")
+# Loops until the user states otherwise
+while checkAnother("function") == True:
+    findFunction(input("Function type required (\"Find Tag\", \"Select Section\" or \"DI\"): ").lower().replace(" ",""))

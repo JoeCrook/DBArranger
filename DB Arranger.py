@@ -230,27 +230,21 @@ def createFile(override):
             print("Error: Expected answer \"yes\" or \"no\"")
 
 # Checks if more than one input is required
-def checkAnother(type):
-    moreInputs = input("Another "+type+"? ").lower().replace(" ","")
+def checkAnother(item):
+    moreInputs = input("Another "+item+"? ").lower().replace(" ","")
     if moreInputs in ["y", "ye", "yes", "1"]:
         return True
     elif moreInputs in ["n", "no", "0"]:
-        moreInputs = False
+        return False
     else:
         print("Error: \"Yes\" or \"No\" answer required")
-        return checkAnother(type)
+        return checkAnother(item)
 
 # Loops until the user states otherwise
-loop = True
-while loop == True:
+moreFunctions = True
+while moreFunctions == True:
     # Gathers which function is wanted, and runs the function to find/start it
     findFunction(input("Function type required (\"Find Tag\", \"Select Section\" or \"DI\"): ").lower().replace(" ",""))
 
     # Determines if a loop is needed for another function
-    loop = input("Run another function? ")
-    if loop in ["y", "ye", "yes", "1"]:
-        loop = True
-    elif loop in ["n", "no", "0"]:
-        loop = False
-    else:
-        print("Error: Expected answer \"yes\" or \"no\"")
+    moreFunctions = checkAnother("function")

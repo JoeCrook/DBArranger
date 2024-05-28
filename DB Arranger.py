@@ -1,6 +1,13 @@
 import csv
 import os.path
 
+class NewDI:
+    Name = ""
+    Group = ""
+    Comment = ""
+    AccessName = ""
+    ItemName = ""
+
 # Function that finds the base CSV file and loops if not correct
 def findFile():
     fileLoop = True
@@ -47,6 +54,8 @@ def findFunction(functionCheck):
 
     # Function that creates a new DI supertag
     elif functionCheck in ["di"]:
+        # Checks how many new tags being created
+        newDIAmount = input("How many new tags needed: ")
         # Creates the dict required
         newDI = {
             "Name": "",

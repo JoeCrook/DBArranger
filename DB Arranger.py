@@ -3,12 +3,12 @@ import os.path
 
 class NewDI:
     """A Class to store information about a new DI supertag"""
-    
-    Name = ""
-    Group = ""
-    Comment = ""
-    AccessName = ""
-    ItemName = ""
+    def __init__(self, num):
+        self.Name = input("New DI #" + str(num) + " Name: ")
+        self.Group = input("New DI #" + str(num) + " Group: ")
+        self.Comment = input("New DI #" + str(num) + " Comment: ")
+        self.AccessName = input("New DI #" + str(num) + " AccessName: ")
+        self.ItemName = input("New DI #" + str(num) + " ItemName: ")
 
 # Function that finds the base CSV file and loops if not correct
 def findFile():
@@ -57,22 +57,13 @@ def findFunction(functionCheck):
     # Function that creates a new DI supertag
     elif functionCheck in ["di"]:
         # Checks how many new tags being created
-        newDIAmount = input("How many new tags needed: ")
-        # Creates the dict required
-        newDI = {
-            "Name": "",
-            "Group": "",
-            "Comment": "",
-            "AccessName": "",
-            "ItemName": ""
-        }
+        newDINum = int(input("How many new tags needed: "))
+        # Creates the number of classes required
+        newDIs = []
+        for i in range (newDINum):
+            newDIs.append (NewDI(i + 1))
         # Gathers required info
-        newDI["Name"] = input("New DI Name: ")
-        newDI["Group"] = input("New DI Group: ")
-        newDI["Comment"] = input("New DI Comment: ")
-        newDI["AccessName"] = input("New DI AccessName: ")
-        newDI["ItemName"] = input("New DI ItemName: ")
-        createDI(createFile(True), newDI)
+        createDI(createFile(True), newDINum, newDIs)
     
     # Loops if the given function doesn't exist/isn't recognised
     else:
@@ -175,7 +166,7 @@ def selectSection(fileName, newFileName, sections):
         return "Finished searching"
 
 # Function that creats a new DI supertag
-def createDI(newFileName, newDI):
+def createDI(newFileName, newDINum, newDIs):
     # Opens the output file and preps to write to it
     DIOutput = open(newFileName+".csv", "w", newline = "")
     DIWriter = csv.writer(DIOutput)
@@ -183,22 +174,26 @@ def createDI(newFileName, newDI):
     # Writes all the rows required
     DIWriter.writerow([":mode=ask"])
     DIWriter.writerow([":IODisc","Group","Comment","Logged","EventLogged","EventLoggingPriority","RetentiveValue","InitialDisc","OffMsg","OnMsg","AlarmState","AlarmPri","Dconversion","AccessName","ItemUseTagname","ItemName","ReadOnly","AlarmComment","AlarmAckModel","DSCAlarmDisable","DSCAlarmInhibitor","SymbolicName"])
-    DIWriter.writerow([newDI["Name"]+"\DIW",newDI["Group"],newDI["Comment"] + " - Digital Input Warning","No","Yes","1","No","Off","","","On","1","Direct",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.CMDW.09","No",newDI["Comment"] + " - Digital Input Warning","0","0","","","No"])
-    DIWriter.writerow([newDI["Name"]+"\GI",newDI["Group"],newDI["Comment"] + " - General Inhibit","No","No","0","No","Off","","","None","1","Direct",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.STW.02","No",newDI["Comment"] + " - General Inhibit","0","0","","","No"])
-    DIWriter.writerow([newDI["Name"]+"\GA",newDI["Group"],newDI["Comment"] + " - General Alarm","Yes","No","0","No","Off","","","None","1","Direct",newDI["AccessName"],"No",newDI["ItemName"]+".GA","No",newDI["Comment"] + " - General Alarm","0","0","","","No"])
-    DIWriter.writerow([newDI["Name"]+"\DIA",newDI["Group"],newDI["Comment"] + " - Digital Input Alarm","No","Yes","1","No","Off","","","On","1","Direct",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.CMDW.08","No",newDI["Comment"] + " - Digital Input Alarm","0","0","","","No"])
+    for i in range(newDINum):
+        DIWriter.writerow([newDIs[i].Name+"\DIW",newDIs[i].Group,newDIs[i].Comment+" - Digital Input Warning","No","Yes","1","No","Off","","","On","1","Direct",newDIs[i].AccessName,"No",newDIs[i].ItemName+".HMI.CMDW.09","No",newDIs[i].Comment+" - Digital Input Warning","0","0","","","No"])
+        DIWriter.writerow([newDIs[i].Name+"\GI",newDIs[i].Group,newDIs[i].Comment+" - General Inhibit","No","No","0","No","Off","","","None","1","Direct",newDIs[i].AccessName,"No",newDIs[i].ItemName+".HMI.STW.02","No",newDIs[i].Comment+" - General Inhibit","0","0","","","No"])
+        DIWriter.writerow([newDIs[i].Name+"\GA",newDIs[i].Group,newDIs[i].Comment+" - General Alarm","No","No","0","No","Off","","","None","1","Direct",newDIs[i].AccessName,"No",newDIs[i].ItemName+".GA","No",newDIs[i].Comment+" - General Alarm","0","0","","","No"])
+        DIWriter.writerow([newDIs[i].Name+"\DIA",newDIs[i].Group,newDIs[i].Comment+" - Digital Input Alarm","No","Yes","1","No","Off","","","On","1","Direct",newDIs[i].AccessName,"No",newDIs[i].ItemName+".HMI.CMDW.08","No",newDIs[i].Comment+" - Digital Input Alarm","0","0","","","No"])
     DIWriter.writerow([":MemoryInt","Group","Comment","Logged","EventLogged","EventLoggingPriority","RetentiveValue","RetentiveAlarmParameters","AlarmValueDeadband","AlarmDevDeadband","EngUnits","InitialValue","MinValue","MaxValue","Deadband","LogDeadband","LoLoAlarmState","LoLoAlarmValue","LoLoAlarmPri","LoAlarmState","LoAlarmValue","LoAlarmPri","HiAlarmState","HiAlarmValue","HiAlarmPri","HiHiAlarmState","HiHiAlarmValue","HiHiAlarmPri","MinorDevAlarmState","MinorDevAlarmValue","MinorDevAlarmPri","MajorDevAlarmState","MajorDevAlarmValue","MajorDevAlarmPri","DevTarget","ROCAlarmState","ROCAlarmValue","ROCAlarmPri","ROCTimeBase","AlarmComment","AlarmAckModel","LoLoAlarmDisable","LoAlarmDisable","HiAlarmDisable","HiHiAlarmDisable","MinDevAlarmDisable","MajDevAlarmDisable","RocAlarmDisable","LoLoAlarmInhibitor","LoAlarmInhibitor","HiAlarmInhibitor","HiHiAlarmInhibitor","MinDevAlarmInhibitor","MajDevAlarmInhibitor","RocAlarmInhibitor","SymbolicName","LocalTag"])
-    DIWriter.writerow([newDI["Name"]+"\Precision",newDI["Group"],newDI["Comment"] + " - Precision","No","No","0","No","No","0","0","","0","0","9999","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","0","Off","0","1","Min","","0","0","0","0","0","0","0","0","","","","","","","","","No"])
-    DIWriter.writerow([newDI["Name"]+"\AccessLevel",newDI["Group"],newDI["Comment"] + " - AccessLevel","No","No","0","No","No","0","0","","900","0","9999","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","0","Off","0","1","Min","","0","0","0","0","0","0","0","0","","","","","","","","","No"])
+    for i in range(newDINum):
+        DIWriter.writerow([newDIs[i].Name+"\Precision",newDIs[i].Group,newDIs[i].Comment+" - Precision","No","No","0","No","No","0","0","","0","0","9999","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","0","Off","0","1","Min","","0","0","0","0","0","0","0","0","","","","","","","","","No"])
+        DIWriter.writerow([newDIs[i].Name+"\AccessLevel",newDIs[i].Group,newDIs[i].Comment+" - AccessLevel","No","No","0","No","No","0","0","","900","0","9999","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","0","Off","0","1","Min","","0","0","0","0","0","0","0","0","","","","","","","","","No"])
     DIWriter.writerow([":IOInt","Group","Comment","Logged","EventLogged","EventLoggingPriority","RetentiveValue","RetentiveAlarmParameters","AlarmValueDeadband","AlarmDevDeadband","EngUnits","InitialValue","MinEU","MaxEU","Deadband","LogDeadband","LoLoAlarmState","LoLoAlarmValue","LoLoAlarmPri","LoAlarmState","LoAlarmValue","LoAlarmPri","HiAlarmState","HiAlarmValue","HiAlarmPri","HiHiAlarmState","HiHiAlarmValue","HiHiAlarmPri","MinorDevAlarmState","MinorDevAlarmValue","MinorDevAlarmPri","MajorDevAlarmState","MajorDevAlarmValue","MajorDevAlarmPri","DevTarget","ROCAlarmState","ROCAlarmValue","ROCAlarmPri","ROCTimeBase","MinRaw","MaxRaw","Conversion","AccessName","ItemUseTagname","ItemName","ReadOnly","AlarmComment","AlarmAckModel","LoLoAlarmDisable","LoAlarmDisable","HiAlarmDisable","HiHiAlarmDisable","MinDevAlarmDisable","MajDevAlarmDisable","RocAlarmDisable","LoLoAlarmInhibitor","LoAlarmInhibitor","HiAlarmInhibitor","HiHiAlarmInhibitor","MinDevAlarmInhibitor","MajDevAlarmInhibitor","RocAlarmInhibitor","SymbolicName"])
-    DIWriter.writerow([newDI["Name"]+"\HMICMDW",newDI["Group"],newDI["Comment"] + " - HMICMDW","No","No","0","No","No","0","0","","0","0","65535","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","0","Off","0","1","Min","0","65535","Linear",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.CMDW","No","","0","0","0","0","0","0","0","0","","","","","","","","","No"])
-    DIWriter.writerow([newDI["Name"]+"\HMISTW",newDI["Group"],newDI["Comment"] + " - HMISTW","No","No","0","No","No","0","0","","0","0","65535","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","0","Off","0","1","Min","0","65535","Linear",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.STW","No","","0","0","0","0","0","0","0","0","","","","","","","","","No"])
-    DIWriter.writerow([newDI["Name"]+"\HMIHMIW",newDI["Group"],newDI["Comment"] + " - HMIHMIW","No","No","0","No","No","0","0","","0","0","65535","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","0","Off","0","1","Min","0","65535","Linear",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.HMIW","No","","0","0","0","0","0","0","0","0","","","","","","","","","No"])
-    DIWriter.writerow([newDI["Name"]+"\HMICUSW",newDI["Group"],newDI["Comment"] + " - HMICUSW","No","No","0","No","No","0","0","","0","0","65535","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","0","Off","0","1","Min","0","65535","Linear",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.CUSW","No","","0","0","0","0","0","0","0","0","","","","","","","","","No"])
-    DIWriter.writerow([newDI["Name"]+"\HMICFGW",newDI["Group"],newDI["Comment"] + " - HMICFGW","No","No","0","No","No","0","0","","0","0","65535","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","0","Off","0","1","Min","0","65535","Linear",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.CFGW","No","","0","0","0","0","0","0","0","0","","","","","","","","","No"])
-    DIWriter.writerow([newDI["Name"]+"\HMIFIELDW",newDI["Group"],newDI["Comment"] + " - HMIFIELDW","No","No","0","No","No","0","0","","0","0","65535","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","0","Off","0","1","Min","0","65535","Linear",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.FIELDW","No","","0","0","0","0","0","0","0","0","","","","","","","","","No"])
+    for i in range(newDINum):    
+        DIWriter.writerow([newDIs[i].Name+"\HMICMDW",newDIs[i].Group,newDIs[i].Comment+" - HMICMDW","No","No","0","No","No","0","0","","0","0","65535","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","0","Off","0","1","Min","0","65535","Linear",newDIs[i].AccessName,"No",newDIs[i].ItemName+".HMI.CMDW","No","","0","0","0","0","0","0","0","0","","","","","","","","","No"])
+        DIWriter.writerow([newDIs[i].Name+"\HMISTW",newDIs[i].Group,newDIs[i].Comment+" - HMISTW","No","No","0","No","No","0","0","","0","0","65535","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","0","Off","0","1","Min","0","65535","Linear",newDIs[i].AccessName,"No",newDIs[i].ItemName+".HMI.STW","No","","0","0","0","0","0","0","0","0","","","","","","","","","No"])
+        DIWriter.writerow([newDIs[i].Name+"\HMIHMIW",newDIs[i].Group,newDIs[i].Comment+" - HMIHMIW","No","No","0","No","No","0","0","","0","0","65535","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","0","Off","0","1","Min","0","65535","Linear",newDIs[i].AccessName,"No",newDIs[i].ItemName+".HMI.HMIW","No","","0","0","0","0","0","0","0","0","","","","","","","","","No"])
+        DIWriter.writerow([newDIs[i].Name+"\HMICUSW",newDIs[i].Group,newDIs[i].Comment+" - HMICUSW","No","No","0","No","No","0","0","","0","0","65535","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","0","Off","0","1","Min","0","65535","Linear",newDIs[i].AccessName,"No",newDIs[i].ItemName+".HMI.CUSW","No","","0","0","0","0","0","0","0","0","","","","","","","","","No"])
+        DIWriter.writerow([newDIs[i].Name+"\HMICFGW",newDIs[i].Group,newDIs[i].Comment+" - HMICFGW","No","No","0","No","No","0","0","","0","0","65535","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","0","Off","0","1","Min","0","65535","Linear",newDIs[i].AccessName,"No",newDIs[i].ItemName+".HMI.CFGW","No","","0","0","0","0","0","0","0","0","","","","","","","","","No"])
+        DIWriter.writerow([newDIs[i].Name+"\HMIFIELDW",newDIs[i].Group,newDIs[i].Comment+" - HMIFIELDW","No","No","0","No","No","0","0","","0","0","65535","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","0","Off","0","1","Min","0","65535","Linear",newDIs[i].AccessName,"No",newDIs[i].ItemName+".HMI.FIELDW","No","","0","0","0","0","0","0","0","0","","","","","","","","","No"])
     DIWriter.writerow([":MemoryMsg","Group","Comment","Logged","EventLogged","EventLoggingPriority","RetentiveValue","MaxLength","InitialMessage","AlarmComment","SymbolicName","LocalTag"])
-    DIWriter.writerow([newDI["Name"]+"\OBJ",newDI["Group"],newDI["Comment"] + " - OBJ","No","No","0","No","131","OP_DI_10","","","No"])
+    for i in range(newDINum):    
+        DIWriter.writerow([newDIs[i].Name+"\OBJ",newDIs[i].Group,newDIs[i].Comment+" - OBJ","No","No","0","No","131","OP_DI_10","","","No"])
     return
 
 # Asks if an output file is required, and generates the name if so
@@ -241,7 +236,7 @@ def checkAnother(type):
 loop = True
 while loop == True:
     # Gathers which function is wanted, and runs the function to find/start it
-    findFunction(input("Function type required: ").lower().replace(" ",""))
+    findFunction(input("Function type required (\"Find Tag\", \"Select Section\" or \"DI\"): ").lower().replace(" ",""))
 
     # Determines if a loop is needed for another function
     loop = input("Run another function? ")

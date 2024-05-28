@@ -31,7 +31,7 @@ def findFunction(functionCheck):
                 tagList += [requiredTag]
             moreTags = checkAnother("tag")
 
-        print(findTag(fileName, createFile(), tagList))
+        print(findTag(fileName, createFile(False), tagList))
     
     # Function that selects a certain section of tags, and saves them only to a file
     elif functionCheck in ["selectsection", "selsec", "ss"]:
@@ -43,23 +43,23 @@ def findFunction(functionCheck):
             sections.append(input("Which section to keep: ").lower())
             moreSections = checkAnother("section")
             
-        print(selectSection(fileName, createFile(), sections))
+        print(selectSection(fileName, createFile(False), sections))
 
     # Function that creates a new DI supertag
     elif functionCheck in ["di"]:
         newDI = {
-            "Name": "",
-            "Group": "",
-            "Comment": "",
-            "AccessName": "",
-            "ItemName": ""
+            "Name": "D4DT74V01LSL01",
+            "Group": "BM06",
+            "Comment": "Selox 30S dense phase buffer hopper level switch",
+            "AccessName": "PLC18",
+            "ItemName": "D4_DT74_V01_LSL01"
         }
-        newDI["Name"] = input("New DI Name: ")
-        newDI["Group"] = input("New DI Group: ")
-        newDI["Comment"] = input("New DI Comment: ")
-        newDI["AccessName"] = input("New DI AccessName: ")
-        newDI["ItemName"] = input("New DI ItemName: ")
-        createDI(createFile(), newDI)
+        #newDI["Name"] = input("New DI Name: ")
+        #newDI["Group"] = input("New DI Group: ")
+        #newDI["Comment"] = input("New DI Comment: ")
+        #newDI["AccessName"] = input("New DI AccessName: ")
+        #newDI["ItemName"] = input("New DI ItemName: ")
+        createDI(createFile(True), newDI)
     
     # Loops if the given function doesn't exist/isn't recognised
     else:
@@ -167,19 +167,25 @@ def createDI(newFileName, newDI):
     DIWriter = csv.writer(DIOutput)
     DIWriter.writerow([":mode=ask"])
     DIWriter.writerow([":IODisc","Group","Comment","Logged","EventLogged","EventLoggingPriority","RetentiveValue","InitialDisc","OffMsg","OnMsg","AlarmState","AlarmPri","Dconversion","AccessName","ItemUseTagname","ItemName","ReadOnly","AlarmComment","AlarmAckModel","DSCAlarmDisable","DSCAlarmInhibitor","SymbolicName"])
-    DIWriter.writerow([newDI["Name"]+"\GI","$System",newDI["Comment"] + " - General Inhibit","No","No","0","No","Off","","","None","1","Direct",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.STW.02","No",newDI["Comment"] + " - General Inhibit","0","0","","","No"])
-    DIWriter.writerow([newDI["Name"]+"\GA","$System",newDI["Comment"] + " - General Alarm","Yes","No","0","No","Off","","","None","1","Direct",newDI["AccessName"],"No",newDI["ItemName"]+".GA","No",newDI["Comment"] + " - General Alarm","0","0","","","No"])
-    DIWriter.writerow([newDI["Name"]+"\DIW","$System",newDI["Comment"] + " - Digital Input Warning","No","Yes","1","No","Off","","","On","1","Direct",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.CMDW.9","No",newDI["Comment"] + " - Digital Input Warning","0","0","","","No"])
-    DIWriter.writerow([newDI["Name"]+"\DIA","$System",newDI["Comment"] + " - Digital Input Alarm","No","Yes","1","No","Off","","","On","1","Direct",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.CMDW.8","No",newDI["Comment"] + " - Digital Input Alarm","0","0","","","No"])
+    DIWriter.writerow([newDI["Name"]+"\GI",newDI["Group"],newDI["Comment"] + " - General Inhibit","No","No","0","No","Off","","","None","1","Direct",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.STW.02","No",newDI["Comment"] + " - General Inhibit","0","0","","","No"])
+    DIWriter.writerow([newDI["Name"]+"\GA",newDI["Group"],newDI["Comment"] + " - General Alarm","Yes","No","0","No","Off","","","None","1","Direct",newDI["AccessName"],"No",newDI["ItemName"]+".GA","No",newDI["Comment"] + " - General Alarm","0","0","","","No"])
+    DIWriter.writerow([newDI["Name"]+"\DIW",newDI["Group"],newDI["Comment"] + " - Digital Input Warning","No","Yes","1","No","Off","","","On","1","Direct",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.CMDW.9","No",newDI["Comment"] + " - Digital Input Warning","0","0","","","No"])
+    DIWriter.writerow([newDI["Name"]+"\DIA",newDI["Group"],newDI["Comment"] + " - Digital Input Alarm","No","Yes","1","No","Off","","","On","1","Direct",newDI["AccessName"],"No",newDI["ItemName"]+".HMI.CMDW.8","No",newDI["Comment"] + " - Digital Input Alarm","0","0","","","No"])
     DIWriter.writerow([":MemoryInt","Group","Comment","Logged","EventLogged","EventLoggingPriority","RetentiveValue","RetentiveAlarmParameters","AlarmValueDeadband","AlarmDevDeadband","EngUnits","InitialValue","MinValue","MaxValue","Deadband","LogDeadband","LoLoAlarmState","LoLoAlarmValue","LoLoAlarmPri","LoAlarmState","LoAlarmValue","LoAlarmPri","HiAlarmState","HiAlarmValue","HiAlarmPri","HiHiAlarmState","HiHiAlarmValue","HiHiAlarmPri","MinorDevAlarmState","MinorDevAlarmValue","MinorDevAlarmPri","MajorDevAlarmState","MajorDevAlarmValue","MajorDevAlarmPri","DevTarget","ROCAlarmState","ROCAlarmValue","ROCAlarmPri","ROCTimeBase","AlarmComment","AlarmAckModel","LoLoAlarmDisable","LoAlarmDisable","HiAlarmDisable","HiHiAlarmDisable","MinDevAlarmDisable","MajDevAlarmDisable","RocAlarmDisable","LoLoAlarmInhibitor","LoAlarmInhibitor","HiAlarmInhibitor","HiHiAlarmInhibitor","MinDevAlarmInhibitor","MajDevAlarmInhibitor","RocAlarmInhibitor","SymbolicName","LocalTag"])
-        return
+    DIWriter.writerow([newDI["Name"]+"\Precision",newDI["Group"],newDI["Comment"] + " - Precision","No","No","0","No","No","0","0","","0","0","9999","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","Off","0","1","0","Off","0","1","Min",newDI["Comment"] + " - Precision","0","0","0","0","0","0","0","0","","","","","","","","","No"])
+    return
 
 # Asks if an output file is required, and generates the name if so
-def createFile():
+def createFile(override):
     fileLoop = True
     while fileLoop == True:
-        fileReqd = input("Create new file for discovered files? ").lower()
-        if fileReqd in ["y", "ye", "yes", "1"]:
+        # Checks if a file is needed to be created without asking
+        if override == False:
+            fileReqd = input("Create new file for discovered files? ").lower()
+        else:
+            fileReqd = "y"
+
+        if fileReqd in ["y", "ye", "yes", "1"] or override == True:
             fileLoop = False
             # If file required, gets the name
             newFileName = input("Name of new file: ")

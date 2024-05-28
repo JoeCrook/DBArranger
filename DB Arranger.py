@@ -1,6 +1,7 @@
 import csv
 import os.path
 
+# Function that finds the base CSV file and loops if not correct
 def findFile():
     fileLoop = True
     while fileLoop == True:
@@ -152,6 +153,7 @@ def selectSection(fileName, newFileName, sections):
     else:
         return "Finished searching"
 
+# Function that creats a new DI supertag
 def createDI(newFileName, newDIName, newDIComment, newDIAccessName, newDIItemName):
     DIOutput = open(newFileName+".csv", "w", newline = "")
     DIWriter = csv.writer(DIOutput)

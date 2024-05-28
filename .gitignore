@@ -1,2 +1,4 @@
 *.csv
 test.py
+build/
+dist/

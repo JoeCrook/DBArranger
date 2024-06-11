@@ -7,12 +7,13 @@ from os.path import isfile
 class NewDI:
     """A Class to store information about a new DI supertag"""
 
-    def __init__(self, num):
-        self.Name = input("New DI #" + num + " Name: ")
-        self.Group = input("New DI #" + num + " Group: ")
-        self.Comment = input("New DI #" + num + " Comment: ")
-        self.AccessName = input("New DI #" + num + " AccessName: ")
-        self.ItemName = input("New DI #" + num + " ItemName: ")
+    def __init__(self, name, group, comment, accessName, itemName):
+        name = name.replace("_", "")
+        self.Name = str(name)
+        self.Group = str(group)
+        self.Comment = str(comment)
+        self.AccessName = str(accessName)
+        self.ItemName = str(itemName)
 
 
 def findFile():
@@ -65,7 +66,7 @@ def findFunction(functionCheck):
             inputFile = input("Use an input csv file?: ")
             if inputFile in ["y", "ye", "yes", "1"]:
                 inputFile = True
-                inputFileName = findFile()
+                DIReader = reader(open(findFile()+".csv", "w", newline=""))
                 break
             elif inputFile in ["n", "no", "0"]:
                 inputFile = False
@@ -74,24 +75,25 @@ def findFunction(functionCheck):
                 print("Error: Expected answer \"yes\" or \"no\"")
                 continue
 
-        # Checks how many new tags being created, and checks answer is given in a correct format
-        while True:
+        if inputFile == False:
+            # Checks how many new tags being created, and checks answer is given in a correct format
             while True:
-                try:
-                    newDINum = int(input("How many new tags needed: "))
+                while True:
+                    try:
+                        newDINum = int(input("How many new tags needed: "))
+                        break
+                    except ValueError:
+                        print("Answer must be an int")
+                if newDINum > 0:
                     break
-                except ValueError:
-                    print("Answer must be an int")
-            if newDINum > 0:
-                break
-            else:
-                print("Answer must be 1 or more")
+                else:
+                    print("Answer must be 1 or more")
 
-        # Creates the number of classes required
-        newDIs = []
-        for i in range(newDINum):
-            newDIs.append(NewDI(str(i + 1)))
-        # Gathers required info
+            # Creates the number of classes required and gathers required info
+            newDIs = []
+            for i in range(newDINum):
+                newDIs.append(NewDI(str(i + 1)))
+
         createDI(createFile(True), newDINum, newDIs)
 
     # Loops if the given function doesn't exist/isn't recognised
@@ -200,8 +202,7 @@ def selectSection(fileName, newFileName, sections):
 def createDI(newFileName, newDINum, newDIs):
     """Creates a new DI supertag"""
     # Opens the output file and preps to write to it
-    DIOutput = open(newFileName+".csv", "w", newline="")
-    DIWriter = writer(DIOutput)
+    DIWriter = writer(open(newFileName+".csv", "w", newline=""))
 
     # Writes all the rows required
     DIWriter.writerow([":mode=ask"])
@@ -259,7 +260,7 @@ def createFile(override):
         if fileReqd in ["y", "ye", "yes", "1"] or override == True:
             fileLoop = False
             # If file required, gets the name
-            newFileName = input("Name of new file: ")
+            newFileName = input("Name of the new file: ")
             if newFileName.lower().endswith(".csv"):
                 return newFileName[:-4]
             else:

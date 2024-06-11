@@ -61,6 +61,19 @@ def findFunction(functionCheck):
 
     # Function that creates a new DI supertag
     elif functionCheck in ["di"]:
+        while True:
+            inputFile = input("Use an input csv file?: ")
+            if inputFile in ["y", "ye", "yes", "1"]:
+                inputFile = True
+                inputFileName = findFile()
+                break
+            elif inputFile in ["n", "no", "0"]:
+                inputFile = False
+                break
+            else:
+                print("Error: Expected answer \"yes\" or \"no\"")
+                continue
+
         # Checks how many new tags being created, and checks answer is given in a correct format
         while True:
             while True:

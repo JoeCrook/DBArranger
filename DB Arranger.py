@@ -7,8 +7,8 @@ from os.path import isfile
 class NewDI:
     """A Class to store information about a new DI supertag"""
 
-    def __init__(self, name, group, comment, accessName, itemName):
-        name = name.replace("_", "")
+    def __init__(self, group, comment, accessName, itemName):
+        name = itemName.replace("_", "")
         self.Name = str(name)
         self.Group = str(group)
         self.Comment = str(comment)
@@ -90,9 +90,10 @@ def findFunction(functionCheck):
                     print("Answer must be 1 or more")
 
             # Creates the number of classes required and gathers required info
-            newDIs = []
-            for i in range(newDINum):
-                newDIs.append(NewDI(str(i + 1)))
+        newDIs = []
+        for i in range(newDINum):
+            newDIs.append(input("New DI #" + str(i + 1) + " Group: "), input("New DI #" + str(i + 1) + " Comment: "),
+                          input("New DI #" + str(i + 1) + " AccessName: "), input("New DI #" + str(i + 1di) + " ItemName: "))
 
         createDI(createFile(True), newDINum, newDIs)
 

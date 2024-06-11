@@ -92,7 +92,9 @@ def findFunction(functionCheck):
             # Creates the number of classes required and gathers required info
         newDIs = []
         if inputFile == True:
+            newDINum = 0
             for row in DIReader:
+                newDINum += 1
                 newDIGroup = row[3]
                 newDIComment = row[1]
                 newDIAccessName = row[4]
@@ -101,8 +103,13 @@ def findFunction(functionCheck):
                               newDIAccessName, newDIItemName))
         else:
             for i in range(newDINum):
-                newDIs.append(NewDI(input("New DI #" + str(i + 1) + " Group: "), input("New DI #" + str(i + 1) + " Comment: "),
-                                    input("New DI #" + str(i + 1) + " AccessName: "), input("New DI #" + str(i + 1) + " ItemName: ")))
+                newDIGroup = input("New DI #" + str(i + 1) + " Group: ")
+                newDIComment = input("New DI #" + str(i + 1) + " Comment: ")
+                newDIAccessName = input(
+                    "New DI #" + str(i + 1) + " AccessName: ")
+                newDIItemName = input("New DI #" + str(i + 1) + " ItemName: ")
+                newDIs.append(NewDI(newDIGroup, newDIComment,
+                              newDIAccessName, newDIItemName))
         createDI(createFile(True), newDINum, newDIs)
 
     # Loops if the given function doesn't exist/isn't recognised

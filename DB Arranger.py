@@ -92,8 +92,8 @@ def findFunction(functionCheck):
             # Creates the number of classes required and gathers required info
         newDIs = []
         for i in range(newDINum):
-            newDIs.append(input("New DI #" + str(i + 1) + " Group: "), input("New DI #" + str(i + 1) + " Comment: "),
-                          input("New DI #" + str(i + 1) + " AccessName: "), input("New DI #" + str(i + 1di) + " ItemName: "))
+            newDIs.append(NewDI(input("New DI #" + str(i + 1) + " Group: "), input("New DI #" + str(i + 1) + " Comment: "),
+                          input("New DI #" + str(i + 1) + " AccessName: "), input("New DI #" + str(i + 1) + " ItemName: ")))
 
         createDI(createFile(True), newDINum, newDIs)
 

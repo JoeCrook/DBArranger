@@ -8,13 +8,13 @@ from os.path import isfile
 class NewDI:
     """A Class to store information about a new DI supertag"""
 
-    def __init__(self, group, comment, accessName, itemName):
+    def __init__(self, str: group, str: comment, str: accessName, str: itemName):
         name = itemName.replace("_", "")
-        self.Name = str(name)
-        self.Group = str(group)
-        self.Comment = str(comment)
-        self.AccessName = str(accessName)
-        self.ItemName = str(itemName)
+        self.Name = name
+        self.Group = group
+        self.Comment = comment
+        self.AccessName = accessName
+        self.ItemName = itemName
 
 
 def findFile():
@@ -102,20 +102,22 @@ def findFunction(functionCheck):
                 DIReader = reader(DIInput, delimiter=',')
                 for row in DIReader:
                     newDINum += 1
-                    newDIGroup = row[2]
-                    newDIComment = row[1]
-                    newDIAccessName = row[3]
-                    newDIItemName = row[0]
+                    newDIGroup = str(row[2])
+                    newDIComment = str(row[1])
+                    newDIAccessName = str(row[3])
+                    newDIItemName = str(row[0])
                     newDIs.append(NewDI(newDIGroup, newDIComment,
                                         newDIAccessName, newDIItemName))
         else:
             # Manually asks for all the required information
             for i in range(newDINum):
-                newDIGroup = input("New DI #" + str(i + 1) + " Group: ")
-                newDIComment = input("New DI #" + str(i + 1) + " Comment: ")
-                newDIAccessName = input(
-                    "New DI #" + str(i + 1) + " AccessName: ")
-                newDIItemName = input("New DI #" + str(i + 1) + " ItemName: ")
+                newDIGroup = str(input("New DI #" + str(i + 1) + " Group: "))
+                newDIComment = str(
+                    input("New DI #" + str(i + 1) + " Comment: "))
+                newDIAccessName = str(input(
+                    "New DI #" + str(i + 1) + " AccessName: "))
+                newDIItemName = str(
+                    input("New DI #" + str(i + 1) + " ItemName: "))
                 newDIs.append(NewDI(newDIGroup, newDIComment,
                               newDIAccessName, newDIItemName))
         createDI(createFile(True), newDINum, newDIs)
@@ -151,7 +153,9 @@ def findTag(fileName, newFileName, requiredTag):
                 elif tag in row[0].lower():
                     if headerWritten == False:
                         if newFileName != "":
-                            DBWriter.writerow(currentHeader)
+                            with open(newFileName + ".csv", "w", newline="") as DBOutput:
+                                DBWriter = writer(DBOutput)
+                                DBWriter.writerow(currentHeader)
                         headerWritten = True
                     tagCount += 1
                     print(', '.join(row))

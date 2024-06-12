@@ -120,7 +120,7 @@ def findFunction(functionCheck):
                     input("New DI #" + str(i + 1) + " ItemName: "))
                 newDIs.append(NewDI(newDIGroup, newDIComment,
                               newDIAccessName, newDIItemName))
-        createDI(createFile(True), newDINum, newDIs)
+        print(createDI(createFile(True), newDINum, newDIs))
 
     # Loops if the given function doesn't exist/isn't recognised
     else:
@@ -270,7 +270,11 @@ def createDI(newFileName, newDINum, newDIs):
         for i in range(newDINum):
             DIWriter.writerow([newDIs[i].Name+"\OBJ", newDIs[i].Group, newDIs[i].Comment +
                                " - OBJ", "No", "No", "0", "No", "131", "OP_DI_10", "", "", "No"])
-        return
+        if newDINum > 1:
+            DITemp = "s"
+        else:
+            DITemp = ""
+        return "Created " + str(newDINum) + " new DI" + DITemp + " and saved to the file " + newFileName + ".csv"
 
 
 def createFile(override):

@@ -66,7 +66,7 @@ def findFunction(functionCheck):
             inputFile = input("Use an input csv file?: ")
             if inputFile in ["y", "ye", "yes", "1"]:
                 inputFile = True
-                DIReader = reader(open(findFile()+".csv", "w", newline=""))
+                inputFileName = findFile()
                 break
             elif inputFile in ["n", "no", "0"]:
                 inputFile = False
@@ -93,14 +93,16 @@ def findFunction(functionCheck):
         newDIs = []
         if inputFile == True:
             newDINum = 0
-            for row in DIReader:
-                newDINum += 1
-                newDIGroup = row[3]
-                newDIComment = row[1]
-                newDIAccessName = row[4]
-                newDIItemName = row[0]
-                newDIs.append(NewDI(newDIGroup, newDIComment,
-                              newDIAccessName, newDIItemName))
+            with open(inputFileName + ".csv", newline='') as DIInput:
+                DIReader = reader(DIInput, delimiter=',')
+                for row in DIReader:
+                    newDINum += 1
+                    newDIGroup = row[3]
+                    newDIComment = row[1]
+                    newDIAccessName = row[4]
+                    newDIItemName = row[0]
+                    newDIs.append(NewDI(newDIGroup, newDIComment,
+                                        newDIAccessName, newDIItemName))
         else:
             for i in range(newDINum):
                 newDIGroup = input("New DI #" + str(i + 1) + " Group: ")

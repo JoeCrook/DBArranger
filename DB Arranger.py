@@ -64,8 +64,10 @@ def findFunction(functionCheck):
     # Function that creates a new DI supertag
     elif functionCheck in ["di"]:
         while True:
-            inputFile = input("Use an input csv file?: (Y/N)")
+            # Determines if new tags are created using an input csv file, or via manual input
+            inputFile = input("Use an input csv file?: (Y/N) ")
             if inputFile in ["y", "ye", "yes", "1", "true"]:
+                print("Input file must have no headers, and have each new DI on it's own line, with info in the order: PLC Name, Comment, Group, AccessName")
                 inputFile = True
                 inputFileName = findFile()
                 break
@@ -93,6 +95,7 @@ def findFunction(functionCheck):
         # Creates the number of classes required and gathers required info
         newDIs = []
         if inputFile == True:
+            # Uses an input file to gather the info
             newDINum = 0
             # Input file must have no headers, and have each new DI on it's own line, with info in the order: PLC Name, Comment, Group, AccessName
             with open(inputFileName + ".csv", newline='') as DIInput:
@@ -106,6 +109,7 @@ def findFunction(functionCheck):
                     newDIs.append(NewDI(newDIGroup, newDIComment,
                                         newDIAccessName, newDIItemName))
         else:
+            # Manually asks for all the required information
             for i in range(newDINum):
                 newDIGroup = input("New DI #" + str(i + 1) + " Group: ")
                 newDIComment = input("New DI #" + str(i + 1) + " Comment: ")
@@ -129,11 +133,11 @@ def findTag(fileName, newFileName, requiredTag):
     tagCount = 0
     # Opens the given base file
     with open(fileName + ".csv", newline='') as DBInput:
+        DBReader = reader(DBInput, delimiter=',')
         # If an output file is required, creates one and prepares to write to it
         if newFileName != "":
             DBOutput = open(newFileName + ".csv", "w", newline="")
             DBWriter = writer(DBOutput)
-        DBReader = reader(DBInput, delimiter=',')
         # Reads the given base file row by row
         for row in DBReader:
             if row[0].lower().startswith(":mode="):
@@ -222,49 +226,49 @@ def selectSection(fileName, newFileName, sections):
 def createDI(newFileName, newDINum, newDIs):
     """Creates a new DI supertag"""
     # Opens the output file and preps to write to it
-    DIWriter = writer(open(newFileName+".csv", "w", newline=""))
-
-    # Writes all the rows required
-    DIWriter.writerow([":mode=ask"])
-    DIWriter.writerow([":IODisc", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "InitialDisc", "OffMsg", "OnMsg", "AlarmState", "AlarmPri",
-                      "Dconversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "DSCAlarmDisable", "DSCAlarmInhibitor", "SymbolicName"])
-    for i in range(newDINum):
-        DIWriter.writerow([newDIs[i].Name+"\DIW", newDIs[i].Group, newDIs[i].Comment+" - Digital Input Warning", "No", "Yes", "1", "No", "Off", "", "", "On", "1",
-                          "Direct", newDIs[i].AccessName, "No", newDIs[i].ItemName+".HMI.CMDW.09", "No", newDIs[i].Comment+" - Digital Input Warning", "0", "0", "", "", "No"])
-        DIWriter.writerow([newDIs[i].Name+"\GI", newDIs[i].Group, newDIs[i].Comment+" - General Inhibit", "No", "No", "0", "No", "Off", "", "", "None", "1",
-                          "Direct", newDIs[i].AccessName, "No", newDIs[i].ItemName+".HMI.STW.02", "No", newDIs[i].Comment+" - General Inhibit", "0", "0", "", "", "No"])
-        DIWriter.writerow([newDIs[i].Name+"\GA", newDIs[i].Group, newDIs[i].Comment+" - General Alarm", "No", "No", "0", "No", "Off", "", "", "None",
-                          "1", "Direct", newDIs[i].AccessName, "No", newDIs[i].ItemName+".GA", "No", newDIs[i].Comment+" - General Alarm", "0", "0", "", "", "No"])
-        DIWriter.writerow([newDIs[i].Name+"\DIA", newDIs[i].Group, newDIs[i].Comment+" - Digital Input Alarm", "No", "Yes", "1", "No", "Off", "", "", "On", "1",
-                          "Direct", newDIs[i].AccessName, "No", newDIs[i].ItemName+".HMI.CMDW.08", "No", newDIs[i].Comment+" - Digital Input Alarm", "0", "0", "", "", "No"])
-    DIWriter.writerow([":MemoryInt", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "RetentiveAlarmParameters", "AlarmValueDeadband", "AlarmDevDeadband", "EngUnits", "InitialValue", "MinValue", "MaxValue", "Deadband", "LogDeadband", "LoLoAlarmState", "LoLoAlarmValue", "LoLoAlarmPri", "LoAlarmState", "LoAlarmValue", "LoAlarmPri", "HiAlarmState", "HiAlarmValue", "HiAlarmPri", "HiHiAlarmState", "HiHiAlarmValue", "HiHiAlarmPri", "MinorDevAlarmState", "MinorDevAlarmValue",
-                      "MinorDevAlarmPri", "MajorDevAlarmState", "MajorDevAlarmValue", "MajorDevAlarmPri", "DevTarget", "ROCAlarmState", "ROCAlarmValue", "ROCAlarmPri", "ROCTimeBase", "AlarmComment", "AlarmAckModel", "LoLoAlarmDisable", "LoAlarmDisable", "HiAlarmDisable", "HiHiAlarmDisable", "MinDevAlarmDisable", "MajDevAlarmDisable", "RocAlarmDisable", "LoLoAlarmInhibitor", "LoAlarmInhibitor", "HiAlarmInhibitor", "HiHiAlarmInhibitor", "MinDevAlarmInhibitor", "MajDevAlarmInhibitor", "RocAlarmInhibitor", "SymbolicName", "LocalTag"])
-    for i in range(newDINum):
-        DIWriter.writerow([newDIs[i].Name+"\Precision", newDIs[i].Group, newDIs[i].Comment+" - Precision", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "9999", "0", "1", "Off", "0", "1", "Off",
-                          "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        DIWriter.writerow([newDIs[i].Name+"\AccessLevel", newDIs[i].Group, newDIs[i].Comment+" - AccessLevel", "No", "No", "0", "No", "No", "0", "0", "", "900", "0", "9999", "0", "1", "Off", "0", "1", "Off",
-                          "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-    DIWriter.writerow([":IOInt", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "RetentiveAlarmParameters", "AlarmValueDeadband", "AlarmDevDeadband", "EngUnits", "InitialValue", "MinEU", "MaxEU", "Deadband", "LogDeadband", "LoLoAlarmState", "LoLoAlarmValue", "LoLoAlarmPri", "LoAlarmState", "LoAlarmValue", "LoAlarmPri", "HiAlarmState", "HiAlarmValue", "HiAlarmPri", "HiHiAlarmState", "HiHiAlarmValue", "HiHiAlarmPri", "MinorDevAlarmState", "MinorDevAlarmValue", "MinorDevAlarmPri", "MajorDevAlarmState",
-                      "MajorDevAlarmValue", "MajorDevAlarmPri", "DevTarget", "ROCAlarmState", "ROCAlarmValue", "ROCAlarmPri", "ROCTimeBase", "MinRaw", "MaxRaw", "Conversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "LoLoAlarmDisable", "LoAlarmDisable", "HiAlarmDisable", "HiHiAlarmDisable", "MinDevAlarmDisable", "MajDevAlarmDisable", "RocAlarmDisable", "LoLoAlarmInhibitor", "LoAlarmInhibitor", "HiAlarmInhibitor", "HiHiAlarmInhibitor", "MinDevAlarmInhibitor", "MajDevAlarmInhibitor", "RocAlarmInhibitor", "SymbolicName"])
-    for i in range(newDINum):
-        DIWriter.writerow([newDIs[i].Name+"\HMICMDW", newDIs[i].Group, newDIs[i].Comment+" - HMICMDW", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
-                          "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newDIs[i].AccessName, "No", newDIs[i].ItemName+".HMI.CMDW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        DIWriter.writerow([newDIs[i].Name+"\HMISTW", newDIs[i].Group, newDIs[i].Comment+" - HMISTW", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
-                          "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newDIs[i].AccessName, "No", newDIs[i].ItemName+".HMI.STW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        DIWriter.writerow([newDIs[i].Name+"\HMIHMIW", newDIs[i].Group, newDIs[i].Comment+" - HMIHMIW", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
-                          "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newDIs[i].AccessName, "No", newDIs[i].ItemName+".HMI.HMIW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        DIWriter.writerow([newDIs[i].Name+"\HMICUSW", newDIs[i].Group, newDIs[i].Comment+" - HMICUSW", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
-                          "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newDIs[i].AccessName, "No", newDIs[i].ItemName+".HMI.CUSW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        DIWriter.writerow([newDIs[i].Name+"\HMICFGW", newDIs[i].Group, newDIs[i].Comment+" - HMICFGW", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
-                          "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newDIs[i].AccessName, "No", newDIs[i].ItemName+".HMI.CFGW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        DIWriter.writerow([newDIs[i].Name+"\HMIFIELDW", newDIs[i].Group, newDIs[i].Comment+" - HMIFIELDW", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
-                          "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newDIs[i].AccessName, "No", newDIs[i].ItemName+".HMI.FIELDW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-    DIWriter.writerow([":MemoryMsg", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority",
-                      "RetentiveValue", "MaxLength", "InitialMessage", "AlarmComment", "SymbolicName", "LocalTag"])
-    for i in range(newDINum):
-        DIWriter.writerow([newDIs[i].Name+"\OBJ", newDIs[i].Group, newDIs[i].Comment +
-                          " - OBJ", "No", "No", "0", "No", "131", "OP_DI_10", "", "", "No"])
-    return
+    with open(newFileName+".csv", "w", newline="") as DIOutput:
+        DIWriter = writer(DIOutput)
+        # Writes all the rows required
+        DIWriter.writerow([":mode=ask"])
+        DIWriter.writerow([":IODisc", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "InitialDisc", "OffMsg", "OnMsg", "AlarmState", "AlarmPri",
+                           "Dconversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "DSCAlarmDisable", "DSCAlarmInhibitor", "SymbolicName"])
+        for i in range(newDINum):
+            DIWriter.writerow([newDIs[i].Name+"\DIW", newDIs[i].Group, newDIs[i].Comment+" - Digital Input Warning", "No", "Yes", "1", "No", "Off", "", "", "On", "1",
+                               "Direct", newDIs[i].AccessName, "No", newDIs[i].ItemName+".HMI.CMDW.09", "No", newDIs[i].Comment+" - Digital Input Warning", "0", "0", "", "", "No"])
+            DIWriter.writerow([newDIs[i].Name+"\GI", newDIs[i].Group, newDIs[i].Comment+" - General Inhibit", "No", "No", "0", "No", "Off", "", "", "None", "1",
+                               "Direct", newDIs[i].AccessName, "No", newDIs[i].ItemName+".HMI.STW.02", "No", newDIs[i].Comment+" - General Inhibit", "0", "0", "", "", "No"])
+            DIWriter.writerow([newDIs[i].Name+"\GA", newDIs[i].Group, newDIs[i].Comment+" - General Alarm", "No", "No", "0", "No", "Off", "", "", "None",
+                               "1", "Direct", newDIs[i].AccessName, "No", newDIs[i].ItemName+".GA", "No", newDIs[i].Comment+" - General Alarm", "0", "0", "", "", "No"])
+            DIWriter.writerow([newDIs[i].Name+"\DIA", newDIs[i].Group, newDIs[i].Comment+" - Digital Input Alarm", "No", "Yes", "1", "No", "Off", "", "", "On", "1",
+                               "Direct", newDIs[i].AccessName, "No", newDIs[i].ItemName+".HMI.CMDW.08", "No", newDIs[i].Comment+" - Digital Input Alarm", "0", "0", "", "", "No"])
+        DIWriter.writerow([":MemoryInt", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "RetentiveAlarmParameters", "AlarmValueDeadband", "AlarmDevDeadband", "EngUnits", "InitialValue", "MinValue", "MaxValue", "Deadband", "LogDeadband", "LoLoAlarmState", "LoLoAlarmValue", "LoLoAlarmPri", "LoAlarmState", "LoAlarmValue", "LoAlarmPri", "HiAlarmState", "HiAlarmValue", "HiAlarmPri", "HiHiAlarmState", "HiHiAlarmValue", "HiHiAlarmPri", "MinorDevAlarmState", "MinorDevAlarmValue",
+                           "MinorDevAlarmPri", "MajorDevAlarmState", "MajorDevAlarmValue", "MajorDevAlarmPri", "DevTarget", "ROCAlarmState", "ROCAlarmValue", "ROCAlarmPri", "ROCTimeBase", "AlarmComment", "AlarmAckModel", "LoLoAlarmDisable", "LoAlarmDisable", "HiAlarmDisable", "HiHiAlarmDisable", "MinDevAlarmDisable", "MajDevAlarmDisable", "RocAlarmDisable", "LoLoAlarmInhibitor", "LoAlarmInhibitor", "HiAlarmInhibitor", "HiHiAlarmInhibitor", "MinDevAlarmInhibitor", "MajDevAlarmInhibitor", "RocAlarmInhibitor", "SymbolicName", "LocalTag"])
+        for i in range(newDINum):
+            DIWriter.writerow([newDIs[i].Name+"\Precision", newDIs[i].Group, newDIs[i].Comment+" - Precision", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "9999", "0", "1", "Off", "0", "1", "Off",
+                               "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            DIWriter.writerow([newDIs[i].Name+"\AccessLevel", newDIs[i].Group, newDIs[i].Comment+" - AccessLevel", "No", "No", "0", "No", "No", "0", "0", "", "900", "0", "9999", "0", "1", "Off", "0", "1", "Off",
+                               "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        DIWriter.writerow([":IOInt", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "RetentiveAlarmParameters", "AlarmValueDeadband", "AlarmDevDeadband", "EngUnits", "InitialValue", "MinEU", "MaxEU", "Deadband", "LogDeadband", "LoLoAlarmState", "LoLoAlarmValue", "LoLoAlarmPri", "LoAlarmState", "LoAlarmValue", "LoAlarmPri", "HiAlarmState", "HiAlarmValue", "HiAlarmPri", "HiHiAlarmState", "HiHiAlarmValue", "HiHiAlarmPri", "MinorDevAlarmState", "MinorDevAlarmValue", "MinorDevAlarmPri", "MajorDevAlarmState",
+                           "MajorDevAlarmValue", "MajorDevAlarmPri", "DevTarget", "ROCAlarmState", "ROCAlarmValue", "ROCAlarmPri", "ROCTimeBase", "MinRaw", "MaxRaw", "Conversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "LoLoAlarmDisable", "LoAlarmDisable", "HiAlarmDisable", "HiHiAlarmDisable", "MinDevAlarmDisable", "MajDevAlarmDisable", "RocAlarmDisable", "LoLoAlarmInhibitor", "LoAlarmInhibitor", "HiAlarmInhibitor", "HiHiAlarmInhibitor", "MinDevAlarmInhibitor", "MajDevAlarmInhibitor", "RocAlarmInhibitor", "SymbolicName"])
+        for i in range(newDINum):
+            DIWriter.writerow([newDIs[i].Name+"\HMICMDW", newDIs[i].Group, newDIs[i].Comment+" - HMICMDW", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
+                               "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newDIs[i].AccessName, "No", newDIs[i].ItemName+".HMI.CMDW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            DIWriter.writerow([newDIs[i].Name+"\HMISTW", newDIs[i].Group, newDIs[i].Comment+" - HMISTW", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
+                               "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newDIs[i].AccessName, "No", newDIs[i].ItemName+".HMI.STW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            DIWriter.writerow([newDIs[i].Name+"\HMIHMIW", newDIs[i].Group, newDIs[i].Comment+" - HMIHMIW", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
+                               "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newDIs[i].AccessName, "No", newDIs[i].ItemName+".HMI.HMIW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            DIWriter.writerow([newDIs[i].Name+"\HMICUSW", newDIs[i].Group, newDIs[i].Comment+" - HMICUSW", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
+                               "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newDIs[i].AccessName, "No", newDIs[i].ItemName+".HMI.CUSW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            DIWriter.writerow([newDIs[i].Name+"\HMICFGW", newDIs[i].Group, newDIs[i].Comment+" - HMICFGW", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
+                               "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newDIs[i].AccessName, "No", newDIs[i].ItemName+".HMI.CFGW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            DIWriter.writerow([newDIs[i].Name+"\HMIFIELDW", newDIs[i].Group, newDIs[i].Comment+" - HMIFIELDW", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
+                               "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newDIs[i].AccessName, "No", newDIs[i].ItemName+".HMI.FIELDW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        DIWriter.writerow([":MemoryMsg", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority",
+                           "RetentiveValue", "MaxLength", "InitialMessage", "AlarmComment", "SymbolicName", "LocalTag"])
+        for i in range(newDINum):
+            DIWriter.writerow([newDIs[i].Name+"\OBJ", newDIs[i].Group, newDIs[i].Comment +
+                               " - OBJ", "No", "No", "0", "No", "131", "OP_DI_10", "", "", "No"])
+        return
 
 
 def createFile(override):

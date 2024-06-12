@@ -134,15 +134,13 @@ def findTag(fileName, newFileName, requiredTag):
     # Opens the given base file
     with open(fileName + ".csv", newline='') as DBInput:
         DBReader = reader(DBInput, delimiter=',')
-        # If an output file is required, creates one and prepares to write to it
-        if newFileName != "":
-            DBOutput = open(newFileName + ".csv", "w", newline="")
-            DBWriter = writer(DBOutput)
         # Reads the given base file row by row
         for row in DBReader:
             if row[0].lower().startswith(":mode="):
                 if newFileName != "":
-                    DBWriter.writerow(row)
+                    with open(newFileName + ".csv", "w", newline="") as DBOutput:
+                        DBWriter = writer(DBOutput)
+                        DBWriter.writerow(row)
                 continue
             # If the first cell (the "tag") in the row contains the given requiredTag, increments the tag count, prints the whole row, and writes it to the output file if enabled)
             for tag in requiredTag:

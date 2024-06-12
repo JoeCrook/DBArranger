@@ -1,4 +1,5 @@
-# Updated 2024-05-28
+# Updated 2024-05-12
+# Added the ability to use an input file for NewDI
 
 from csv import writer, reader
 from os.path import isfile
@@ -20,7 +21,7 @@ def findFile():
     """Finds the base CSV file and loops if not correct"""
     while True:
         # Gathers the name of the csv file to be checked
-        fileName = input("Name of the CSV file: ").lower()
+        fileName = input("Name of the input CSV file: ").lower()
         if fileName.endswith(".csv"):
             fileName = fileName[:-4]
         # Loops asking for the file name if the given one doesn't exist

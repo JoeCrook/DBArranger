@@ -97,9 +97,9 @@ def findFunction(functionCheck):
                 DIReader = reader(DIInput, delimiter=',')
                 for row in DIReader:
                     newDINum += 1
-                    newDIGroup = row[3]
+                    newDIGroup = row[2]
                     newDIComment = row[1]
-                    newDIAccessName = row[4]
+                    newDIAccessName = row[3]
                     newDIItemName = row[0]
                     newDIs.append(NewDI(newDIGroup, newDIComment,
                                         newDIAccessName, newDIItemName))

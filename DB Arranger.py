@@ -8,7 +8,7 @@ from os.path import isfile
 class NewDI:
     """A Class to store information about a new DI supertag"""
 
-    def __init__(self, str: group, str: comment, str: accessName, str: itemName):
+    def __init__(self, group, comment, accessName, itemName):
         name = itemName.replace("_", "")
         self.Name = name
         self.Group = group
@@ -280,7 +280,7 @@ def createFile(override):
         # Checks if a file is needed to be created without asking
         if override == False:
             fileReqd = input(
-                "Create new file for discovered files? (Y/N)").lower()
+                "Create new file for discovered files? (Y/N) ").lower()
         else:
             fileReqd = "y"
 

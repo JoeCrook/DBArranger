@@ -64,7 +64,7 @@ def findFunction(functionCheck):
     # Function that creates a new DI supertag
     elif functionCheck in ["di"]:
         while True:
-            inputFile = input("Use an input csv file?: ")
+            inputFile = input("Use an input csv file?: (Y/N)")
             if inputFile in ["y", "ye", "yes", "1"]:
                 inputFile = True
                 inputFileName = findFile()
@@ -273,7 +273,8 @@ def createFile(override):
     while fileLoop == True:
         # Checks if a file is needed to be created without asking
         if override == False:
-            fileReqd = input("Create new file for discovered files? ").lower()
+            fileReqd = input(
+                "Create new file for discovered files? (Y/N)").lower()
         else:
             fileReqd = "y"
 
@@ -295,7 +296,7 @@ def createFile(override):
 
 def checkAnother(item):
     """Checks if more than one input is required"""
-    moreInputs = input("Another "+item+"? ").lower().replace(" ", "")
+    moreInputs = input("Another "+item+"? (Y/N) ").lower().replace(" ", "")
     if moreInputs in ["y", "ye", "yes", "1"]:
         return True
     elif moreInputs in ["n", "no", "0"]:
@@ -306,7 +307,7 @@ def checkAnother(item):
 
 
 # Gathers which function is wanted, and runs the function to find/start it
-difindFunction(input(
+findFunction(input(
     "Function type required (\"Find Tag\", \"Select Section\" or \"DI\"): ").lower().replace(" ", ""))
 
 # Loops until the user states otherwise

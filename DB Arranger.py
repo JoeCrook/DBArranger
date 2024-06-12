@@ -90,10 +90,11 @@ def findFunction(functionCheck):
                 else:
                     print("Answer must be 1 or more")
 
-            # Creates the number of classes required and gathers required info
+        # Creates the number of classes required and gathers required info
         newDIs = []
         if inputFile == True:
             newDINum = 0
+            # Input file must have no headers, and have each new DI on it's own line, with info in the order: PLC Name, Comment, Group, AccessName
             with open(inputFileName + ".csv", newline='') as DIInput:
                 DIReader = reader(DIInput, delimiter=',')
                 for row in DIReader:

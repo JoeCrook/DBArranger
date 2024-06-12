@@ -1,4 +1,5 @@
-# Updated 2024-05-28
+# Updated 2024-05-12
+# Added the ability to use an input file for NewDI
 
 from csv import writer, reader
 from os.path import isfile
@@ -7,19 +8,20 @@ from os.path import isfile
 class NewDI:
     """A Class to store information about a new DI supertag"""
 
-    def __init__(self, num):
-        self.Name = input("New DI #" + num + " Name: ")
-        self.Group = input("New DI #" + num + " Group: ")
-        self.Comment = input("New DI #" + num + " Comment: ")
-        self.AccessName = input("New DI #" + num + " AccessName: ")
-        self.ItemName = input("New DI #" + num + " ItemName: ")
+    def __init__(self, group, comment, accessName, itemName):
+        name = itemName.replace("_", "")
+        self.Name = str(name)
+        self.Group = str(group)
+        self.Comment = str(comment)
+        self.AccessName = str(accessName)
+        self.ItemName = str(itemName)
 
 
 def findFile():
     """Finds the base CSV file and loops if not correct"""
     while True:
         # Gathers the name of the csv file to be checked
-        fileName = input("Name of the CSV file: ").lower()
+        fileName = input("Name of the input CSV file: ").lower()
         if fileName.endswith(".csv"):
             fileName = fileName[:-4]
         # Loops asking for the file name if the given one doesn't exist
@@ -61,24 +63,57 @@ def findFunction(functionCheck):
 
     # Function that creates a new DI supertag
     elif functionCheck in ["di"]:
-        # Checks how many new tags being created, and checks answer is given in a correct format
         while True:
-            while True:
-                try:
-                    newDINum = int(input("How many new tags needed: "))
-                    break
-                except ValueError:
-                    print("Answer must be an int")
-            if newDINum > 0:
+            inputFile = input("Use an input csv file?: ")
+            if inputFile in ["y", "ye", "yes", "1"]:
+                inputFile = True
+                inputFileName = findFile()
+                break
+            elif inputFile in ["n", "no", "0"]:
+                inputFile = False
                 break
             else:
-                print("Answer must be 1 or more")
+                print("Error: Expected answer \"yes\" or \"no\"")
+                continue
 
-        # Creates the number of classes required
+        if inputFile == False:
+            # Checks how many new tags being created, and checks answer is given in a correct format
+            while True:
+                while True:
+                    try:
+                        newDINum = int(input("How many new tags needed: "))
+                        break
+                    except ValueError:
+                        print("Answer must be an int")
+                if newDINum > 0:
+                    break
+                else:
+                    print("Answer must be 1 or more")
+
+        # Creates the number of classes required and gathers required info
         newDIs = []
-        for i in range(newDINum):
-            newDIs.append(NewDI(str(i + 1)))
-        # Gathers required info
+        if inputFile == True:
+            newDINum = 0
+            # Input file must have no headers, and have each new DI on it's own line, with info in the order: PLC Name, Comment, Group, AccessName
+            with open(inputFileName + ".csv", newline='') as DIInput:
+                DIReader = reader(DIInput, delimiter=',')
+                for row in DIReader:
+                    newDINum += 1
+                    newDIGroup = row[2]
+                    newDIComment = row[1]
+                    newDIAccessName = row[3]
+                    newDIItemName = row[0]
+                    newDIs.append(NewDI(newDIGroup, newDIComment,
+                                        newDIAccessName, newDIItemName))
+        else:
+            for i in range(newDINum):
+                newDIGroup = input("New DI #" + str(i + 1) + " Group: ")
+                newDIComment = input("New DI #" + str(i + 1) + " Comment: ")
+                newDIAccessName = input(
+                    "New DI #" + str(i + 1) + " AccessName: ")
+                newDIItemName = input("New DI #" + str(i + 1) + " ItemName: ")
+                newDIs.append(NewDI(newDIGroup, newDIComment,
+                              newDIAccessName, newDIItemName))
         createDI(createFile(True), newDINum, newDIs)
 
     # Loops if the given function doesn't exist/isn't recognised
@@ -187,8 +222,7 @@ def selectSection(fileName, newFileName, sections):
 def createDI(newFileName, newDINum, newDIs):
     """Creates a new DI supertag"""
     # Opens the output file and preps to write to it
-    DIOutput = open(newFileName+".csv", "w", newline="")
-    DIWriter = writer(DIOutput)
+    DIWriter = writer(open(newFileName+".csv", "w", newline=""))
 
     # Writes all the rows required
     DIWriter.writerow([":mode=ask"])
@@ -246,7 +280,7 @@ def createFile(override):
         if fileReqd in ["y", "ye", "yes", "1"] or override == True:
             fileLoop = False
             # If file required, gets the name
-            newFileName = input("Name of new file: ")
+            newFileName = input("Name of the new file: ")
             if newFileName.lower().endswith(".csv"):
                 return newFileName[:-4]
             else:
@@ -272,7 +306,7 @@ def checkAnother(item):
 
 
 # Gathers which function is wanted, and runs the function to find/start it
-findFunction(input(
+difindFunction(input(
     "Function type required (\"Find Tag\", \"Select Section\" or \"DI\"): ").lower().replace(" ", ""))
 
 # Loops until the user states otherwise

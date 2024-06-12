@@ -304,7 +304,7 @@ def checkAnother(item):
 
 
 # Gathers which function is wanted, and runs the function to find/start it
-findFunction(input(
+difindFunction(input(
     "Function type required (\"Find Tag\", \"Select Section\" or \"DI\"): ").lower().replace(" ", ""))
 
 # Loops until the user states otherwise

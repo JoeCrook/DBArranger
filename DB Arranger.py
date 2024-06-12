@@ -65,11 +65,11 @@ def findFunction(functionCheck):
     elif functionCheck in ["di"]:
         while True:
             inputFile = input("Use an input csv file?: (Y/N)")
-            if inputFile in ["y", "ye", "yes", "1"]:
+            if inputFile in ["y", "ye", "yes", "1", "true"]:
                 inputFile = True
                 inputFileName = findFile()
                 break
-            elif inputFile in ["n", "no", "0"]:
+            elif inputFile in ["n", "no", "0", "false"]:
                 inputFile = False
                 break
             else:
@@ -278,7 +278,7 @@ def createFile(override):
         else:
             fileReqd = "y"
 
-        if fileReqd in ["y", "ye", "yes", "1"] or override == True:
+        if fileReqd in ["y", "ye", "yes", "1", "true"] or override == True:
             fileLoop = False
             # If file required, gets the name
             newFileName = input("Name of the new file: ")
@@ -286,7 +286,7 @@ def createFile(override):
                 return newFileName[:-4]
             else:
                 return newFileName
-        elif fileReqd in ["n", "no", "0"]:
+        elif fileReqd in ["n", "no", "0", "false"]:
             # If not required, leaves the name blank
             fileLoop = False
             return ""
@@ -297,9 +297,9 @@ def createFile(override):
 def checkAnother(item):
     """Checks if more than one input is required"""
     moreInputs = input("Another "+item+"? (Y/N) ").lower().replace(" ", "")
-    if moreInputs in ["y", "ye", "yes", "1"]:
+    if moreInputs in ["y", "ye", "yes", "1", "true"]:
         return True
-    elif moreInputs in ["n", "no", "0"]:
+    elif moreInputs in ["n", "no", "0", "false"]:
         return False
     else:
         print("Error: \"Yes\" or \"No\" answer required")

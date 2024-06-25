@@ -281,8 +281,8 @@ def createHRM(newFileName, newHRMname):
     HRMWriter.writerow([":mode=ask"])
     HRMWriter.writerow([":IODisc", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "InitialDisc", "OffMsg", "OnMsg", "AlarmState", "AlarmPri",
                         "Dconversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "DSCAlarmDisable", "DSCAlarmInhibitor", "SymbolicName"])
-    HRMWriter.writerow([newHRMname+"\PAR_11", newDIs[i].Group, newDIs[i].Comment+" - Digital Input Warning", "No", "Yes", "1", "No", "Off", "", "", "On", "1",
-                        "Direct", newDIs[i].AccessName, "No", newDIs[i].ItemName+".HMI.CMDW.09", "No", newDIs[i].Comment+" - Digital Input Warning", "0", "0", "", "", "No"])
+    HRMWriter.writerow([newHRMname+"\PAR_11", "SYS3", "Horomill MPG", "Yes", "No", "0", "No", "Off", "", "", "None", "3",
+                        "Direct", "PLC01", "No", newHRMname.replace("_", "")+".PAR_11", "No", "Horomill MPG", "0", "0", "", "", "No"])
 
 
 def createFile(override):

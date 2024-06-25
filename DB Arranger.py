@@ -312,6 +312,7 @@ def createHRM(newFileName, newHRMName):
                            "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "200", "Linear", "PLC01", "Yes", newHRMName.replace("_", "")+".PAR_12", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
         HRMWriter.writerow([newHRMName+"\PAR_13", "SYS3", "Horomill Roller Down Delay (Seconds)", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "1000", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
                            "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "1000", "Linear", "PLC01", "Yes", newHRMName.replace("_", "")+".PAR_13", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+    return "Finished creating new HRMRecipe Supertag"
 
 
 def createFile(override):

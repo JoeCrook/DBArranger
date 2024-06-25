@@ -122,9 +122,12 @@ def findFunction(functionCheck):
                               newDIAccessName, newDIItemName))
         print(createDI(createFile(True), newDINum, newDIs))
 
+    elif functionCheck in ["hrm"]:
+        return
+
     # Loops if the given function doesn't exist/isn't recognised
     else:
-        print("Functions: \"Find Tag\", \"Select Section\", \"DI\"")
+        print("Functions: \"Find Tag\", \"Select Section\", \"DI\", \"HRM\"")
         findFunction(
             input("Function type required: ").lower().replace(" ", ""))
     return

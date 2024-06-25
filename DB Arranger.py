@@ -160,7 +160,9 @@ def findTag(fileName, newFileName, requiredTag):
                     tagCount += 1
                     print(', '.join(row))
                     if newFileName != "":
-                        DBWriter.writerow(row)
+                        with open(newFileName + ".csv", "w", newline="") as DBOutput:
+                            DBWriter = writer(DBOutput)
+                            DBWriter.writerow(row)
 
     # Closes the output file if used
     if newFileName != "":

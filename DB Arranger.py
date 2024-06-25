@@ -275,14 +275,43 @@ def createDI(newFileName, newDINum, newDIs):
         return "Created " + str(newDINum) + " new DI" + DITemp + " and saved to the file " + newFileName + ".csv"
 
 
-def createHRM(newFileName, newHRMname):
+def createHRM(newFileName, newHRMName):
     with open(newFileName+".csv", "w", newline="") as HRMOutput:
         HRMWriter = writer(HRMOutput)
-    HRMWriter.writerow([":mode=ask"])
-    HRMWriter.writerow([":IODisc", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "InitialDisc", "OffMsg", "OnMsg", "AlarmState", "AlarmPri",
-                        "Dconversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "DSCAlarmDisable", "DSCAlarmInhibitor", "SymbolicName"])
-    HRMWriter.writerow([newHRMname+"\PAR_11", "SYS3", "Horomill MPG", "Yes", "No", "0", "No", "Off", "", "", "None", "3",
-                        "Direct", "PLC01", "No", newHRMname.replace("_", "")+".PAR_11", "No", "Horomill MPG", "0", "0", "", "", "No"])
+        HRMWriter.writerow([":mode=ask"])
+
+        HRMWriter.writerow([":IODisc", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "InitialDisc", "OffMsg", "OnMsg", "AlarmState", "AlarmPri",
+                            "Dconversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "DSCAlarmDisable", "DSCAlarmInhibitor", "SymbolicName"])
+        HRMWriter.writerow([newHRMName+"\PAR_11", "SYS3", "Horomill MPG", "Yes", "No", "0", "No", "Off", "", "", "None", "3",
+                            "Direct", "PLC01", "No", newHRMName.replace("_", "")+".PAR_11", "No", "Horomill MPG", "0", "0", "", "", "No"])
+
+        HRMWriter.writerow([":IOReal", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "RetentiveAlarmParameters", "AlarmValueDeadband", "AlarmDevDeadband", "EngUnits", "InitialValue", "MinEU", "MaxEU", "Deadband", "LogDeadband", "LoLoAlarmState", "LoLoAlarmValue", "LoLoAlarmPri", "LoAlarmState", "LoAlarmValue", "LoAlarmPri", "HiAlarmState", "HiAlarmValue", "HiAlarmPri", "HiHiAlarmState", "HiHiAlarmValue", "HiHiAlarmPri", "MinorDevAlarmState", "MinorDevAlarmValue", "MinorDevAlarmPri", "MajorDevAlarmState",
+                            "MajorDevAlarmValue", "MajorDevAlarmPri", "DevTarget", "ROCAlarmState", "ROCAlarmValue", "ROCAlarmPri", "ROCTimeBase", "MinRaw", "MaxRaw", "Conversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "LoLoAlarmDisable", "LoAlarmDisable", "HiAlarmDisable", "HiHiAlarmDisable", "MinDevAlarmDisable", "MajDevAlarmDisable", "RocAlarmDisable", "LoLoAlarmInhibitor", "LoAlarmInhibitor", "HiAlarmInhibitor", "HiHiAlarmInhibitor", "MinDevAlarmInhibitor", "MajDevAlarmInhibitor", "RocAlarmInhibitor", "SymbolicName"])
+
+        HRMWriter.writerow([newHRMName+"\PAR_01", "SYS3", "Horomill Nominal Air Pressure", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "-10", "10", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                           "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-10", "10", "Linear", "PLC01", "Yes", newHRMName.replace("_", "")+".PAR_01", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        HRMWriter.writerow([newHRMName+"\PAR_02", "SYS3", "Horomill Startup Air Pressure", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "-10", "10", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                           "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-10", "10", "Linear", "PLC01", "Yes", newHRMName.replace("_", "")+".PAR_02", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        HRMWriter.writerow([newHRMName+"\PAR_03", "SYS3", "Horomill Total Nominal Feedrate", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "0", "200", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                           "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "200", "Linear", "PLC01", "Yes", newHRMName.replace("_", "")+".PAR_03", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        HRMWriter.writerow([newHRMName+"\PAR_04", "SYS3", "Horomill Total Feedrate Startup/Shutdown ", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "0", "200", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                           "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "200", "Linear", "PLC01", "Yes", newHRMName.replace("_", "")+".PAR_04", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        HRMWriter.writerow([newHRMName+"\PAR_05", "SYS3", "Horomill Nominal Fresh Feedrate ", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "0", "200", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                           "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "200", "Linear", "PLC01", "Yes", newHRMName.replace("_", "")+".PAR_05", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        HRMWriter.writerow([newHRMName+"\PAR_06", "SYS3", "Horomill Startup Fresh Feedrate ", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "0", "200", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                           "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "200", "Linear", "PLC01", "Yes", newHRMName.replace("_", "")+".PAR_06", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        HRMWriter.writerow([newHRMName+"\PAR_07", "SYS3", "Horomill Nominal Jack Pressure", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "0", "200", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                           "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "200", "Linear", "PLC01", "Yes", newHRMName.replace("_", "")+".PAR_07", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        HRMWriter.writerow([newHRMName+"\PAR_08", "SYS3", "Horomill Startup Jack Pressure", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "0", "200", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                           "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "200", "Linear", "PLC01", "Yes", newHRMName.replace("_", "")+".PAR_08", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        HRMWriter.writerow([newHRMName+"\PAR_09", "SYS3", "Horomill Scraper Position", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "0", "10", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                           "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "10", "Linear", "PLC01", "Yes", newHRMName.replace("_", "")+".PAR_09", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        HRMWriter.writerow([newHRMName+"\PAR_10", "SYS3", "Horomill Fresh Feed Percentage", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "0", "200", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                           "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "200", "Linear", "PLC01", "Yes", newHRMName.replace("_", "")+".PAR_10", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        HRMWriter.writerow([newHRMName+"\PAR_12", "SYS3", "Horomill Roller Down Total Feedrate Setpoint", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "200", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                           "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "200", "Linear", "PLC01", "Yes", newHRMName.replace("_", "")+".PAR_12", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        HRMWriter.writerow([newHRMName+"\PAR_13", "SYS3", "Horomill Roller Down Delay (Seconds)", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "1000", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                           "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "1000", "Linear", "PLC01", "Yes", newHRMName.replace("_", "")+".PAR_13", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
 
 
 def createFile(override):

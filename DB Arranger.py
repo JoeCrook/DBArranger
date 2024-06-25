@@ -123,7 +123,7 @@ def findFunction(functionCheck):
         print(createDI(createFile(True), newDINum, newDIs))
 
     elif functionCheck in ["hrm"]:
-        return
+        print(createHRM(createFile(True), str(input("New HRM recipe name: "))))
 
     # Loops if the given function doesn't exist/isn't recognised
     else:
@@ -278,6 +278,16 @@ def createDI(newFileName, newDINum, newDIs):
         else:
             DITemp = ""
         return "Created " + str(newDINum) + " new DI" + DITemp + " and saved to the file " + newFileName + ".csv"
+
+
+def createHRM(newFileName, newHRMname):
+    with open(newFileName+".csv", "w", newline="") as HRMOutput:
+        HRMWriter = writer(HRMOutput)
+    HRMWriter.writerow([":mode=ask"])
+    HRMWriter.writerow([":IODisc", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "InitialDisc", "OffMsg", "OnMsg", "AlarmState", "AlarmPri",
+                        "Dconversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "DSCAlarmDisable", "DSCAlarmInhibitor", "SymbolicName"])
+    HRMWriter.writerow([newHRMname+"\PAR_11", newDIs[i].Group, newDIs[i].Comment+" - Digital Input Warning", "No", "Yes", "1", "No", "Off", "", "", "On", "1",
+                        "Direct", newDIs[i].AccessName, "No", newDIs[i].ItemName+".HMI.CMDW.09", "No", newDIs[i].Comment+" - Digital Input Warning", "0", "0", "", "", "No"])
 
 
 def createFile(override):

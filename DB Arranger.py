@@ -47,7 +47,7 @@ def findFunction(functionCheck):
                 tagList += [requiredTag]
             moreTags = checkAnother("tag")
 
-        print(findTag(fileName, createFile(False), tagList))
+        print(findTag(fileName, createFile(True), tagList))
 
     # Function that selects a certain section of tags, and saves them only to a file
     elif functionCheck in ["selectsection", "selsec", "ss"]:
@@ -59,7 +59,7 @@ def findFunction(functionCheck):
             sections.append(input("Which section to keep: ").lower())
             moreSections = checkAnother("section")
 
-        print(selectSection(fileName, createFile(False), sections))
+        print(selectSection(fileName, createFile(True), sections))
 
     # Function that creates a new DI supertag
     elif functionCheck in ["di"]:
@@ -135,38 +135,26 @@ def findTag(fileName, newFileName, requiredTag):
     tagCount = 0
     # Opens the given base file
     with open(fileName + ".csv", newline='') as DBInput:
-        DBReader = reader(DBInput, delimiter=',')
-        # Reads the given base file row by row
-        for row in DBReader:
-            if row[0].lower().startswith(":mode="):
-                if newFileName != "":
-                    with open(newFileName + ".csv", "w", newline="") as DBOutput:
-                        DBWriter = writer(DBOutput)
+        with open(newFileName + ".csv", "w", newline="") as DBOutput:
+            DBWriter = writer(DBOutput)
+            DBReader = reader(DBInput, delimiter=',')
+            # Reads the given base file row by row
+            for row in DBReader:
+                if row[0].lower().startswith(":mode="):
+                    DBWriter.writerow(row)
+                # If the first cell (the "tag") in the row contains the given requiredTag, increments the tag count, prints the whole row, and writes it to the output file if enabled)
+                for tag in requiredTag:
+                    # If the row is a section header, and an output file is required, write the row to the output file
+                    if row[0].lower().startswith(":"):
+                        headerWritten = False
+                        currentHeader = row
+                    elif tag in row[0].lower():
+                        if headerWritten == False:
+                            DBWriter.writerow(currentHeader)
+                            headerWritten = True
+                        tagCount += 1
+                        print(', '.join(row))
                         DBWriter.writerow(row)
-                continue
-            # If the first cell (the "tag") in the row contains the given requiredTag, increments the tag count, prints the whole row, and writes it to the output file if enabled)
-            for tag in requiredTag:
-                # If the row is a section header, and an output file is required, write the row to the output file
-                if row[0].lower().startswith(":"):
-                    headerWritten = False
-                    currentHeader = row
-                elif tag in row[0].lower():
-                    if headerWritten == False:
-                        if newFileName != "":
-                            with open(newFileName + ".csv", "w", newline="") as DBOutput:
-                                DBWriter = writer(DBOutput)
-                                DBWriter.writerow(currentHeader)
-                        headerWritten = True
-                    tagCount += 1
-                    print(', '.join(row))
-                    if newFileName != "":
-                        with open(newFileName + ".csv", "w", newline="") as DBOutput:
-                            DBWriter = writer(DBOutput)
-                            DBWriter.writerow(row)
-
-    # Closes the output file if used
-    if newFileName != "":
-        DBOutput.close()
 
     # Prints the amount of tags found in the console
     if tagCount > 0:

@@ -284,6 +284,7 @@ def createDI(newFileName, newDINum, newDIs):
 
 
 def tesys(tesysFileName, tesysList):
+    """Creates all the tags needed on SCADA from a Tesys unit"""
     with open(tesysFileName+".csv", "w", newline="") as tesysOutput:
         tesysWriter = writer(tesysOutput)
         tesysWriter.writerow([":mode=ask"])

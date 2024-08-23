@@ -122,6 +122,9 @@ def findFunction(functionCheck):
                               newDIAccessName, newDIItemName))
         print(createDI(createFile(True), newDINum, newDIs))
 
+    elif functionCheck in ["tesys"]:
+        tesys(createFile(True), tesysList)
+
     # Loops if the given function doesn't exist/isn't recognised
     else:
         print("Functions: \"Find Tag\", \"Select Section\", \"DI\"")
@@ -267,27 +270,15 @@ def createDI(newFileName, newDINum, newDIs):
         return "Created " + str(newDINum) + " new DI" + DITemp + " and saved to the file " + newFileName + ".csv"
 
 
-def tesys():
-    with open("tesys.csv", "w", newline="") as tesysOutput:
+def tesys(tesysFileName, tesysList):
+    with open(tesysFileName, "w", newline="") as tesysOutput:
         tesysWriter = writer(tesysOutput)
         tesysWriter.writerow([":mode=ask"])
         tesysWriter.writerow([":IODisc", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "InitialDisc", "OffMsg", "OnMsg", "AlarmState", "AlarmPri",
                               "Dconversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "DSCAlarmDisable", "DSCAlarmInhibitor", "SymbolicName"])
-        tesysList = ["S5S24B1", "S5S25B1", "S5S26B1", "S5S27B1", "S5S9B1",
-                     "S5S22B1", "S5S23B1", "S5S2B1"]
         for i in range(len(tesysList)):
-            tesysWriter.writerow([tesysList[i]+"_F1", "$System", tesysList[i]+" Silo Vent Fan Tripped", "Yes", "No", "0", "No", "Off", "", "", "On", "3",
-                                  "Direct", "PLC02", "Yes", tesysList[i]+"_F1", "No", tesysList[i]+" Silo Vent Fan Tripped", "0", "0", "", "", "No"])
-            tesysWriter.writerow([tesysList[i]+"_F2", "$System", tesysList[i]+" Silo Vent Fan Starter Off", "Yes", "No", "0", "No", "Off", "", "", "On", "3",
-                                  "Direct", "PLC02", "Yes", tesysList[i]+"_F2", "No", tesysList[i]+" Silo Vent Fan Starter Off", "0", "0", "", "", "No"])
-            tesysWriter.writerow([tesysList[i]+"_F3", "$System", tesysList[i]+" Silo Vent Fan Isolated", "Yes", "No", "0", "No", "Off", "", "", "On", "3",
-                                  "Direct", "PLC02", "Yes", tesysList[i]+"_F3", "No", tesysList[i]+" Silo Vent Fan Isolated", "0", "0", "", "", "No"])
-            tesysWriter.writerow([tesysList[i]+"_F4", "$System", tesysList[i]+" Silo Vent Fan Underload", "Yes", "No", "0", "No", "Off", "", "", "On", "3",
-                                  "Direct", "PLC02", "Yes", tesysList[i]+"_F4", "No", tesysList[i]+" Silo Vent Fan Underload", "0", "0", "", "", "No"])
-            tesysWriter.writerow([tesysList[i]+"_F5", "$System", tesysList[i]+" Silo Vent Fan Run Fault", "Yes", "No", "0", "No", "Off", "", "", "On", "3",
-                                  "Direct", "PLC02", "Yes", tesysList[i]+"_F5", "No", tesysList[i]+" Silo Vent Fan Run Fault", "0", "0", "", "", "No"])
-            tesysWriter.writerow([tesysList[i]+"_GENERAL_F", "$System", tesysList[i]+" Silo Vent Fan General Fault", "Yes", "Yes", "3", "No", "Off", "", "", "None", "3",
-                                  "Direct", "PLC02", "Yes", tesysList[i]+"_GENERAL_F", "No", tesysList[i]+" Silo Vent Fan General Fault", "0", "0", "", "", "No"])
+            tesysWriter.writerow([tesysList[i]["Tag"]+"_ELI", "$System", tesysList[i]["Comment"]+" Isolator", "Yes", "No", "0", "No", "Off", "", "", "None", "99",
+                                  "Direct", tesysList[i]["AccessName"], "Yes", tesysList[i]["Tag"]+"_ELI", tesysList[i]["Comment"]+" Isolator", "0", "0", "", "", "No"])
 
 
 def createFile(override):

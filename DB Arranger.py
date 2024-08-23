@@ -136,11 +136,11 @@ def findFunction(functionCheck):
             tesysNum += 1
             tesysLoop = checkAnother("set of tags")
 
-        tesys(createFile(True), tesysList)
+        print(tesys(createFile(True), tesysList))
 
     # Loops if the given function doesn't exist/isn't recognised
     else:
-        print("Functions: \"Find Tag\", \"Select Section\", \"DI\"")
+        print("Functions: \"Find Tag\", \"Select Section\", \"DI\", \"Tesys\"")
         findFunction(
             input("Function type required: ").lower().replace(" ", ""))
     return
@@ -383,7 +383,7 @@ def checkAnother(item):
 
 # Gathers which function is wanted, and runs the function to find/start it
 findFunction(input(
-    "Function type required (\"Find Tag\", \"Select Section\" or \"DI\"): ").lower().replace(" ", ""))
+    "Function type required (\"Find Tag\", \"Select Section\", \"DI\" or \"Tesys\"): ").lower().replace(" ", ""))
 
 # Loops until the user states otherwise
 while checkAnother("function") == True:

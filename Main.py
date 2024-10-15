@@ -1,16 +1,24 @@
 import tkinter as tk
-
-window = tk.Tk()
-window.title("Hello World")
+from tkinter import ttk
 
 
-def handle_button_press(event):
-    window.destroy()
+root = tk.Tk()
+root.title("Database Functions")
+root.resizable(False, False)
+
+root_width = 600
+root_height = 400
+
+# find the center point
+center_x = int(root.winfo_screenwidth()/2 - root_width / 2)
+center_y = int(root.winfo_screenheight()/2 - root_height / 2)
+# set the position of the window to the center of the screen
+root.geometry(f'{root_width}x{root_height}+{center_x}+{center_y}')
 
 
-button = tk.Button(text="My simple app.")
-button.bind("", handle_button_press)
-button.pack()
+# place a label on the root window
+message = ttk.Label(root, text="Hello, World!")
+message.pack()
 
-# Start the event loop.
-window.mainloop()
+# keep the window displaying
+root.mainloop()

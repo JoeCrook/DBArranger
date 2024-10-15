@@ -94,13 +94,6 @@ class HST(Tk):
         root.title("Database Functions")
         root.resizable(False, False)
 
-        frame1 = createframe1(root)
-        frame1.grid(column=0, row=0)
-        frame2 = createframe2(root)
-        frame2.grid(column=0, row=1)
-        frame3 = createframe3(root)
-        frame3.grid(column=0, row=2)
-
 
 root = HST()
 root.mainloop()

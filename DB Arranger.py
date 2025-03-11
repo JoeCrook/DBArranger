@@ -9,12 +9,11 @@ class NewDI:
     """A Class to store information about a new DI supertag"""
 
     def __init__(self, group, comment, accessName, itemName):
-        name = itemName.replace("_", "")
-        self.Name = name
         self.Group = group
         self.Comment = comment
         self.AccessName = accessName
         self.ItemName = itemName
+        self.Name = itemName
 
 
 class NewM_3:
@@ -32,7 +31,7 @@ def findFile():
     """Finds the base CSV file and loops if not correct"""
     while True:
         # Gathers the name of the csv file to be checked
-        fileName = input("Name of the input CSV file: ")
+        fileName = input("Name of the input CSV file: ").lower()
         if fileName.endswith(".csv"):
             fileName = fileName[:-4]
         # Loops asking for the file name if the given one doesn't exist
@@ -108,8 +107,8 @@ def findFunction(functionCheck):
         if inputFile == True:
             # Uses an input file to gather the info
             newDINum = 0
-            # Input file must have no headers, and have each new DI on it's own line, with info in the order: PLC Name, Comment, Group, AccessName
-            with open(inputFileName + ".csv", newline='') as DIInput:
+            # Input file must have no headers, and have each new DI on it's own line, with info in the order: Item Name, Comment, Group, AccessName
+            with open(inputFileName + ".csv", newline='', encoding='utf-8-sig') as DIInput:
                 DIReader = reader(DIInput, delimiter=',')
                 for row in DIReader:
                     newDINum += 1

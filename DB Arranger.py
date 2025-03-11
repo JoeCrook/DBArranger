@@ -78,9 +78,7 @@ def findFunction(functionCheck):
             # Determines if new tags are created using an input csv file, or via manual input
             inputFile = input("Use an input csv file?: (Y/N) ")
             if inputFile in ["y", "ye", "yes", "1", "true"]:
-
-
-b print("Input file must have no headers, and have each new DI on it's own line, with info in the order: PLC Name, Comment, Group, AccessName")
+                print("Input file must have no headers, and have each new DI on it's own line, with info in the order: PLC Name, Comment, Group, AccessName")
                 inputFile = True
                 inputFileName = findFile()
                 break

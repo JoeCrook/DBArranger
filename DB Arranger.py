@@ -17,11 +17,22 @@ class NewDI:
         self.ItemName = itemName
 
 
+class NewM_3:
+    """A Class to store information about a new M_3 supertag"""
+
+    def __init__(self, group, comment, accessName, itemName):
+        self.Group = group
+        self.Comment = comment
+        self.AccessName = accessName
+        self.ItemName = itemName
+        self.Name = itemName
+
+
 def findFile():
     """Finds the base CSV file and loops if not correct"""
     while True:
         # Gathers the name of the csv file to be checked
-        fileName = input("Name of the input CSV file: ").lower()
+        fileName = input("Name of the input CSV file: ")
         if fileName.endswith(".csv"):
             fileName = fileName[:-4]
         # Loops asking for the file name if the given one doesn't exist
@@ -67,7 +78,9 @@ def findFunction(functionCheck):
             # Determines if new tags are created using an input csv file, or via manual input
             inputFile = input("Use an input csv file?: (Y/N) ")
             if inputFile in ["y", "ye", "yes", "1", "true"]:
-                print("Input file must have no headers, and have each new DI on it's own line, with info in the order: PLC Name, Comment, Group, AccessName")
+
+
+b print("Input file must have no headers, and have each new DI on it's own line, with info in the order: PLC Name, Comment, Group, AccessName")
                 inputFile = True
                 inputFileName = findFile()
                 break
@@ -122,6 +135,66 @@ def findFunction(functionCheck):
                               newDIAccessName, newDIItemName))
         print(createDI(createFile(True), newDINum, newDIs))
 
+    elif functionCheck in ["m_3"]:
+        while True:
+            # Determines if new tags are created using an input csv file, or via manual input
+            inputFile = input("Use an input csv file?: (Y/N) ")
+            if inputFile in ["y", "ye", "yes", "1", "true"]:
+                print("Input file must have no headers, and have each new M_3 on it's own line, with info in the order: PLC Name, Comment, Group, AccessName")
+                inputFile = True
+                inputFileName = findFile()
+                break
+            elif inputFile in ["n", "no", "0", "false"]:
+                inputFile = False
+                break
+            else:
+                print("Error: Expected answer \"yes\" or \"no\"")
+                continue
+
+        if inputFile == False:
+            # Checks how many new tags being created, and checks answer is given in a correct format
+            while True:
+                while True:
+                    try:
+                        newM_3Num = int(input("How many new tags needed: "))
+                        break
+                    except ValueError:
+                        print("Answer must be an int")
+                if newM_3Num > 0:
+                    break
+                else:
+                    print("Answer must be 1 or more")
+
+        # Creates the number of classes required and gathers required info
+        NewM_3s = []
+        if inputFile == True:
+            # Uses an input file to gather the info
+            newM_3Num = 0
+            # Input file must have no headers, and have each new M_3 on it's own line, with info in the order: Item Name, Comment, Group, AccessName
+            with open(inputFileName + ".csv", newline='') as M_3Input:
+                M_3Reader = reader(M_3Input, delimiter=',')
+                for row in M_3Reader:
+                    newM_3Num += 1
+                    newM_3Group = str(row[2])
+                    newM_3Comment = str(row[1])
+                    newM_3AccessName = str(row[3])
+                    newM_3ItemName = str(row[0])
+                    NewM_3s.append(NewM_3(newM_3Group, newM_3Comment,
+                                          newM_3AccessName, newM_3ItemName))
+        else:
+            # Manually asks for all the required information
+            for i in range(newM_3Num):
+                newM_3Group = str(input("New M_3 #" + str(i + 1) + " Group: "))
+                newM_3Comment = str(
+                    input("New M_3 #" + str(i + 1) + " Comment: "))
+                newM_3AccessName = str(input(
+                    "New M_3 #" + str(i + 1) + " AccessName: "))
+                newM_3ItemName = str(
+                    input("New M_3 #" + str(i + 1) + " ItemName: "))
+                NewM_3s.append(NewM_3(newM_3Group, newM_3Comment,
+                                      newM_3AccessName, newM_3ItemName))
+        print(createM_3(createFile(True), newM_3Num, NewM_3s))
+
     elif functionCheck in ["tesys"]:
         tesysLoop = True
         tesysList = []
@@ -140,7 +213,7 @@ def findFunction(functionCheck):
 
     # Loops if the given function doesn't exist/isn't recognised
     else:
-        print("Functions: \"Find Tag\", \"Select Section\", \"DI\", \"Tesys\"")
+        print("Functions: \"Find Tag\", \"Select Section\", \"DI\", \"M_3\", \"Tesys\"")
         findFunction(
             input("Function type required: ").lower().replace(" ", ""))
     return
@@ -283,6 +356,60 @@ def createDI(newFileName, newDINum, newDIs):
         return "Created " + str(newDINum) + " new DI" + DITemp + " and saved to the file " + newFileName + ".csv"
 
 
+def createM_3(newFileName, newM_3Num, newM_3s):
+    """Creates a new M_3 supertag"""
+    # Opens the output file and preps to write to it
+    with open(newFileName+".csv", "w", newline="") as M_3Output:
+        M_3Writer = writer(M_3Output)
+        # Writes all the rows required
+        M_3Writer.writerow([":mode=ask"])
+        M_3Writer.writerow([":IODisc", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "InitialDisc", "OffMsg", "OnMsg", "AlarmState", "AlarmPri",
+                           "Dconversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "DSCAlarmDisable", "DSCAlarmInhibitor", "SymbolicName"])
+        for i in range(newM_3Num):
+            M_3Writer.writerow([newM_3s[i].Name+"\OLA", newM_3s[i].Group, newM_3s[i].Comment+" - Overload Alarm", "Yes", "No", "0", "No", "Off", "", "", "On", "3",
+                               "Direct", newM_3s[i].AccessName, "No", newM_3s[i].ItemName+".HMI.CMDW.09", "No", newM_3s[i].Comment+" - Overload Alarm", "0", "0", "", "", "No"])
+            M_3Writer.writerow([newM_3s[i].Name+"\GEE", newM_3s[i].Group, newM_3s[i].Comment+" - Equipment Energized", "Yes", "No", "0", "No", "Off", "", "", "None", "3",
+                               "Direct", newM_3s[i].AccessName, "No", newM_3s[i].ItemName+".HMI.STW.03", "No", newM_3s[i].Comment+" - Equipment Energized", "0", "0", "", "", "No"])
+            M_3Writer.writerow([newM_3s[i].Name+"\GA", newM_3s[i].Group, newM_3s[i].Comment+" - General Alarm", "No", "Yes", "3", "No", "Off", "", "", "None", "3",
+                               "Direct", newM_3s[i].AccessName, "No", newM_3s[i].ItemName+".HMI.STW.05", "No", newM_3s[i].Comment+" - General Alarm", "0", "0", "", "", "No"])
+            M_3Writer.writerow([newM_3s[i].Name+"\CRA", newM_3s[i].Group, newM_3s[i].Comment+" - Contactor Run Alarm", "Yes", "No", "0", "No", "Off", "", "", "On",
+                               "3", "Direct", newM_3s[i].AccessName, "No", newM_3s[i].ItemName+".HMI.CMDW.10", "No", newM_3s[i].Comment+" - Contactor Run Alarm", "0", "0", "", "", "No"])
+            M_3Writer.writerow([newM_3s[i].Name+"\CIA", newM_3s[i].Group, newM_3s[i].Comment+" - Isolated", "Yes", "No", "0", "No", "Off", "", "", "On",
+                               "3", "Direct", newM_3s[i].AccessName, "No", newM_3s[i].ItemName+".HMI.CMDW.11", "No", newM_3s[i].Comment+" - Isolated", "0", "0", "", "", "No"])
+            M_3Writer.writerow([newM_3s[i].Name+"\CBA", newM_3s[i].Group, newM_3s[i].Comment+" - Circuit Breaker Alarm", "Yes", "No", "0", "No", "Off", "", "", "On",
+                               "3", "Direct", newM_3s[i].AccessName, "No", newM_3s[i].ItemName+".HMI.CMDW.08", "No", newM_3s[i].Comment+" - Circuit Breaker Alarm", "0", "0", "", "", "No"])
+            M_3Writer.writerow([newM_3s[i].Name+"\BPA", newM_3s[i].Group, newM_3s[i].Comment+" - Push-Button Stop Alarm", "Yes", "No", "0", "No", "Off", "", "", "On",
+                               "3", "Direct", newM_3s[i].AccessName, "No", newM_3s[i].ItemName+".HMI.CMDW.12", "No", newM_3s[i].Comment+" - Push-Button Stop Alarm", "0", "0", "", "", "No"])
+        M_3Writer.writerow([":IOInt", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "RetentiveAlarmParameters", "AlarmValueDeadband", "AlarmDevDeadband", "EngUnits", "InitialValue", "MinEU", "MaxEU", "Deadband", "LogDeadband", "LoLoAlarmState", "LoLoAlarmValue", "LoLoAlarmPri", "LoAlarmState", "LoAlarmValue", "LoAlarmPri", "HiAlarmState", "HiAlarmValue", "HiAlarmPri", "HiHiAlarmState", "HiHiAlarmValue", "HiHiAlarmPri", "MinorDevAlarmState", "MinorDevAlarmValue", "MinorDevAlarmPri", "MajorDevAlarmState",
+                           "MajorDevAlarmValue", "MajorDevAlarmPri", "DevTarget", "ROCAlarmState", "ROCAlarmValue", "ROCAlarmPri", "ROCTimeBase", "MinRaw", "MaxRaw", "Conversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "LoLoAlarmDisable", "LoAlarmDisable", "HiAlarmDisable", "HiHiAlarmDisable", "MinDevAlarmDisable", "MajDevAlarmDisable", "RocAlarmDisable", "LoLoAlarmInhibitor", "LoAlarmInhibitor", "HiAlarmInhibitor", "HiHiAlarmInhibitor", "MinDevAlarmInhibitor", "MajDevAlarmInhibitor", "RocAlarmInhibitor", "SymbolicName"])
+        for i in range(newM_3Num):
+            M_3Writer.writerow([newM_3s[i].Name+"\HMISTW", newM_3s[i].Group, newM_3s[i].Comment+" - Status word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                               "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newM_3s[i].AccessName, "No", newM_3s[i].ItemName+".HMI.STW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            M_3Writer.writerow([newM_3s[i].Name+"\HMIHMIW", newM_3s[i].Group, newM_3s[i].Comment+" - Command Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                               "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newM_3s[i].AccessName, "No", newM_3s[i].ItemName+".HMI.HMIW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            M_3Writer.writerow([newM_3s[i].Name+"\HMIFIELDW", newM_3s[i].Group, newM_3s[i].Comment+" - Field word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                               "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newM_3s[i].AccessName, "No", newM_3s[i].ItemName+".HMI.FIELDW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            M_3Writer.writerow([newM_3s[i].Name+"\HMICMDW", newM_3s[i].Group, newM_3s[i].Comment+" - Alarm Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                               "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newM_3s[i].AccessName, "No", newM_3s[i].ItemName+".HMI.CMDW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            M_3Writer.writerow([newM_3s[i].Name+"\HMICFGW", newM_3s[i].Group, newM_3s[i].Comment+" - Config word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                               "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newM_3s[i].AccessName, "No", newM_3s[i].ItemName+".HMI.CFGW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        M_3Writer.writerow([":IOReal", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "RetentiveAlarmParameters", "AlarmValueDeadband", "AlarmDevDeadband", "EngUnits", "InitialValue", "MinEU", "MaxEU", "Deadband", "LogDeadband", "LoLoAlarmState", "LoLoAlarmValue", "LoLoAlarmPri", "LoAlarmState", "LoAlarmValue", "LoAlarmPri", "HiAlarmState", "HiAlarmValue", "HiAlarmPri", "HiHiAlarmState", "HiHiAlarmValue", "HiHiAlarmPri", "MinorDevAlarmState", "MinorDevAlarmValue", "MinorDevAlarmPri", "MajorDevAlarmState",
+                           "MajorDevAlarmValue", "MajorDevAlarmPri", "DevTarget", "ROCAlarmState", "ROCAlarmValue", "ROCAlarmPri", "ROCTimeBase", "MinRaw", "MaxRaw", "Conversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "LoLoAlarmDisable", "LoAlarmDisable", "HiAlarmDisable", "HiHiAlarmDisable", "MinDevAlarmDisable", "MajDevAlarmDisable", "RocAlarmDisable", "LoLoAlarmInhibitor", "LoAlarmInhibitor", "HiAlarmInhibitor", "HiHiAlarmInhibitor", "MinDevAlarmInhibitor", "MajDevAlarmInhibitor", "RocAlarmInhibitor", "SymbolicName"])
+        for i in range(newM_3Num):
+            M_3Writer.writerow([newM_3s[i].Name+"\IPV", newM_3s[i].Group, newM_3s[i].Comment+" - Motor Current", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "1", "0", "0.5", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                               "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "1", "Linear", newM_3s[i].AccessName, "No", newM_3s[i].ItemName+".IPV", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        M_3Writer.writerow([":MemoryMsg", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority",
+                           "RetentiveValue", "MaxLength", "InitialMessage", "AlarmComment", "SymbolicName", "LocalTag"])
+        for i in range(newM_3Num):
+            M_3Writer.writerow([newM_3s[i].Name+"\OBJ", newM_3s[i].Group, newM_3s[i].Comment +
+                               " - Object", "No", "No", "0", "No", "131", "OP_M_3", "", "", "No"])
+        if newM_3Num > 1:
+            M_3Temp = "s"
+        else:
+            M_3Temp = ""
+        return "Created " + str(newM_3Num) + " new M_3" + M_3Temp + " and saved to the file " + newFileName + ".csv"
+
+
 def tesys(tesysFileName, tesysList):
     """Creates all the tags needed on SCADA from a Tesys unit"""
     with open(tesysFileName+".csv", "w", newline="") as tesysOutput:
@@ -384,9 +511,9 @@ def checkAnother(item):
 
 # Gathers which function is wanted, and runs the function to find/start it
 findFunction(input(
-    "Function type required (\"Find Tag\", \"Select Section\", \"DI\" or \"Tesys\"): ").lower().replace(" ", ""))
+    "Function type required (\"Find Tag\", \"Select Section\", \"DI\", \"M_3\" or \"Tesys\"): ").lower().replace(" ", ""))
 
 # Loops until the user states otherwise
 while checkAnother("function") == True:
     findFunction(input(
-        "Function type required (\"Find Tag\", \"Select Section\" or \"DI\"): ").lower().replace(" ", ""))
+        "Function type required (\"Find Tag\", \"Select Section\", \"DI\", \"M_3\" or \"Tesys\"): ").lower().replace(" ", ""))

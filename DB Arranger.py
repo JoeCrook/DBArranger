@@ -5,19 +5,8 @@ from csv import writer, reader
 from os.path import isfile
 
 
-class NewDI:
-    """A Class to store information about a new DI supertag"""
-
-    def __init__(self, group, comment, accessName, itemName):
-        self.Group = group
-        self.Comment = comment
-        self.AccessName = accessName
-        self.ItemName = itemName
-        self.Name = itemName
-
-
-class NewM_3:
-    """A Class to store information about a new M_3 supertag"""
+class NewSuper:
+    """A Class to store information about a new supertag"""
 
     def __init__(self, group, comment, accessName, itemName):
         self.Group = group
@@ -116,8 +105,8 @@ def findFunction(functionCheck):
                     newDIComment = str(row[1])
                     newDIAccessName = str(row[3])
                     newDIItemName = str(row[0])
-                    newDIs.append(NewDI(newDIGroup, newDIComment,
-                                        newDIAccessName, newDIItemName))
+                    newDIs.append(NewSuper(newDIGroup, newDIComment,
+                                           newDIAccessName, newDIItemName))
         else:
             # Manually asks for all the required information
             for i in range(newDINum):
@@ -128,7 +117,7 @@ def findFunction(functionCheck):
                     "New DI #" + str(i + 1) + " AccessName: "))
                 newDIItemName = str(
                     input("New DI #" + str(i + 1) + " ItemName: "))
-                newDIs.append(NewDI(newDIGroup, newDIComment,
+                newDIs.append(NewSuper(newDIGroup, newDIComment,
                               newDIAccessName, newDIItemName))
         print(createDI(createFile(True), newDINum, newDIs))
 
@@ -176,8 +165,8 @@ def findFunction(functionCheck):
                     newM_3Comment = str(row[1])
                     newM_3AccessName = str(row[3])
                     newM_3ItemName = str(row[0])
-                    NewM_3s.append(NewM_3(newM_3Group, newM_3Comment,
-                                          newM_3AccessName, newM_3ItemName))
+                    NewM_3s.append(NewSuper(newM_3Group, newM_3Comment,
+                                            newM_3AccessName, newM_3ItemName))
         else:
             # Manually asks for all the required information
             for i in range(newM_3Num):
@@ -188,8 +177,8 @@ def findFunction(functionCheck):
                     "New M_3 #" + str(i + 1) + " AccessName: "))
                 newM_3ItemName = str(
                     input("New M_3 #" + str(i + 1) + " ItemName: "))
-                NewM_3s.append(NewM_3(newM_3Group, newM_3Comment,
-                                      newM_3AccessName, newM_3ItemName))
+                NewM_3s.append(NewSuper(newM_3Group, newM_3Comment,
+                                        newM_3AccessName, newM_3ItemName))
         print(createM_3(createFile(True), newM_3Num, NewM_3s))
 
     elif functionCheck in ["tesys"]:

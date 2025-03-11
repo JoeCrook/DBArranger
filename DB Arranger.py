@@ -242,6 +242,67 @@ def findFunction(functionCheck):
                                          newM_10AccessName, newM_10ItemName))
         print(createM_10(createFile(True), newM_10Num, NewM_10s))
 
+    elif functionCheck in ["mf_10"]:
+        while True:
+            # Determines if new tags are created using an input csv file, or via manual input
+            inputFile = input("Use an input csv file?: (Y/N) ")
+            if inputFile in ["y", "ye", "yes", "1", "true"]:
+                print("Input file must have no headers, and have each new MF_10 on it's own line, with info in the order: PLC Name, Comment, Group, AccessName")
+                inputFile = True
+                inputFileName = findFile()
+                break
+            elif inputFile in ["n", "no", "0", "false"]:
+                inputFile = False
+                break
+            else:
+                print("Error: Expected answer \"yes\" or \"no\"")
+                continue
+
+        if inputFile == False:
+            # Checks how many new tags being created, and checks answer is given in a correct format
+            while True:
+                while True:
+                    try:
+                        newMF_10Num = int(input("How many new tags needed: "))
+                        break
+                    except ValueError:
+                        print("Answer must be an int")
+                if newMF_10Num > 0:
+                    break
+                else:
+                    print("Answer must be 1 or more")
+
+        # Creates the number of classes required and gathers required info
+        NewMF_10s = []
+        if inputFile == True:
+            # Uses an input file to gather the info
+            newMF_10Num = 0
+            # Input file must have no headers, and have each new MF_10 on it's own line, with info in the order: Item Name, Comment, Group, AccessName
+            with open(inputFileName + ".csv", newline='', encoding='utf-8-sig') as MF_10Input:
+                MF_10Reader = reader(MF_10Input, delimiter=',')
+                for row in MF_10Reader:
+                    newMF_10Num += 1
+                    newMF_10Group = str(row[2])
+                    newMF_10Comment = str(row[1])
+                    newMF_10AccessName = str(row[3])
+                    newMF_10ItemName = str(row[0])
+                    NewMF_10s.append(NewSuper(newMF_10Group, newMF_10Comment,
+                                              newMF_10AccessName, newMF_10ItemName))
+        else:
+            # Manually asks for all the required information
+            for i in range(newMF_10Num):
+                newMF_10Group = str(
+                    input("New MF_10 #" + str(i + 1) + " Group: "))
+                newMF_10Comment = str(
+                    input("New MF_10 #" + str(i + 1) + " Comment: "))
+                newMF_10AccessName = str(input(
+                    "New MF_10 #" + str(i + 1) + " AccessName: "))
+                newMF_10ItemName = str(
+                    input("New MF_10 #" + str(i + 1) + " ItemName: "))
+                NewMF_10s.append(NewSuper(newMF_10Group, newMF_10Comment,
+                                          newMF_10AccessName, newMF_10ItemName))
+        print(createMF_10(createFile(True), newMF_10Num, NewMF_10s))
+
     elif functionCheck in ["tesys"]:
         tesysLoop = True
         tesysList = []
@@ -528,6 +589,91 @@ def createM_10(newFileName, newM_10Num, newM_10s):
         else:
             M_10Temp = ""
         return "Created " + str(newM_10Num) + " new M_10" + M_10Temp + " and saved to the file " + newFileName + ".csv"
+
+
+def createMF_10(newFileName, newMF_10Num, newMF_10s):
+    """Creates a new MF_10 supertag"""
+    # Opens the output file and preps to write to it
+    with open(newFileName+".csv", "w", newline="") as MF_10Output:
+        MF_10Writer = writer(MF_10Output)
+        # Writes all the rows required
+        MF_10Writer.writerow([":mode=ask"])
+        MF_10Writer.writerow([":IODisc", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "InitialDisc", "OffMsg", "OnMsg", "AlarmState", "AlarmPri",
+                             "Dconversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "DSCAlarmDisable", "DSCAlarmInhibitor", "SymbolicName"])
+        for i in range(newMF_10Num):
+            MF_10Writer.writerow([newMF_10s[i].Name+"\RUNA", newMF_10s[i].Group, newMF_10s[i].Comment+" - Run Alarm", "No", "No", "0", "No", "Off", "", "", "On",
+                                 "3", "Direct", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".HMI.CMDW.10", "No", newMF_10s[i].Comment+" - Run Alarm", "0", "0", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\RDYA", newMF_10s[i].Group, newMF_10s[i].Comment+" - Ready Status Alarm", "No", "No", "0", "No", "Off", "", "", "On",
+                                 "3", "Direct", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".HMI.CMDW.9", "No", newMF_10s[i].Comment+" - Ready Status Alarm", "0", "0", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\GI", newMF_10s[i].Group, newMF_10s[i].Comment+" - General Inhibit", "Yes", "No", "0", "No", "Off", "", "", "None",
+                                 "3", "Direct", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".HMI.STW.02", "No", newMF_10s[i].Comment+" - General Inhibit", "0", "0", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\GEE", newMF_10s[i].Group, newMF_10s[i].Comment+" - Equipment Energize", "No", "No", "0", "No", "Off", "", "", "None",
+                                 "3", "Direct", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".HMI.STW.3", "No", newMF_10s[i].Comment+" - Equipment Energize", "0", "0", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\GA", newMF_10s[i].Group, newMF_10s[i].Comment+" - General Alarm", "Yes", "No", "0", "No", "Off", "", "", "None",
+                                 "3", "Direct", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".HMI.STW.05", "No", newMF_10s[i].Comment+" - General Alarm", "0", "0", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\ERRA", newMF_10s[i].Group, newMF_10s[i].Comment+" - Error", "No", "No", "0", "No", "Off", "", "", "On",
+                                 "3", "Direct", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".HMI.CMDW.13", "No", newMF_10s[i].Comment+" - Error", "0", "0", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\CIA", newMF_10s[i].Group, newMF_10s[i].Comment+" - Isolated", "No", "No", "0", "No", "Off", "", "", "On", "3",
+                                 "Direct", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".HMI.CMDW.11", "No", newMF_10s[i].Comment+" - Isolated", "0", "0", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\CBA", newMF_10s[i].Group, newMF_10s[i].Comment+" - Tripped", "No", "No", "0", "No", "Off", "", "", "On",
+                                 "3", "Direct", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".HMI.CMDW.8", "No", newMF_10s[i].Comment+" - Tripped", "0", "0", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\BPA", newMF_10s[i].Group, newMF_10s[i].Comment+" - Stop Button", "No", "No", "0", "No", "Off", "", "", "On", "3",
+                                 "Direct", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".HMI.CMDW.12", "No", newMF_10s[i].Comment+" - Stop Button", "0", "0", "", "", "No"])
+        MF_10Writer.writerow([":MemoryInt", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "RetentiveAlarmParameters", "AlarmValueDeadband", "AlarmDevDeadband", "EngUnits", "InitialValue", "MinValue", "MaxValue", "Deadband", "LogDeadband", "LoLoAlarmState", "LoLoAlarmValue", "LoLoAlarmPri", "LoAlarmState", "LoAlarmValue", "LoAlarmPri", "HiAlarmState", "HiAlarmValue", "HiAlarmPri", "HiHiAlarmState", "HiHiAlarmValue", "HiHiAlarmPri", "MinorDevAlarmState", "MinorDevAlarmValue",
+                              "MinorDevAlarmPri", "MajorDevAlarmState", "MajorDevAlarmValue", "MajorDevAlarmPri", "DevTarget", "ROCAlarmState", "ROCAlarmValue", "ROCAlarmPri", "ROCTimeBase", "AlarmComment", "AlarmAckModel", "LoLoAlarmDisable", "LoAlarmDisable", "HiAlarmDisable", "HiHiAlarmDisable", "MinDevAlarmDisable", "MajDevAlarmDisable", "RocAlarmDisable", "LoLoAlarmInhibitor", "LoAlarmInhibitor", "HiAlarmInhibitor", "HiHiAlarmInhibitor", "MinDevAlarmInhibitor", "MajDevAlarmInhibitor", "RocAlarmInhibitor", "SymbolicName", "LocalTag"])
+        for i in range(newMF_10Num):
+            MF_10Writer.writerow([newMF_10s[i].Name+"\AccessLevel", newMF_10s[i].Group, newMF_10s[i].Comment+" - Access Level", "No", "No", "0", "No", "No", "0", "0", "", "5000", "0", "9999", "0", "1", "Off", "0", "1",
+                                  "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\Precision", newMF_10s[i].Group, newMF_10s[i].Comment+" - Precision", "No", "No", "0", "No", "No", "0", "0", "", "1", "0", "9999", "0", "1", "Off", "0", "1",
+                                  "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        MF_10Writer.writerow([":IOInt", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "RetentiveAlarmParameters", "AlarmValueDeadband", "AlarmDevDeadband", "EngUnits", "InitialValue", "MinEU", "MaxEU", "Deadband", "LogDeadband", "LoLoAlarmState", "LoLoAlarmValue", "LoLoAlarmPri", "LoAlarmState", "LoAlarmValue", "LoAlarmPri", "HiAlarmState", "HiAlarmValue", "HiAlarmPri", "HiHiAlarmState", "HiHiAlarmValue", "HiHiAlarmPri", "MinorDevAlarmState", "MinorDevAlarmValue", "MinorDevAlarmPri", "MajorDevAlarmState",
+                              "MajorDevAlarmValue", "MajorDevAlarmPri", "DevTarget", "ROCAlarmState", "ROCAlarmValue", "ROCAlarmPri", "ROCTimeBase", "MinRaw", "MaxRaw", "Conversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "LoLoAlarmDisable", "LoAlarmDisable", "HiAlarmDisable", "HiHiAlarmDisable", "MinDevAlarmDisable", "MajDevAlarmDisable", "RocAlarmDisable", "LoLoAlarmInhibitor", "LoAlarmInhibitor", "HiAlarmInhibitor", "HiHiAlarmInhibitor", "MinDevAlarmInhibitor", "MajDevAlarmInhibitor", "RocAlarmInhibitor", "SymbolicName", ""])
+        for i in range(newMF_10Num):
+            MF_10Writer.writerow([newMF_10s[i].Name+"\HMICFGW", newMF_10s[i].Group, newMF_10s[i].Comment+" - Config Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
+                                  "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".HMI.CFGW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\MAINTHMIW", newMF_10s[i].Group, newMF_10s[i].Comment+" - Maintenance Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                                  "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".MAINT.HMIW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\HMISTW", newMF_10s[i].Group, newMF_10s[i].Comment+" - Status Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
+                                  "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".HMI.STW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\HMIHMIW", newMF_10s[i].Group, newMF_10s[i].Comment+" - Command Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                                  "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".HMI.HMIW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\HMIFIELDW", newMF_10s[i].Group, newMF_10s[i].Comment+" - Field Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
+                                  "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".HMI.FIELDW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\HMICUSW", newMF_10s[i].Group, newMF_10s[i].Comment+" - Custom Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
+                                  "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".HMI.CUSW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\HMICMDW", newMF_10s[i].Group, newMF_10s[i].Comment+" - Alarm Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
+                                  "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".HMI.CMDW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        MF_10Writer.writerow([":IOReal", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "RetentiveAlarmParameters", "AlarmValueDeadband", "AlarmDevDeadband", "EngUnits", "InitialValue", "MinEU", "MaxEU", "Deadband", "LogDeadband", "LoLoAlarmState", "LoLoAlarmValue", "LoLoAlarmPri", "LoAlarmState", "LoAlarmValue", "LoAlarmPri", "HiAlarmState", "HiAlarmValue", "HiAlarmPri", "HiHiAlarmState", "HiHiAlarmValue", "HiHiAlarmPri", "MinorDevAlarmState", "MinorDevAlarmValue", "MinorDevAlarmPri", "MajorDevAlarmState",
+                              "MajorDevAlarmValue", "MajorDevAlarmPri", "DevTarget", "ROCAlarmState", "ROCAlarmValue", "ROCAlarmPri", "ROCTimeBase", "MinRaw", "MaxRaw", "Conversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "LoLoAlarmDisable", "LoAlarmDisable", "HiAlarmDisable", "HiHiAlarmDisable", "MinDevAlarmDisable", "MajDevAlarmDisable", "RocAlarmDisable", "LoLoAlarmInhibitor", "LoAlarmInhibitor", "HiAlarmInhibitor", "HiHiAlarmInhibitor", "MinDevAlarmInhibitor", "MajDevAlarmInhibitor", "RocAlarmInhibitor", "SymbolicName", ""])
+        for i in range(newMF_10Num):
+            MF_10Writer.writerow([newMF_10s[i].Name+"\MAINTOPESP", newMF_10s[i].Group, newMF_10s[i].Comment+" - Maintenance Operating Time Setpoint", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                                  "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".MAINT.OPE_SP", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\MAINTOPETOT", newMF_10s[i].Group, newMF_10s[i].Comment+" - Total Operating Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                                  "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".MAINT.OPE_TOT", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\MAINTOPE", newMF_10s[i].Group, newMF_10s[i].Comment+" - Maintenance Operating Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                                  "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".MAINT.OPE", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\AO", newMF_10s[i].Group, newMF_10s[i].Comment+" - Output", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
+                                 "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".AO", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\JPV", newMF_10s[i].Group, newMF_10s[i].Comment+" - Power", "Yes", "No", "0", "No", "No", "0", "0", "kW", "0", "0", "35", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
+                                 "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "35", "Linear", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".JPV", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\SPV", newMF_10s[i].Group, newMF_10s[i].Comment+" - Speed", "Yes", "No", "0", "No", "No", "0", "0", "rpm", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                                 "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".SPV", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\SPM", newMF_10s[i].Group, newMF_10s[i].Comment+" - Setpoint Manual", "Yes", "No", "0", "No", "No", "0", "0", "%", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                                 "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".SPM", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\SP", newMF_10s[i].Group, newMF_10s[i].Comment+" - Setpoint", "Yes", "No", "0", "No", "No", "0", "0", "%", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                                 "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".SP", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            MF_10Writer.writerow([newMF_10s[i].Name+"\PV", newMF_10s[i].Group, newMF_10s[i].Comment+" - Process Value", "Yes", "No", "0", "No", "No", "0", "0", "%", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                                 "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", newMF_10s[i].AccessName, "No", newMF_10s[i].ItemName+".PV", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        MF_10Writer.writerow([":MemoryMsg", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority",
+                             "RetentiveValue", "MaxLength", "InitialMessage", "AlarmComment", "SymbolicName", "LocalTag"])
+        for i in range(newMF_10Num):
+            MF_10Writer.writerow([newMF_10s[i].Name+"\OBJ", newMF_10s[i].Group, newMF_10s[i].Comment +
+                                  " - Object", "No", "No", "0", "No", "131", "OP_MF_10", "", "", "No"])
+        if newMF_10Num > 1:
+            MF_10Temp = "s"
+        else:
+            MF_10Temp = ""
+        return "Created " + str(newMF_10Num) + " new MF_10" + MF_10Temp + " and saved to the file " + newFileName + ".csv"
 
 
 def tesys(tesysFileName, tesysList):

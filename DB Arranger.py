@@ -194,7 +194,7 @@ def newSuperLoop(SuperWriter, newSupers, i, section):
         createM_10(SuperWriter, newSupers, i, section)
     elif newSupers[i].Type == "op_mf_10":
         createMF_10(SuperWriter, newSupers, i, section)
-    elif newSupers[i].Type == "op_fv1_10":
+    elif newSupers[i].Type in ["op_fv1_10", "op_fv2_10"]:
         createFV1_10P(SuperWriter, newSupers, i, section)
 
 
@@ -427,7 +427,11 @@ def createFV1_10P(SuperWriter, newSupers, i, section):
                               "", "None", "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.STW.3", "No", newSupers[i].Comment+" - Equipment Energize", "0", "0", "", "", "No"])
         SuperWriter.writerow([newSupers[i].Name+"\GA", newSupers[i].Group, newSupers[i].Comment+" - General Alarm", "No", "Yes", "3", "No", "Off", "", "",
                               "None", "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.STW.05", "No", newSupers[i].Comment+" - General Alarm", "0", "0", "", "", "No"])
-
+        if newSupers[i].Type == "op_fv2_10":
+            SuperWriter.writerow([newSupers[i].Name+"\E1", newSupers[i].Group, newSupers[i].Comment+" - Energize Forward Output", "Yes", "No", "0",
+                                 "No", "Off", "", "", "None", "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".E1", "No", "", "0", "0", "", "", "No"])
+            SuperWriter.writerow([newSupers[i].Name+"\E2", newSupers[i].Group, newSupers[i].Comment+" - Energize Reverse Output", "Yes", "No", "0",
+                                 "No", "Off", "", "", "None", "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".E2", "No", "", "0", "0", "", "", "No"])
     elif section == "memint":
         SuperWriter.writerow([newSupers[i].Name+"\Precision", newSupers[i].Group, newSupers[i].Comment+" - Precision", "No", "No", "0", "No", "No", "0", "0", "", "1", "0", "9999", "0", "1", "Off", "0",
                               "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])

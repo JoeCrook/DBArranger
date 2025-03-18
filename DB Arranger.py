@@ -8,7 +8,7 @@ from os.path import isfile
 class NewSuper:
     """A Class to store information about a new supertag"""
 
-    def __init__(self, type, itemName, group, comment, accessName, ):
+    def __init__(self, type, itemName, comment, group, accessName):
         self.Type = type.lower()
         self.ItemName = itemName
         self.Name = itemName

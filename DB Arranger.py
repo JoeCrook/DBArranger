@@ -8,19 +8,21 @@ from os.path import isfile
 class NewSuper:
     """A Class to store information about a new supertag"""
 
-    def __init__(self, group, comment, accessName, itemName):
-        self.Group = group
-        self.Comment = comment
-        self.AccessName = accessName
+    def __init__(self, type, itemName, group, comment, accessName, ):
+        self.Type = type
         self.ItemName = itemName
         self.Name = itemName
+        self.Comment = comment
+        self.Group = group
+        self.AccessName = accessName
 
 
 def findFile():
     """Finds the base CSV file and loops if not correct"""
     while True:
         # Gathers the name of the csv file to be checked
-        fileName = input("Name of the input CSV file: ").lower()
+        fileName = "base"
+        # fileName = input("Name of the input CSV file: ").lower()
         if fileName.endswith(".csv"):
             fileName = fileName[:-4]
         # Loops asking for the file name if the given one doesn't exist
@@ -60,310 +62,20 @@ def findFunction(functionCheck):
 
         print(selectSection(fileName, createFile(True), sections))
 
-    # Function that creates a new DI supertag
-    elif functionCheck in ["di"]:
-        while True:
-            # Determines if new tags are created using an input csv file, or via manual input
-            inputFile = input("Use an input csv file?: (Y/N) ")
-            if inputFile in ["y", "ye", "yes", "1", "true"]:
-                print("Input file must have no headers, and have each new DI on it's own line, with info in the order: PLC Name, Comment, Group, AccessName")
-                inputFile = True
-                inputFileName = findFile()
-                break
-            elif inputFile in ["n", "no", "0", "false"]:
-                inputFile = False
-                break
-            else:
-                print("Error: Expected answer \"yes\" or \"no\"")
-                continue
-
-        if inputFile == False:
-            # Checks how many new tags being created, and checks answer is given in a correct format
-            while True:
-                while True:
-                    try:
-                        newDINum = int(input("How many new tags needed: "))
-                        break
-                    except ValueError:
-                        print("Answer must be an int")
-                if newDINum > 0:
-                    break
-                else:
-                    print("Answer must be 1 or more")
+    elif functionCheck in ["super"]:
+        print("Input file must have no headers, and have each new Super on it's own line, with info in the order: Supertag Type, PLC Name, Comment, Group, AccessName")
+        inputFileName = findFile()
 
         # Creates the number of classes required and gathers required info
-        newDIs = []
-        if inputFile == True:
-            # Uses an input file to gather the info
-            newDINum = 0
-            # Input file must have no headers, and have each new DI on it's own line, with info in the order: Item Name, Comment, Group, AccessName
-            with open(inputFileName + ".csv", newline='', encoding='utf-8-sig') as DIInput:
-                DIReader = reader(DIInput, delimiter=',')
-                for row in DIReader:
-                    newDINum += 1
-                    newDIGroup = str(row[2])
-                    newDIComment = str(row[1])
-                    newDIAccessName = str(row[3])
-                    newDIItemName = str(row[0])
-                    newDIs.append(NewSuper(newDIGroup, newDIComment,
-                                           newDIAccessName, newDIItemName))
-        else:
-            # Manually asks for all the required information
-            for i in range(newDINum):
-                newDIGroup = str(input("New DI #" + str(i + 1) + " Group: "))
-                newDIComment = str(
-                    input("New DI #" + str(i + 1) + " Comment: "))
-                newDIAccessName = str(input(
-                    "New DI #" + str(i + 1) + " AccessName: "))
-                newDIItemName = str(
-                    input("New DI #" + str(i + 1) + " ItemName: "))
-                newDIs.append(NewSuper(newDIGroup, newDIComment,
-                              newDIAccessName, newDIItemName))
-        print(createDI(createFile(True), newDINum, newDIs))
-
-    elif functionCheck in ["m_3"]:
-        while True:
-            # Determines if new tags are created using an input csv file, or via manual input
-            inputFile = input("Use an input csv file?: (Y/N) ")
-            if inputFile in ["y", "ye", "yes", "1", "true"]:
-                print("Input file must have no headers, and have each new M_3 on it's own line, with info in the order: PLC Name, Comment, Group, AccessName")
-                inputFile = True
-                inputFileName = findFile()
-                break
-            elif inputFile in ["n", "no", "0", "false"]:
-                inputFile = False
-                break
-            else:
-                print("Error: Expected answer \"yes\" or \"no\"")
-                continue
-
-        if inputFile == False:
-            # Checks how many new tags being created, and checks answer is given in a correct format
-            while True:
-                while True:
-                    try:
-                        newM_3Num = int(input("How many new tags needed: "))
-                        break
-                    except ValueError:
-                        print("Answer must be an int")
-                if newM_3Num > 0:
-                    break
-                else:
-                    print("Answer must be 1 or more")
-
-        # Creates the number of classes required and gathers required info
-        NewM_3s = []
-        if inputFile == True:
-            # Uses an input file to gather the info
-            newM_3Num = 0
-            # Input file must have no headers, and have each new M_3 on it's own line, with info in the order: Item Name, Comment, Group, AccessName
-            with open(inputFileName + ".csv", newline='', encoding='utf-8-sig') as M_3Input:
-                M_3Reader = reader(M_3Input, delimiter=',')
-                for row in M_3Reader:
-                    newM_3Num += 1
-                    newM_3Group = str(row[2])
-                    newM_3Comment = str(row[1])
-                    newM_3AccessName = str(row[3])
-                    newM_3ItemName = str(row[0])
-                    NewM_3s.append(NewSuper(newM_3Group, newM_3Comment,
-                                            newM_3AccessName, newM_3ItemName))
-        else:
-            # Manually asks for all the required information
-            for i in range(newM_3Num):
-                newM_3Group = str(input("New M_3 #" + str(i + 1) + " Group: "))
-                newM_3Comment = str(
-                    input("New M_3 #" + str(i + 1) + " Comment: "))
-                newM_3AccessName = str(input(
-                    "New M_3 #" + str(i + 1) + " AccessName: "))
-                newM_3ItemName = str(
-                    input("New M_3 #" + str(i + 1) + " ItemName: "))
-                NewM_3s.append(NewSuper(newM_3Group, newM_3Comment,
-                                        newM_3AccessName, newM_3ItemName))
-        print(createM_3(createFile(True), newM_3Num, NewM_3s))
-
-    elif functionCheck in ["m_10"]:
-        while True:
-            # Determines if new tags are created using an input csv file, or via manual input
-            inputFile = input("Use an input csv file?: (Y/N) ")
-            if inputFile in ["y", "ye", "yes", "1", "true"]:
-                print("Input file must have no headers, and have each new M_10 on it's own line, with info in the order: PLC Name, Comment, Group, AccessName")
-                inputFile = True
-                inputFileName = findFile()
-                break
-            elif inputFile in ["n", "no", "0", "false"]:
-                inputFile = False
-                break
-            else:
-                print("Error: Expected answer \"yes\" or \"no\"")
-                continue
-
-        if inputFile == False:
-            # Checks how many new tags being created, and checks answer is given in a correct format
-            while True:
-                while True:
-                    try:
-                        newM_10Num = int(input("How many new tags needed: "))
-                        break
-                    except ValueError:
-                        print("Answer must be an int")
-                if newM_10Num > 0:
-                    break
-                else:
-                    print("Answer must be 1 or more")
-
-        # Creates the number of classes required and gathers required info
-        NewM_10s = []
-        if inputFile == True:
-            # Uses an input file to gather the info
-            newM_10Num = 0
-            # Input file must have no headers, and have each new M_10 on it's own line, with info in the order: Item Name, Comment, Group, AccessName
-            with open(inputFileName + ".csv", newline='', encoding='utf-8-sig') as M_10Input:
-                M_10Reader = reader(M_10Input, delimiter=',')
-                for row in M_10Reader:
-                    newM_10Num += 1
-                    newM_10Group = str(row[2])
-                    newM_10Comment = str(row[1])
-                    newM_10AccessName = str(row[3])
-                    newM_10ItemName = str(row[0])
-                    NewM_10s.append(NewSuper(newM_10Group, newM_10Comment,
-                                             newM_10AccessName, newM_10ItemName))
-        else:
-            # Manually asks for all the required information
-            for i in range(newM_10Num):
-                newM_10Group = str(
-                    input("New M_10 #" + str(i + 1) + " Group: "))
-                newM_10Comment = str(
-                    input("New M_10 #" + str(i + 1) + " Comment: "))
-                newM_10AccessName = str(input(
-                    "New M_10 #" + str(i + 1) + " AccessName: "))
-                newM_10ItemName = str(
-                    input("New M_10 #" + str(i + 1) + " ItemName: "))
-                NewM_10s.append(NewSuper(newM_10Group, newM_10Comment,
-                                         newM_10AccessName, newM_10ItemName))
-        print(createM_10(createFile(True), newM_10Num, NewM_10s))
-
-    elif functionCheck in ["mf_10"]:
-        while True:
-            # Determines if new tags are created using an input csv file, or via manual input
-            inputFile = input("Use an input csv file?: (Y/N) ")
-            if inputFile in ["y", "ye", "yes", "1", "true"]:
-                print("Input file must have no headers, and have each new MF_10 on it's own line, with info in the order: PLC Name, Comment, Group, AccessName")
-                inputFile = True
-                inputFileName = findFile()
-                break
-            elif inputFile in ["n", "no", "0", "false"]:
-                inputFile = False
-                break
-            else:
-                print("Error: Expected answer \"yes\" or \"no\"")
-                continue
-
-        if inputFile == False:
-            # Checks how many new tags being created, and checks answer is given in a correct format
-            while True:
-                while True:
-                    try:
-                        newMF_10Num = int(input("How many new tags needed: "))
-                        break
-                    except ValueError:
-                        print("Answer must be an int")
-                if newMF_10Num > 0:
-                    break
-                else:
-                    print("Answer must be 1 or more")
-
-        # Creates the number of classes required and gathers required info
-        NewMF_10s = []
-        if inputFile == True:
-            # Uses an input file to gather the info
-            newMF_10Num = 0
-            # Input file must have no headers, and have each new MF_10 on it's own line, with info in the order: Item Name, Comment, Group, AccessName
-            with open(inputFileName + ".csv", newline='', encoding='utf-8-sig') as MF_10Input:
-                MF_10Reader = reader(MF_10Input, delimiter=',')
-                for row in MF_10Reader:
-                    newMF_10Num += 1
-                    newMF_10Group = str(row[2])
-                    newMF_10Comment = str(row[1])
-                    newMF_10AccessName = str(row[3])
-                    newMF_10ItemName = str(row[0])
-                    NewMF_10s.append(NewSuper(newMF_10Group, newMF_10Comment,
-                                              newMF_10AccessName, newMF_10ItemName))
-        else:
-            # Manually asks for all the required information
-            for i in range(newMF_10Num):
-                newMF_10Group = str(
-                    input("New MF_10 #" + str(i + 1) + " Group: "))
-                newMF_10Comment = str(
-                    input("New MF_10 #" + str(i + 1) + " Comment: "))
-                newMF_10AccessName = str(input(
-                    "New MF_10 #" + str(i + 1) + " AccessName: "))
-                newMF_10ItemName = str(
-                    input("New MF_10 #" + str(i + 1) + " ItemName: "))
-                NewMF_10s.append(NewSuper(newMF_10Group, newMF_10Comment,
-                                          newMF_10AccessName, newMF_10ItemName))
-        print(createMF_10(createFile(True), newMF_10Num, NewMF_10s))
-
-    elif functionCheck in ["fv1_10p"]:
-        while True:
-            # Determines if new tags are created using an input csv file, or via manual input
-            inputFile = input("Use an input csv file?: (Y/N) ")
-            if inputFile in ["y", "ye", "yes", "1", "true"]:
-                print("Input file must have no headers, and have each new FV1_10P on it's own line, with info in the order: PLC Name, Comment, Group, AccessName")
-                inputFile = True
-                inputFileName = findFile()
-                break
-            elif inputFile in ["n", "no", "0", "false"]:
-                inputFile = False
-                break
-            else:
-                print("Error: Expected answer \"yes\" or \"no\"")
-                continue
-
-        if inputFile == False:
-            # Checks how many new tags being created, and checks answer is given in a correct format
-            while True:
-                while True:
-                    try:
-                        newFV1_10PNum = int(
-                            input("How many new tags needed: "))
-                        break
-                    except ValueError:
-                        print("Answer must be an int")
-                if newFV1_10PNum > 0:
-                    break
-                else:
-                    print("Answer must be 1 or more")
-
-        # Creates the number of classes required and gathers required info
-        NewFV1_10Ps = []
-        if inputFile == True:
-            # Uses an input file to gather the info
-            newFV1_10PNum = 0
-            # Input file must have no headers, and have each new FV1_10P on it's own line, with info in the order: Item Name, Comment, Group, AccessName
-            with open(inputFileName + ".csv", newline='', encoding='utf-8-sig') as FV1_10PInput:
-                FV1_10PReader = reader(FV1_10PInput, delimiter=',')
-                for row in FV1_10PReader:
-                    newFV1_10PNum += 1
-                    newFV1_10PGroup = str(row[2])
-                    newFV1_10PComment = str(row[1])
-                    newFV1_10PAccessName = str(row[3])
-                    newFV1_10PItemName = str(row[0])
-                    NewFV1_10Ps.append(NewSuper(newFV1_10PGroup, newFV1_10PComment,
-                                                newFV1_10PAccessName, newFV1_10PItemName))
-        else:
-            # Manually asks for all the required information
-            for i in range(newFV1_10PNum):
-                newFV1_10PGroup = str(
-                    input("New FV1_10P #" + str(i + 1) + " Group: "))
-                newFV1_10PComment = str(
-                    input("New FV1_10P #" + str(i + 1) + " Comment: "))
-                newFV1_10PAccessName = str(input(
-                    "New FV1_10P #" + str(i + 1) + " AccessName: "))
-                newFV1_10PItemName = str(
-                    input("New FV1_10P #" + str(i + 1) + " ItemName: "))
-                NewFV1_10Ps.append(NewSuper(newFV1_10PGroup, newFV1_10PComment,
-                                            newFV1_10PAccessName, newFV1_10PItemName))
-        print(createFV1_10P(createFile(True), newFV1_10PNum, NewFV1_10Ps))
+        NewSupers = []
+        # Input file must have no headers, and have each new Super on it's own line, with info in the order: Supertag Type, Item Name, Comment, Group, AccessName
+        with open(inputFileName + ".csv", newline='', encoding='utf-8-sig') as SuperInput:
+            SuperReader = reader(SuperInput, delimiter=',')
+            next(SuperReader)
+            for rowCount, row in enumerate(SuperReader):
+                NewSupers.append(NewSuper(str(row[0]), str(
+                    row[1]), str(row[2]), str(row[3]), str(row[4])))
+        print(createSuper(createFile(True), rowCount, NewSupers))
 
     elif functionCheck in ["tesys"]:
         tesysLoop = True
@@ -383,7 +95,7 @@ def findFunction(functionCheck):
 
     # Loops if the given function doesn't exist/isn't recognised
     else:
-        print("Functions: \"Find Tag\", \"Select Section\", \"DI\", \"M_3\", \"Tesys\"")
+        print("Functions: \"Find Tag\", \"Select Section\", \"Super\", \"Tesys\"")
         findFunction(
             input("Function type required: ").lower().replace(" ", ""))
     return
@@ -474,7 +186,7 @@ def selectSection(fileName, newFileName, sections):
         return "Finished searching"
 
 
-def createSuper(newFileName, newSuperNum, newSupers):
+def createSuper(newFileName, rowCount, newSupers):
     """Creates a new Super supertag"""
     # Opens the output file and preps to write to it
     with open(newFileName+".csv", "w", newline="") as SuperOutput:
@@ -483,7 +195,7 @@ def createSuper(newFileName, newSuperNum, newSupers):
         SuperWriter.writerow([":mode=ask"])
         SuperWriter.writerow([":IODisc", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "InitialDisc", "OffMsg", "OnMsg", "AlarmState", "AlarmPri",
                               "Dconversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "DSCAlarmDisable", "DSCAlarmInhibitor", "SymbolicName"])
-        for i in range(newSuperNum):
+        for i in range(rowCount):
             SuperWriter.writerow([newSupers[i].Name+"\OLA", newSupers[i].Group, newSupers[i].Comment+" - Overload Alarm", "Yes", "No", "0", "No", "Off", "", "", "On", "3",
                                   "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.09", "No", newSupers[i].Comment+" - Overload Alarm", "0", "0", "", "", "No"])
             SuperWriter.writerow([newSupers[i].Name+"\GEE", newSupers[i].Group, newSupers[i].Comment+" - Equipment Energized", "Yes", "No", "0", "No", "Off", "", "", "None", "3",
@@ -500,7 +212,7 @@ def createSuper(newFileName, newSuperNum, newSupers):
                                   "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.12", "No", newSupers[i].Comment+" - Push-Button Stop Alarm", "0", "0", "", "", "No"])
         SuperWriter.writerow([":IOInt", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "RetentiveAlarmParameters", "AlarmValueDeadband", "AlarmDevDeadband", "EngUnits", "InitialValue", "MinEU", "MaxEU", "Deadband", "LogDeadband", "LoLoAlarmState", "LoLoAlarmValue", "LoLoAlarmPri", "LoAlarmState", "LoAlarmValue", "LoAlarmPri", "HiAlarmState", "HiAlarmValue", "HiAlarmPri", "HiHiAlarmState", "HiHiAlarmValue", "HiHiAlarmPri", "MinorDevAlarmState", "MinorDevAlarmValue", "MinorDevAlarmPri", "MajorDevAlarmState",
                               "MajorDevAlarmValue", "MajorDevAlarmPri", "DevTarget", "ROCAlarmState", "ROCAlarmValue", "ROCAlarmPri", "ROCTimeBase", "MinRaw", "MaxRaw", "Conversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "LoLoAlarmDisable", "LoAlarmDisable", "HiAlarmDisable", "HiHiAlarmDisable", "MinDevAlarmDisable", "MajDevAlarmDisable", "RocAlarmDisable", "LoLoAlarmInhibitor", "LoAlarmInhibitor", "HiAlarmInhibitor", "HiHiAlarmInhibitor", "MinDevAlarmInhibitor", "MajDevAlarmInhibitor", "RocAlarmInhibitor", "SymbolicName"])
-        for i in range(newSuperNum):
+        for i in range(rowCount):
             SuperWriter.writerow([newSupers[i].Name+"\HMISTW", newSupers[i].Group, newSupers[i].Comment+" - Status word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
                                   "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.STW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
             SuperWriter.writerow([newSupers[i].Name+"\HMIHMIW", newSupers[i].Group, newSupers[i].Comment+" - Command Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
@@ -513,19 +225,19 @@ def createSuper(newFileName, newSuperNum, newSupers):
                                   "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CFGW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
         SuperWriter.writerow([":IOReal", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "RetentiveAlarmParameters", "AlarmValueDeadband", "AlarmDevDeadband", "EngUnits", "InitialValue", "MinEU", "MaxEU", "Deadband", "LogDeadband", "LoLoAlarmState", "LoLoAlarmValue", "LoLoAlarmPri", "LoAlarmState", "LoAlarmValue", "LoAlarmPri", "HiAlarmState", "HiAlarmValue", "HiAlarmPri", "HiHiAlarmState", "HiHiAlarmValue", "HiHiAlarmPri", "MinorDevAlarmState", "MinorDevAlarmValue", "MinorDevAlarmPri", "MajorDevAlarmState",
                               "MajorDevAlarmValue", "MajorDevAlarmPri", "DevTarget", "ROCAlarmState", "ROCAlarmValue", "ROCAlarmPri", "ROCTimeBase", "MinRaw", "MaxRaw", "Conversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "LoLoAlarmDisable", "LoAlarmDisable", "HiAlarmDisable", "HiHiAlarmDisable", "MinDevAlarmDisable", "MajDevAlarmDisable", "RocAlarmDisable", "LoLoAlarmInhibitor", "LoAlarmInhibitor", "HiAlarmInhibitor", "HiHiAlarmInhibitor", "MinDevAlarmInhibitor", "MajDevAlarmInhibitor", "RocAlarmInhibitor", "SymbolicName"])
-        for i in range(newSuperNum):
+        for i in range(rowCount):
             SuperWriter.writerow([newSupers[i].Name+"\IPV", newSupers[i].Group, newSupers[i].Comment+" - Motor Current", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "1", "0", "0.5", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
                                   "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "1", "Linear", newSupers[i].AccessName, "No", newSupers[i].ItemName+".IPV", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
         SuperWriter.writerow([":MemoryMsg", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority",
                               "RetentiveValue", "MaxLength", "InitialMessage", "AlarmComment", "SymbolicName", "LocalTag"])
-        for i in range(newSuperNum):
+        for i in range(rowCount):
             SuperWriter.writerow([newSupers[i].Name+"\OBJ", newSupers[i].Group, newSupers[i].Comment +
                                   " - Object", "No", "No", "0", "No", "131", "OP_Super", "", "", "No"])
-        if newSuperNum > 1:
+        if rowCount > 1:
             SuperTemp = "s"
         else:
             SuperTemp = ""
-        return "Created " + str(newSuperNum) + " new Super" + SuperTemp + " and saved to the file " + newFileName + ".csv"
+        return "Created " + str(rowCount) + " new Super" + SuperTemp + " and saved to the file " + newFileName + ".csv"
 
 
 def createDI(newFileName, newDINum, newDIs):
@@ -957,8 +669,8 @@ def checkAnother(item):
 
 
 # Gathers which function is wanted, and runs the function to find/start it
-findFunction(input(
-    "Function type required (\"Find Tag\", \"Select Section\", \"DI\", \"M_3\", \"M_10\", \"FV1_10P\" or \"Tesys\"): ").lower().replace(" ", ""))
+findFunction("super")
+# findFunction(input("Function type required (\"Find Tag\", \"Select Section\", \"DI\", \"M_3\", \"M_10\", \"FV1_10P\" or \"Tesys\"): ").lower().replace(" ", ""))
 
 # Loops until the user states otherwise
 while checkAnother("function") == True:

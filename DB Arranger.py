@@ -21,8 +21,7 @@ def findFile():
     """Finds the base CSV file and loops if not correct"""
     while True:
         # Gathers the name of the csv file to be checked
-        fileName = "base"
-        # fileName = input("Name of the input CSV file: ").lower()
+        fileName = input("Name of the input CSV file: ").lower()
         if fileName.endswith(".csv"):
             fileName = fileName[:-4]
         # Loops asking for the file name if the given one doesn't exist
@@ -555,8 +554,7 @@ def checkAnother(item):
 
 
 # Gathers which function is wanted, and runs the function to find/start it
-findFunction("super")
-# findFunction(input("Function type required (\"Find Tag\", \"Select Section\", \"DI\", \"M_3\", \"M_10\", \"FV1_10P\" or \"Tesys\"): ").lower().replace(" ", ""))
+findFunction(input("Function type required (\"Find Tag\", \"Select Section\", \"DI\", \"M_3\", \"M_10\", \"FV1_10P\" or \"Tesys\"): ").lower().replace(" ", ""))
 
 # Loops until the user states otherwise
 while checkAnother("function") == True:

@@ -474,6 +474,60 @@ def selectSection(fileName, newFileName, sections):
         return "Finished searching"
 
 
+def createSuper(newFileName, newSuperNum, newSupers):
+    """Creates a new Super supertag"""
+    # Opens the output file and preps to write to it
+    with open(newFileName+".csv", "w", newline="") as SuperOutput:
+        SuperWriter = writer(SuperOutput)
+        # Writes all the rows required
+        SuperWriter.writerow([":mode=ask"])
+        SuperWriter.writerow([":IODisc", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "InitialDisc", "OffMsg", "OnMsg", "AlarmState", "AlarmPri",
+                              "Dconversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "DSCAlarmDisable", "DSCAlarmInhibitor", "SymbolicName"])
+        for i in range(newSuperNum):
+            SuperWriter.writerow([newSupers[i].Name+"\OLA", newSupers[i].Group, newSupers[i].Comment+" - Overload Alarm", "Yes", "No", "0", "No", "Off", "", "", "On", "3",
+                                  "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.09", "No", newSupers[i].Comment+" - Overload Alarm", "0", "0", "", "", "No"])
+            SuperWriter.writerow([newSupers[i].Name+"\GEE", newSupers[i].Group, newSupers[i].Comment+" - Equipment Energized", "Yes", "No", "0", "No", "Off", "", "", "None", "3",
+                                  "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.STW.03", "No", newSupers[i].Comment+" - Equipment Energized", "0", "0", "", "", "No"])
+            SuperWriter.writerow([newSupers[i].Name+"\GA", newSupers[i].Group, newSupers[i].Comment+" - General Alarm", "No", "Yes", "3", "No", "Off", "", "", "None", "3",
+                                  "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.STW.05", "No", newSupers[i].Comment+" - General Alarm", "0", "0", "", "", "No"])
+            SuperWriter.writerow([newSupers[i].Name+"\CRA", newSupers[i].Group, newSupers[i].Comment+" - Contactor Run Alarm", "Yes", "No", "0", "No", "Off", "", "", "On",
+                                  "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.10", "No", newSupers[i].Comment+" - Contactor Run Alarm", "0", "0", "", "", "No"])
+            SuperWriter.writerow([newSupers[i].Name+"\CIA", newSupers[i].Group, newSupers[i].Comment+" - Isolated", "Yes", "No", "0", "No", "Off", "", "", "On",
+                                  "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.11", "No", newSupers[i].Comment+" - Isolated", "0", "0", "", "", "No"])
+            SuperWriter.writerow([newSupers[i].Name+"\CBA", newSupers[i].Group, newSupers[i].Comment+" - Circuit Breaker Alarm", "Yes", "No", "0", "No", "Off", "", "", "On",
+                                  "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.08", "No", newSupers[i].Comment+" - Circuit Breaker Alarm", "0", "0", "", "", "No"])
+            SuperWriter.writerow([newSupers[i].Name+"\BPA", newSupers[i].Group, newSupers[i].Comment+" - Push-Button Stop Alarm", "Yes", "No", "0", "No", "Off", "", "", "On",
+                                  "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.12", "No", newSupers[i].Comment+" - Push-Button Stop Alarm", "0", "0", "", "", "No"])
+        SuperWriter.writerow([":IOInt", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "RetentiveAlarmParameters", "AlarmValueDeadband", "AlarmDevDeadband", "EngUnits", "InitialValue", "MinEU", "MaxEU", "Deadband", "LogDeadband", "LoLoAlarmState", "LoLoAlarmValue", "LoLoAlarmPri", "LoAlarmState", "LoAlarmValue", "LoAlarmPri", "HiAlarmState", "HiAlarmValue", "HiAlarmPri", "HiHiAlarmState", "HiHiAlarmValue", "HiHiAlarmPri", "MinorDevAlarmState", "MinorDevAlarmValue", "MinorDevAlarmPri", "MajorDevAlarmState",
+                              "MajorDevAlarmValue", "MajorDevAlarmPri", "DevTarget", "ROCAlarmState", "ROCAlarmValue", "ROCAlarmPri", "ROCTimeBase", "MinRaw", "MaxRaw", "Conversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "LoLoAlarmDisable", "LoAlarmDisable", "HiAlarmDisable", "HiHiAlarmDisable", "MinDevAlarmDisable", "MajDevAlarmDisable", "RocAlarmDisable", "LoLoAlarmInhibitor", "LoAlarmInhibitor", "HiAlarmInhibitor", "HiHiAlarmInhibitor", "MinDevAlarmInhibitor", "MajDevAlarmInhibitor", "RocAlarmInhibitor", "SymbolicName"])
+        for i in range(newSuperNum):
+            SuperWriter.writerow([newSupers[i].Name+"\HMISTW", newSupers[i].Group, newSupers[i].Comment+" - Status word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                                  "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.STW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            SuperWriter.writerow([newSupers[i].Name+"\HMIHMIW", newSupers[i].Group, newSupers[i].Comment+" - Command Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                                  "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.HMIW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            SuperWriter.writerow([newSupers[i].Name+"\HMIFIELDW", newSupers[i].Group, newSupers[i].Comment+" - Field word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                                  "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.FIELDW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            SuperWriter.writerow([newSupers[i].Name+"\HMICMDW", newSupers[i].Group, newSupers[i].Comment+" - Alarm Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                                  "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            SuperWriter.writerow([newSupers[i].Name+"\HMICFGW", newSupers[i].Group, newSupers[i].Comment+" - Config word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "0", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                                  "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CFGW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([":IOReal", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "RetentiveAlarmParameters", "AlarmValueDeadband", "AlarmDevDeadband", "EngUnits", "InitialValue", "MinEU", "MaxEU", "Deadband", "LogDeadband", "LoLoAlarmState", "LoLoAlarmValue", "LoLoAlarmPri", "LoAlarmState", "LoAlarmValue", "LoAlarmPri", "HiAlarmState", "HiAlarmValue", "HiAlarmPri", "HiHiAlarmState", "HiHiAlarmValue", "HiHiAlarmPri", "MinorDevAlarmState", "MinorDevAlarmValue", "MinorDevAlarmPri", "MajorDevAlarmState",
+                              "MajorDevAlarmValue", "MajorDevAlarmPri", "DevTarget", "ROCAlarmState", "ROCAlarmValue", "ROCAlarmPri", "ROCTimeBase", "MinRaw", "MaxRaw", "Conversion", "AccessName", "ItemUseTagname", "ItemName", "ReadOnly", "AlarmComment", "AlarmAckModel", "LoLoAlarmDisable", "LoAlarmDisable", "HiAlarmDisable", "HiHiAlarmDisable", "MinDevAlarmDisable", "MajDevAlarmDisable", "RocAlarmDisable", "LoLoAlarmInhibitor", "LoAlarmInhibitor", "HiAlarmInhibitor", "HiHiAlarmInhibitor", "MinDevAlarmInhibitor", "MajDevAlarmInhibitor", "RocAlarmInhibitor", "SymbolicName"])
+        for i in range(newSuperNum):
+            SuperWriter.writerow([newSupers[i].Name+"\IPV", newSupers[i].Group, newSupers[i].Comment+" - Motor Current", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "1", "0", "0.5", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                                  "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "1", "Linear", newSupers[i].AccessName, "No", newSupers[i].ItemName+".IPV", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([":MemoryMsg", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority",
+                              "RetentiveValue", "MaxLength", "InitialMessage", "AlarmComment", "SymbolicName", "LocalTag"])
+        for i in range(newSuperNum):
+            SuperWriter.writerow([newSupers[i].Name+"\OBJ", newSupers[i].Group, newSupers[i].Comment +
+                                  " - Object", "No", "No", "0", "No", "131", "OP_Super", "", "", "No"])
+        if newSuperNum > 1:
+            SuperTemp = "s"
+        else:
+            SuperTemp = ""
+        return "Created " + str(newSuperNum) + " new Super" + SuperTemp + " and saved to the file " + newFileName + ".csv"
+
+
 def createDI(newFileName, newDINum, newDIs):
     """Creates a new DI supertag"""
     # Opens the output file and preps to write to it

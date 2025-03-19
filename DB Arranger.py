@@ -233,8 +233,8 @@ def createSuper(newFileName, rowCount, newSupers):
         SuperWriter.writerow([":MemoryMsg", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority",
                               "RetentiveValue", "MaxLength", "InitialMessage", "AlarmComment", "SymbolicName", "LocalTag"])
         for i in range(rowCount):
-            SuperWriter.writerow([newSupers[i].Name+"\OBJ", newSupers[i].Group, newSupers[i].Comment +
-                                  " - Object", "No", "No", "0", "No", "131", newSupers[i].Type.upper(), "", "", "No"])
+            SuperWriter.writerow([newSupers[i].Name+"\OBJ", newSupers[i].Group, newSupers[i].Comment,
+                                 "No", "No", "0", "No", "131", newSupers[i].Type.upper(), "", "", "No"])
 
         return "Created " + str(rowCount) + " new Supertag(s) and saved to the file " + newFileName + ".csv"
 

@@ -186,7 +186,7 @@ def selectSection(fileName, newFileName, sections):
 
 
 def newSuperLoop(SuperWriter, newSupers, i, section):
-    if newSupers[i].Type == "op_di_3":
+    if newSupers[i].Type in ["op_di_3", "op_di_10"]:
         createDI(SuperWriter, newSupers, i, section)
     elif newSupers[i].Type == "op_m_3":
         createM_3(SuperWriter, newSupers, i, section)

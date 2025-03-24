@@ -196,6 +196,8 @@ def newSuperLoop(SuperWriter, newSupers, i, section):
         createFV1_10P(SuperWriter, newSupers, i, section)
     elif newSupers[i].Type == "op_pmc_10":
         createPMC_10(SuperWriter, newSupers, i, section)
+    elif newSupers[i].Type == "op_ai_10":
+        createAI_10(SuperWriter, newSupers, i, section)
 
 
 def createSuper(newFileName, rowCount, newSupers):
@@ -215,7 +217,10 @@ def createSuper(newFileName, rowCount, newSupers):
         SuperWriter.writerow([":MemoryInt", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "RetentiveAlarmParameters", "AlarmValueDeadband", "AlarmDevDeadband", "EngUnits", "InitialValue", "MinValue", "MaxValue", "Deadband", "LogDeadband", "LoLoAlarmState", "LoLoAlarmValue", "LoLoAlarmPri", "LoAlarmState", "LoAlarmValue", "LoAlarmPri", "HiAlarmState", "HiAlarmValue", "HiAlarmPri", "HiHiAlarmState", "HiHiAlarmValue", "HiHiAlarmPri", "MinorDevAlarmState", "MinorDevAlarmValue",
                               "MinorDevAlarmPri", "MajorDevAlarmState", "MajorDevAlarmValue", "MajorDevAlarmPri", "DevTarget", "ROCAlarmState", "ROCAlarmValue", "ROCAlarmPri", "ROCTimeBase", "AlarmComment", "AlarmAckModel", "LoLoAlarmDisable", "LoAlarmDisable", "HiAlarmDisable", "HiHiAlarmDisable", "MinDevAlarmDisable", "MajDevAlarmDisable", "RocAlarmDisable", "LoLoAlarmInhibitor", "LoAlarmInhibitor", "HiAlarmInhibitor", "HiHiAlarmInhibitor", "MinDevAlarmInhibitor", "MajDevAlarmInhibitor", "RocAlarmInhibitor", "SymbolicName", "LocalTag"])
         for i in range(rowCount):
-            newSuperLoop(SuperWriter, newSupers, i, "memint")
+            SuperWriter.writerow([newSupers[i].Name+"\Precision", newSupers[i].Group, newSupers[i].Comment+" - Precision", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "9999", "0", "1", "Off", "0", "1",
+                                  "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            SuperWriter.writerow([newSupers[i].Name+"\AccessLevel", newSupers[i].Group, newSupers[i].Comment+" - AccessLevel", "No", "No", "0", "No", "No", "0", "0", "", "900", "0", "9999", "0", "1", "Off", "0",
+                                  "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
 
         # Writes all the IOInt tags
         SuperWriter.writerow([":IOInt", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "RetentiveAlarmParameters", "AlarmValueDeadband", "AlarmDevDeadband", "EngUnits", "InitialValue", "MinEU", "MaxEU", "Deadband", "LogDeadband", "LoLoAlarmState", "LoLoAlarmValue", "LoLoAlarmPri", "LoAlarmState", "LoAlarmValue", "LoAlarmPri", "HiAlarmState", "HiAlarmValue", "HiAlarmPri", "HiHiAlarmState", "HiHiAlarmValue", "HiHiAlarmPri", "MinorDevAlarmState", "MinorDevAlarmValue", "MinorDevAlarmPri", "MajorDevAlarmState",
@@ -251,11 +256,6 @@ def createDI(SuperWriter, newSupers, i, section):
                               "1", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".GA", "No", newSupers[i].Comment+" - General Alarm", "0", "0", "", "", "No"])
         SuperWriter.writerow([newSupers[i].Name+"\DIA", newSupers[i].Group, newSupers[i].Comment+" - Digital Input Alarm", "No", "Yes", "1", "No", "Off", "", "", "On", "3",
                               "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.08", "No", newSupers[i].Comment+" - Digital Input Alarm", "0", "0", "", "", "No"])
-    elif section == "memint":
-        SuperWriter.writerow([newSupers[i].Name+"\Precision", newSupers[i].Group, newSupers[i].Comment+" - Precision", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "9999", "0", "1", "Off", "0", "1",
-                             "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([newSupers[i].Name+"\AccessLevel", newSupers[i].Group, newSupers[i].Comment+" - AccessLevel", "No", "No", "0", "No", "No", "0", "0", "", "900", "0", "9999", "0", "1", "Off", "0",
-                             "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
     elif section == "ioint":
         SuperWriter.writerow([newSupers[i].Name+"\HMICMDW", newSupers[i].Group, newSupers[i].Comment+" - HMICMDW", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
                              "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
@@ -290,11 +290,6 @@ def createM_10(SuperWriter, newSupers, i, section):
                               "On", "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.8", "No", newSupers[i].Comment+" - Tripped", "0", "0"])
         SuperWriter.writerow([newSupers[i].Name+"\BPA", newSupers[i].Group, newSupers[i].Comment+" - Stop Button", "No", "No", "0", "No", "Off", "", "", "On",
                               "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.12", "No", newSupers[i].Comment+" - Stop Button", "0", "0", "", ""])
-    elif section == "memint":
-        SuperWriter.writerow([newSupers[i].Name+"\AccessLevel", newSupers[i].Group, newSupers[i].Comment+" - Access Level", "No", "No", "0", "No", "No", "0", "0", "", "5000", "0", "9999", "0", "1", "Off", "0", "1",
-                              "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([newSupers[i].Name+"\Precision", newSupers[i].Group, newSupers[i].Comment+" - Precision", "No", "No", "0", "No", "No", "0", "0", "", "1", "0", "9999", "0", "1", "Off", "0", "1",
-                              "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
     elif section == "ioint":
         SuperWriter.writerow([newSupers[i].Name+"\HMICFGW", newSupers[i].Group, newSupers[i].Comment+" - Config Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
                               "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CFGW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
@@ -341,11 +336,6 @@ def createMF_10(SuperWriter, newSupers, i, section):
                               "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.8", "No", newSupers[i].Comment+" - Tripped", "0", "0", "", "", "No"])
         SuperWriter.writerow([newSupers[i].Name+"\BPA", newSupers[i].Group, newSupers[i].Comment+" - Stop Button", "No", "No", "0", "No", "Off", "", "", "On", "3",
                               "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.12", "No", newSupers[i].Comment+" - Stop Button", "0", "0", "", "", "No"])
-    elif section == "memint":
-        SuperWriter.writerow([newSupers[i].Name+"\AccessLevel", newSupers[i].Group, newSupers[i].Comment+" - Access Level", "No", "No", "0", "No", "No", "0", "0", "", "5000", "0", "9999", "0", "1", "Off", "0", "1",
-                              "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([newSupers[i].Name+"\Precision", newSupers[i].Group, newSupers[i].Comment+" - Precision", "No", "No", "0", "No", "No", "0", "0", "", "1", "0", "9999", "0", "1", "Off", "0", "1",
-                              "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
     elif section == "ioint":
         SuperWriter.writerow([newSupers[i].Name+"\HMICFGW", newSupers[i].Group, newSupers[i].Comment+" - Config Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
                               "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CFGW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
@@ -399,11 +389,6 @@ def createFV1_10P(SuperWriter, newSupers, i, section):
                                  "No", "Off", "", "", "None", "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".E1", "No", "", "0", "0", "", "", "No"])
             SuperWriter.writerow([newSupers[i].Name+"\E2", newSupers[i].Group, newSupers[i].Comment+" - Energize Reverse Output", "Yes", "No", "0",
                                  "No", "Off", "", "", "None", "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".E2", "No", "", "0", "0", "", "", "No"])
-    elif section == "memint":
-        SuperWriter.writerow([newSupers[i].Name+"\Precision", newSupers[i].Group, newSupers[i].Comment+" - Precision", "No", "No", "0", "No", "No", "0", "0", "", "1", "0", "9999", "0", "1", "Off", "0",
-                              "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([newSupers[i].Name+"\AccessLevel", newSupers[i].Group, newSupers[i].Comment+" - Access Level", "No", "No", "0", "No", "No", "0", "0", "", "5000", "0", "9999", "0", "1", "Off",
-                              "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
     elif section == "ioint":
         SuperWriter.writerow([newSupers[i].Name+"\HMIHMIW", newSupers[i].Group, newSupers[i].Comment+" - Command Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
                               "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".HMI.HMIW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
@@ -434,11 +419,6 @@ def createPMC_10(SuperWriter, newSupers, i, section):
                               "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".GA", "No", newSupers[i].Comment+" - General Alarm", "0", "0", "", "", "No"])
         SuperWriter.writerow([newSupers[i].Name+"\GW", newSupers[i].Group, newSupers[i].Comment+" - General Warning", "Yes", "No", "0", "No", "Off", "", "", "None",
                               "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".GW", "No", newSupers[i].Comment+" - General Warning", "0", "0", "", "", "No"])
-    elif section == "memint":
-        SuperWriter.writerow([newSupers[i].Name+"\AccessLevel", newSupers[i].Group, newSupers[i].Comment+" - Access Level", "No", "No", "0", "No", "No", "0", "0", "", "5000", "0", "9999", "0", "1", "Off", "0", "1",
-                              "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([newSupers[i].Name+"\Precision", newSupers[i].Group, newSupers[i].Comment+" - Precision", "No", "No", "0", "No", "No", "0", "0", "", "1", "0", "9999", "0", "1", "Off", "0", "1",
-                              "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
     elif section == "ioint":
         SuperWriter.writerow([newSupers[i].Name+"\CMD", newSupers[i].Group, newSupers[i].Comment+" - Command", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".CMD", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
@@ -453,6 +433,76 @@ def createPMC_10(SuperWriter, newSupers, i, section):
     elif section == "ioreal":
         SuperWriter.writerow([newSupers[i].Name+"\STime", newSupers[i].Group, newSupers[i].Comment+" - Sequence Remaining Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
                               "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", newSupers[i].AccessName, "No", newSupers[i].ItemName+".S_Time", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+
+
+def createAI_10(SuperWriter, newSupers, i, section):
+    if section == "iodisc":
+        SuperWriter.writerow([newSupers[i].Name+"\GW", newSupers[i].Group, newSupers[i].Comment+" - General Warning", "Yes", "No", "3", "No", "Off", "0", "0",
+                             "None", "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].Name+".GW", "No", newSupers[i].Comment+" - General Warning", "0", "0", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\AH", newSupers[i].Group, newSupers[i].Comment+" - Alarm High", "Yes", "No", "3", "No", "Off", "0", "0", "On",
+                             "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].Name+".HMI.CMDW.09", "No", newSupers[i].Comment+" - Alarm High", "0", "0", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\AL", newSupers[i].Group, newSupers[i].Comment+" - Alarm Low", "Yes", "No", "3", "No", "Off", "0", "0", "On",
+                             "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].Name+".HMI.CMDW.10", "No", newSupers[i].Comment+" - Alarm Low", "0", "0", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\GA", newSupers[i].Group, newSupers[i].Comment+" - General Alarm", "Yes", "Yes", "3", "No", "Off", "0", "0",
+                             "None", "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].Name+".GA", "No", newSupers[i].Comment+" - General Alarm", "0", "0", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\GEE", newSupers[i].Group, newSupers[i].Comment+" - Equipment Energized", "Yes", "No", "3", "No", "Off", "0", "0", "None",
+                             "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].Name+".HMI.STW.03", "No", newSupers[i].Comment+" - Equipment Energized", "0", "0", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\GI", newSupers[i].Group, newSupers[i].Comment+" - General Inhibit", "No", "No", "3", "No", "Off", "0", "0", "None",
+                             "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].Name+".HMI.STW.02", "No", newSupers[i].Comment+" - General Inhibit", "0", "0", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\SQA", newSupers[i].Group, newSupers[i].Comment+" - Signal Quality Alarm", "Yes", "No", "3", "No", "Off", "0", "0", "On",
+                             "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].Name+".HMI.CMDW.08", "No", newSupers[i].Comment+" - Signal Quality Alarm", "0", "0", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\WH", newSupers[i].Group, newSupers[i].Comment+" - Warning High", "Yes", "No", "3", "No", "Off", "0", "0", "On",
+                             "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].Name+".HMI.CMDW.11", "No", newSupers[i].Comment+" - Warning High", "0", "0", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\WL", newSupers[i].Group, newSupers[i].Comment+" - Warning Low", "Yes", "No", "3", "No", "Off", "0", "0", "On",
+                             "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].Name+".HMI.CMDW.12", "No", newSupers[i].Comment+" - Warning Low", "0", "0", "", "", "No"])
+    elif section == "ioint":
+        SuperWriter.writerow([newSupers[i].Name+"\HMICFGW", newSupers[i].Group, newSupers[i].Comment+" - Config Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                             "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".HMI.CFGW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\HMICMDW", newSupers[i].Group, newSupers[i].Comment+" - Alarm Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                             "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".HMI.CMDW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\HMICUSW", newSupers[i].Group, newSupers[i].Comment+" - Custom Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                             "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".HMI.CUSW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\HMIFIELDW", newSupers[i].Group, newSupers[i].Comment+" - Field Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                             "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".HMI.FIELDW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\HMIHMIW", newSupers[i].Group, newSupers[i].Comment+" - Command Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                             "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".HMI.HMIW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\HMISTW", newSupers[i].Group, newSupers[i].Comment+" - Status Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                             "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".HMI.STW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+    elif section == "ioreal":
+        SuperWriter.writerow([newSupers[i].Name+"\AI", newSupers[i].Group, newSupers[i].Comment+" - Process Value", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                             "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".AI", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\DEVCFGAHTIME", newSupers[i].Group, newSupers[i].Comment+" - Alarm High Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                             "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".DEVCFG.AH_TIME", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\DEVCFGALTIME", newSupers[i].Group, newSupers[i].Comment+" - Alarm Low Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                             "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".DEVCFG.AL_TIME", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\DEVCFGLAH", newSupers[i].Group, newSupers[i].Comment+" - Alarm High Limit", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                             "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".DEVCFG.LAH", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\DEVCFGLAHD", newSupers[i].Group, newSupers[i].Comment+" - Alarm High Limit", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                             "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".DEVCFG.LAHD", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\DEVCFGLAL", newSupers[i].Group, newSupers[i].Comment+" - Alarm Low Limit", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                             "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".DEVCFG.LAL", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\DEVCFGLALD", newSupers[i].Group, newSupers[i].Comment+" - Alarm Low Limit", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                             "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".DEVCFG.LALD", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\DEVCFGLWH", newSupers[i].Group, newSupers[i].Comment+" - Warning High Limit", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                             "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".DEVCFG.LWH", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\DEVCFGLWHD", newSupers[i].Group, newSupers[i].Comment+" - Warning High Limit", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                             "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".DEVCFG.LWHD", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\DEVCFGLWL", newSupers[i].Group, newSupers[i].Comment+" - Warning Low Limit", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                             "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".DEVCFG.LWL", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\DEVCFGLWLD", newSupers[i].Group, newSupers[i].Comment+" - Warning Low Limit", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                             "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".DEVCFG.LWLD", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\DEVCFGRH", newSupers[i].Group, newSupers[i].Comment+" - Range High", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                             "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".DEVCFG.RH", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\DEVCFGRL", newSupers[i].Group, newSupers[i].Comment+" - Range Low", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                             "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".DEVCFG.RL", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\DEVCFGWHTIME", newSupers[i].Group, newSupers[i].Comment+" - Warning High Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                             "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".DEVCFG.WH_TIME", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\DEVCFGWLTIME", newSupers[i].Group, newSupers[i].Comment+" - Warning Low Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                             "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".DEVCFG.WL_TIME", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\PV", newSupers[i].Group, newSupers[i].Comment+" - Process Value", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                             "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".PV", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([newSupers[i].Name+"\SP", newSupers[i].Group, newSupers[i].Comment+" - Setpoint", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                             "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", newSupers[i].AccessName, "No", newSupers[i].Name+".SP", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
 
 
 def tesys(tesysFileName, tesysList):

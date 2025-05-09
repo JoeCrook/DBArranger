@@ -188,7 +188,7 @@ def selectSection(fileName, newFileName, sections):
 def newSuperLoop(SuperWriter, newSupers, i, section):
     if newSupers[i].Type in ["op_di_3", "op_di_10"]:
         createDI(SuperWriter, newSupers, i, section)
-    elif newSupers[i].Type == "op_m_10":
+    elif newSupers[i].Type in ["op_m_10", "op_mr_10"]:
         createM_10(SuperWriter, newSupers, i, section)
     elif newSupers[i].Type == "op_mf_10":
         createMF_10(SuperWriter, newSupers, i, section)
@@ -281,15 +281,24 @@ def createM_10(SuperWriter, newSupers, i, section):
         SuperWriter.writerow([newSupers[i].Name+"\GEE", newSupers[i].Group, newSupers[i].Comment+" - Equipment Energize", "Yes", "No", "0", "No", "Off", "", "", "None",
                               "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.STW.3", "No", newSupers[i].Comment+" - Equipment Energize", "0", "0", "", ""])
         SuperWriter.writerow([newSupers[i].Name+"\GA", newSupers[i].Group, newSupers[i].Comment+" - General Alarm", "Yes", "Yes", "3", "No", "Off", "", "", "None",
-                              "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.STW.05", "No", newSupers[i].Comment+" - General Alarm", "0", "0", "", ""])
-        SuperWriter.writerow([newSupers[i].Name+"\CRA", newSupers[i].Group, newSupers[i].Comment+" - Run Alarm", "No", "No", "0", "No", "Off", "", "", "On",
-                              "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.10", "No", newSupers[i].Comment+" - Run Alarm", "0", "0", "", ""])
+                              "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".GA", "No", newSupers[i].Comment+" - General Alarm", "0", "0", "", ""])
         SuperWriter.writerow([newSupers[i].Name+"\CIA", newSupers[i].Group, newSupers[i].Comment+" - Isolated", "No", "No", "0", "No", "Off", "", "", "On",
                               "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.11", "No", newSupers[i].Comment+" - Isolated", "0", "0", "", ""])
         SuperWriter.writerow([newSupers[i].Name+"\CBA", newSupers[i].Group, newSupers[i].Comment+" - Tripped", "No", "No", "0", "No", "Off", "", "",
                               "On", "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.8", "No", newSupers[i].Comment+" - Tripped", "0", "0"])
-        SuperWriter.writerow([newSupers[i].Name+"\BPA", newSupers[i].Group, newSupers[i].Comment+" - Stop Button", "No", "No", "0", "No", "Off", "", "", "On",
-                              "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.12", "No", newSupers[i].Comment+" - Stop Button", "0", "0", "", ""])
+        if newSupers[i].Type in ["op_m_10", "op_mr_10"]:
+            SuperWriter.writerow([newSupers[i].Name+"\CRA", newSupers[i].Group, newSupers[i].Comment+" - Run Alarm", "No", "No", "0", "No", "Off", "", "", "On",
+                                  "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.10", "No", newSupers[i].Comment+" - Run Alarm", "0", "0", "", ""])
+            SuperWriter.writerow([newSupers[i].Name+"\BPA", newSupers[i].Group, newSupers[i].Comment+" - Stop Button", "No", "No", "0", "No", "Off", "", "", "On",
+                                  "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.12", "No", newSupers[i].Comment+" - Stop Button", "0", "0", "", ""])
+        elif newSupers[i].Type in ["op_mv_10"]:
+            SuperWriter.writerow([newSupers[i].Name+"\RUNA", newSupers[i].Group, newSupers[i].Comment+" - Run Alarm", "No", "No", "0", "No", "Off", "", "", "On",
+                                  "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.10", "No", newSupers[i].Comment+" - Run Alarm", "0", "0", "", ""])
+            SuperWriter.writerow([newSupers[i].Name+"\ZSCA", newSupers[i].Group, newSupers[i].Comment+" - Limit Switch Close Alarm", "No", "No", "0", "No", "Off", "", "", "On",
+                                  "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.12", "No", newSupers[i].Comment+" - Limit Switch Close Alarm", "0", "0", "", ""])
+            SuperWriter.writerow([newSupers[i].Name+"\ZSOA", newSupers[i].Group, newSupers[i].Comment+" - Limit Switch Open Alarm", "No", "No", "0", "No", "Off", "", "", "On",
+                                  "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.12", "No", newSupers[i].Comment+" - Limit Switch Open Alarm", "0", "0", "", ""])
+
     elif section == "ioint":
         SuperWriter.writerow([newSupers[i].Name+"\HMICFGW", newSupers[i].Group, newSupers[i].Comment+" - Config Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
                               "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CFGW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])

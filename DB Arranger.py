@@ -218,17 +218,9 @@ def createSuper(newFileName, rowCount, newSupers):
                               "MinorDevAlarmPri", "MajorDevAlarmState", "MajorDevAlarmValue", "MajorDevAlarmPri", "DevTarget", "ROCAlarmState", "ROCAlarmValue", "ROCAlarmPri", "ROCTimeBase", "AlarmComment", "AlarmAckModel", "LoLoAlarmDisable", "LoAlarmDisable", "HiAlarmDisable", "HiHiAlarmDisable", "MinDevAlarmDisable", "MajDevAlarmDisable", "RocAlarmDisable", "LoLoAlarmInhibitor", "LoAlarmInhibitor", "HiAlarmInhibitor", "HiHiAlarmInhibitor", "MinDevAlarmInhibitor", "MajDevAlarmInhibitor", "RocAlarmInhibitor", "SymbolicName", "LocalTag"])
         for i in range(rowCount):
             newSuperLoop(SuperWriter, newSupers, i, "memint")
-            while True:
-                lototoReq = input(
-                    newSupers[i] + " uses a LOTOTO block? (Y/N)").lower()
-                if lototoReq in ["y", "ye", "yes", "true"]:
-                    SuperWriter.writerow([newSupers[i].Name+"\LOTOTOHMIW", newSupers[i].Group, newSupers[i].Comment+" - LOTOTO Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1",
-                                          "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-                    break
-                elif lototoReq in ["n", "no", "false"]:
-                    break
-                else:
-                    print("Answer needs to be Y or N")
+            if newSupers[i].Type.endswith("_lototo"):
+                SuperWriter.writerow([newSupers[i].Name+"\LOTOTOHMIW", newSupers[i].Group, newSupers[i].Comment+" - LOTOTO Word", "No", "No", "0", "No", "No", "0", "0", "", "1", "0", "65535", "0", "1", "Off", "0", "1",
+                                      "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
             SuperWriter.writerow([newSupers[i].Name+"\Precision", newSupers[i].Group, newSupers[i].Comment+" - Precision", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "9999", "0", "1", "Off", "0", "1",
                                   "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
             SuperWriter.writerow([newSupers[i].Name+"\AccessLevel", newSupers[i].Group, newSupers[i].Comment+" - AccessLevel", "No", "No", "0", "No", "No", "0", "0", "", "900", "0", "9999", "0", "1", "Off", "0",

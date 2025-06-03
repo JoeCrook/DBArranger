@@ -188,7 +188,7 @@ def selectSection(fileName, newFileName, sections):
 def newSuperLoop(SuperWriter, newSupers, i, section):
     if newSupers[i].Type in ["op_di_3", "op_di_10"]:
         createDI(SuperWriter, newSupers, i, section)
-    elif newSupers[i].Type in ["op_m_10", "op_mr_10", "op_mv_10"]:
+    elif newSupers[i].Type in ["op_m_10", "op_m_10_lototo", "op_mr_10", "op_mv_10"]:
         createM_10(SuperWriter, newSupers, i, section)
     elif newSupers[i].Type == "op_mf_10":
         createMF_10(SuperWriter, newSupers, i, section)
@@ -290,7 +290,7 @@ def createM_10(SuperWriter, newSupers, i, section):
                               "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.11", "No", newSupers[i].Comment+" - Isolated", "0", "0", "", ""])
         SuperWriter.writerow([newSupers[i].Name+"\CBA", newSupers[i].Group, newSupers[i].Comment+" - Tripped", "No", "No", "0", "No", "Off", "", "",
                               "On", "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.8", "No", newSupers[i].Comment+" - Tripped", "0", "0"])
-        if newSupers[i].Type in ["op_m_10", "op_mr_10"]:
+        if newSupers[i].Type in ["op_m_10", "op_mr_10", "op_m_10_lototo"]:
             SuperWriter.writerow([newSupers[i].Name+"\CRA", newSupers[i].Group, newSupers[i].Comment+" - Run Alarm", "No", "No", "0", "No", "Off", "", "", "On",
                                   "3", "Direct", newSupers[i].AccessName, "No", newSupers[i].ItemName+".HMI.CMDW.10", "No", newSupers[i].Comment+" - Run Alarm", "0", "0", "", ""])
             SuperWriter.writerow([newSupers[i].Name+"\BPA", newSupers[i].Group, newSupers[i].Comment+" - Stop Button", "No", "No", "0", "No", "Off", "", "", "On",

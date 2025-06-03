@@ -83,7 +83,7 @@ def newSuperLoop(SuperWriter, NewSupers, i, section):
         createM(SuperWriter, NewSupers, i, section)
     elif NewSupers[i].Type == "op_mf_10":
         createMF(SuperWriter, NewSupers, i, section)
-    elif NewSupers[i].Type in ["op_fv1_10", "op_fv1_10_lototo" "op_fv2_10"]:
+    elif NewSupers[i].Type in ["op_fv1_10", "op_fv1_10_lototo", "op_fv2_10"]:
         createFV1(SuperWriter, NewSupers, i, section)
     elif NewSupers[i].Type == "op_pmc_10":
         createPMC(SuperWriter, NewSupers, i, section)

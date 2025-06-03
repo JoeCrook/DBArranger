@@ -13,15 +13,7 @@ def findFunction(functionCheck):
 
     # Function that selects a certain section of tags, and saves them only to a file
     elif functionCheck in ["selectsection", "selsec", "ss"]:
-        fileName = findFile()
-        # Discovers which section is required
-        moreSections = True
-        sections = []
-        while moreSections == True:
-            sections.append(input("Which section to keep: ").lower())
-            moreSections = checkAnother("section")
-
-        print(selectSection(fileName, createFile(True), sections))
+        print(selectSection())
 
     elif functionCheck in ["super"]:
 

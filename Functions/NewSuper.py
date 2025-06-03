@@ -80,15 +80,15 @@ def newSuperLoop(SuperWriter, NewSupers, i, section):
     if NewSupers[i].Type in ["op_di_3", "op_di_10", "op_do_10"]:
         createDx(SuperWriter, NewSupers, i, section)
     elif NewSupers[i].Type in ["op_m_10", "op_m_10_lototo", "op_mr_10", "op_mv_10"]:
-        createM_10(SuperWriter, NewSupers, i, section)
+        createM(SuperWriter, NewSupers, i, section)
     elif NewSupers[i].Type == "op_mf_10":
-        createMF_10(SuperWriter, NewSupers, i, section)
-    elif NewSupers[i].Type in ["op_fv1_10", "op_fv2_10"]:
-        createFV1_10P(SuperWriter, NewSupers, i, section)
+        createMF(SuperWriter, NewSupers, i, section)
+    elif NewSupers[i].Type in ["op_fv1_10", "op_fv1_10_lototo" "op_fv2_10"]:
+        createFV1(SuperWriter, NewSupers, i, section)
     elif NewSupers[i].Type == "op_pmc_10":
-        createPMC_10(SuperWriter, NewSupers, i, section)
+        createPMC(SuperWriter, NewSupers, i, section)
     elif NewSupers[i].Type == "op_ai_10":
-        createAI_10(SuperWriter, NewSupers, i, section)
+        createAI(SuperWriter, NewSupers, i, section)
 
 
 def createDx(SuperWriter, NewSupers, i, section):
@@ -128,7 +128,7 @@ def createDx(SuperWriter, NewSupers, i, section):
                               "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".MAINT.OPE", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
 
 
-def createM_10(SuperWriter, NewSupers, i, section):
+def createM(SuperWriter, NewSupers, i, section):
     """Creates a new M_10 supertag"""
     if section == "iodisc":
         SuperWriter.writerow([NewSupers[i].Name+"\GI", NewSupers[i].Group, NewSupers[i].Comment+" - General Inhibit", "No", "No", "0", "No", "Off", "", "", "None",
@@ -182,7 +182,7 @@ def createM_10(SuperWriter, NewSupers, i, section):
                               "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".IPV", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
 
 
-def createMF_10(SuperWriter, NewSupers, i, section):
+def createMF(SuperWriter, NewSupers, i, section):
     if section == "iodisc":
         SuperWriter.writerow([NewSupers[i].Name+"\RUNA", NewSupers[i].Group, NewSupers[i].Comment+" - Run Alarm", "No", "No", "0", "No", "Off", "", "", "On",
                               "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.10", "No", NewSupers[i].Comment+" - Run Alarm", "0", "0", "", "", "No"])
@@ -238,7 +238,7 @@ def createMF_10(SuperWriter, NewSupers, i, section):
                               "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".PV", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
 
 
-def createFV1_10P(SuperWriter, NewSupers, i, section):
+def createFV1(SuperWriter, NewSupers, i, section):
     if section == "iodisc":
         SuperWriter.writerow([NewSupers[i].Name+"\ZSOA", NewSupers[i].Group, NewSupers[i].Comment+" - Open Alarm", "Yes", "No", "0", "No", "Off", "", "", "On", "3", "Direct",
                               NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.13", "No", NewSupers[i].Comment+" - Open Alarm", "0", "0", "", "", "No"])
@@ -279,7 +279,7 @@ def createFV1_10P(SuperWriter, NewSupers, i, section):
                               "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".MAINT.OPE", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
 
 
-def createPMC_10(SuperWriter, NewSupers, i, section):
+def createPMC(SuperWriter, NewSupers, i, section):
     if section == "iodisc":
         SuperWriter.writerow([NewSupers[i].Name+"\GA", NewSupers[i].Group, NewSupers[i].Comment+" - General Alarm", "Yes", "No", "0", "No", "Off", "", "", "None",
                               "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".GA", "No", NewSupers[i].Comment+" - General Alarm", "0", "0", "", "", "No"])
@@ -301,7 +301,7 @@ def createPMC_10(SuperWriter, NewSupers, i, section):
                               "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".S_Time", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
 
 
-def createAI_10(SuperWriter, NewSupers, i, section):
+def createAI(SuperWriter, NewSupers, i, section):
     if section == "iodisc":
         SuperWriter.writerow([NewSupers[i].Name+"\GW", NewSupers[i].Group, NewSupers[i].Comment+" - General Warning", "Yes", "No", "3", "No", "Off", "0", "0",
                              "None", "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].Name+".GW", "No", NewSupers[i].Comment+" - General Warning", "0", "0", "", "", "No"])

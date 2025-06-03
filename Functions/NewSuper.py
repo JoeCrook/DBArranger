@@ -77,8 +77,8 @@ def createSuper():
 
 
 def newSuperLoop(SuperWriter, NewSupers, i, section):
-    if NewSupers[i].Type in ["op_di_3", "op_di_10"]:
-        createDI(SuperWriter, NewSupers, i, section)
+    if NewSupers[i].Type in ["op_di_3", "op_di_10", "op_do_10"]:
+        createDx(SuperWriter, NewSupers, i, section)
     elif NewSupers[i].Type in ["op_m_10", "op_m_10_lototo", "op_mr_10", "op_mv_10"]:
         createM_10(SuperWriter, NewSupers, i, section)
     elif NewSupers[i].Type == "op_mf_10":
@@ -91,8 +91,8 @@ def newSuperLoop(SuperWriter, NewSupers, i, section):
         createAI_10(SuperWriter, NewSupers, i, section)
 
 
-def createDI(SuperWriter, NewSupers, i, section):
-    """Creates a new DI supertag"""
+def createDx(SuperWriter, NewSupers, i, section):
+    """Creates a new DI or DO supertag"""
     # Writes all the rows required
     if section == "iodisc":
         SuperWriter.writerow([NewSupers[i].Name+"\DIW", NewSupers[i].Group, NewSupers[i].Comment+" - Digital Input Warning", "No", "Yes", "1", "No", "Off", "", "", "On", "3",
@@ -116,6 +116,16 @@ def createDI(SuperWriter, NewSupers, i, section):
                              "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CFGW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
         SuperWriter.writerow([NewSupers[i].Name+"\HMIFIELDW", NewSupers[i].Group, NewSupers[i].Comment+" - HMIFIELDW", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
                              "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.FIELDW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        if NewSupers[i].Type in ["op_do_10"]:
+            SuperWriter.writerow([NewSupers[i].Name+"\MAINTHMIW", NewSupers[i].Group, NewSupers[i].Comment+" - Maintenance Word", "No", "No", "0", "No", "No", "0", "0", " ", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                                 "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".MAINT.HMIW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+    elif section == "ioreal" and NewSupers[i].Type in ["op_do_10"]:
+        SuperWriter.writerow([NewSupers[i].Name+"\MAINTOPESP", NewSupers[i].Group, NewSupers[i].Comment+" - Maintenance Operating Time Setpoint", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                              "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".MAINT.OPE_SP", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([NewSupers[i].Name+"\MAINTOPETOT", NewSupers[i].Group, NewSupers[i].Comment+" - Total Operating Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".MAINT.OPE_TOT", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([NewSupers[i].Name+"\MAINTOPE", NewSupers[i].Group, NewSupers[i].Comment+" - Maintenance Operating Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                              "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".MAINT.OPE", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
 
 
 def createM_10(SuperWriter, NewSupers, i, section):

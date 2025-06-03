@@ -1,7 +1,16 @@
 from csv import writer, reader
+from Functions.Misc import findFile, checkAnother
 
 
 def selectSection(fileName, newFileName, sections):
+    fileName = findFile()
+    # Discovers which section is required
+    moreSections = True
+    sections = []
+    while moreSections == True:
+        sections.append(input("Which section to keep: ").lower())
+        moreSections = checkAnother("section")
+
     """Selects a certain section of tags, and saves them only to a file"""
     correctSection = False
     with open(fileName+".csv", newline="") as DBInput:

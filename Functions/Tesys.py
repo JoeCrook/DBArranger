@@ -1,7 +1,7 @@
 from csv import writer
 
 
-def tesys(tesysFileName, tesysList):
+def createTesys(tesysFileName, tesysList):
     """Creates all the tags needed on SCADA from a Tesys unit"""
     with open(tesysFileName+".csv", "w", newline="") as tesysOutput:
         tesysWriter = writer(tesysOutput)

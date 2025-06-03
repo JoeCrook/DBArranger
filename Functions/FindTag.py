@@ -1,8 +1,20 @@
 from csv import writer, reader
+from Functions.Misc import findFile, checkAnother, createFile
 
 
-def findTag(fileName, newFileName, requiredTag):
+def findTag():
     """Finds a given tag in a database, and optionally saves it to a file"""
+    fileName = findFile()
+    newFileName = createFile(True)
+    moreTags = True
+    tagList = []
+    while moreTags == True:
+        requiredTag = input("Tag to search for: ").lower()
+        if requiredTag.startswith(":"):
+            requiredTag = requiredTag[1:]
+        else:
+            tagList += [requiredTag]
+        moreTags = checkAnother("tag")
     tagCount = 0
     # Opens the given base file
     with open(fileName + ".csv", newline='') as DBInput:
@@ -13,8 +25,8 @@ def findTag(fileName, newFileName, requiredTag):
             for row in DBReader:
                 if row[0].lower().startswith(":mode="):
                     DBWriter.writerow(row)
-                # If the first cell (the "tag") in the row contains the given requiredTag, increments the tag count, prints the whole row, and writes it to the output file if enabled)
-                for tag in requiredTag:
+                # If the first cell (the "tag") in the row contains the given tagList, increments the tag count, prints the whole row, and writes it to the output file if enabled)
+                for tag in tagList:
                     # If the row is a section header, and an output file is required, write the row to the output file
                     if row[0].lower().startswith(":"):
                         headerWritten = False

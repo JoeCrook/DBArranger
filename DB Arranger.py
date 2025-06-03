@@ -9,18 +9,7 @@ def findFunction(functionCheck):
     """Finds the function required, and gathers/passes the information needed to run"""
     # Function that finds a given tag in a database, and optionally saves it to a file
     if functionCheck in ["findtag", "ft"]:
-        fileName = findFile()
-        moreTags = True
-        tagList = []
-        while moreTags == True:
-            requiredTag = input("Tag to search for: ").lower()
-            if requiredTag.startswith(":"):
-                requiredTag = requiredTag[1:]
-            else:
-                tagList += [requiredTag]
-            moreTags = checkAnother("tag")
-
-        print(findTag(fileName, createFile(True), tagList))
+        print(findTag())
 
     # Function that selects a certain section of tags, and saves them only to a file
     elif functionCheck in ["selectsection", "selsec", "ss"]:

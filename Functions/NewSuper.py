@@ -81,13 +81,13 @@ def newSuperLoop(SuperWriter, NewSupers, i, section):
         createDx(SuperWriter, NewSupers, i, section)
     elif NewSupers[i].Type in ["op_m_10", "op_m_10_lototo", "op_mr_10", "op_mv_10"]:
         createM(SuperWriter, NewSupers, i, section)
-    elif NewSupers[i].Type == "op_mf_10":
+    elif NewSupers[i].Type in ["op_mf_10"]:
         createMF(SuperWriter, NewSupers, i, section)
     elif NewSupers[i].Type in ["op_fv1_10", "op_fv1_10_lototo", "op_fv2_10"]:
         createFV1(SuperWriter, NewSupers, i, section)
-    elif NewSupers[i].Type == "op_pmc_10":
+    elif NewSupers[i].Type in ["op_pmc_10"]:
         createPMC(SuperWriter, NewSupers, i, section)
-    elif NewSupers[i].Type == "op_ai_10":
+    elif NewSupers[i].Type in ["op_ai_10"]:
         createAI(SuperWriter, NewSupers, i, section)
 
 

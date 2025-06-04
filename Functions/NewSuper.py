@@ -12,14 +12,14 @@ class NewSuper:
         self.Comment = comment
         self.Group = group
         self.AccessName = accessName
-        self.LOTOTO = False
         if self.Type.endswith("_lototo"):
-            # TODO: Make this LOTOTO handling cleaner
             self.LOTOTO = True
-            self.Type = self.Type[:-7]
+        else:
+            self.LOTOTO = False
 
 
 def createSuper():
+    """Creates a new Super supertag"""
     print("Input file must have no headers, and have each new Super on it's own line, with info in the order: Supertag Type, PLC Name, Comment, Group, AccessName")
     # Creates the number of classes required and gathers required info
     NewSupers = []
@@ -34,7 +34,6 @@ def createSuper():
     newFileName = createFile(True)
     rowCount = rowCount + 1
 
-    """Creates a new Super supertag"""
     # Opens the output file and preps to write to it
     with open(newFileName+".csv", "w", newline="") as SuperOutput:
         SuperWriter = writer(SuperOutput)
@@ -75,8 +74,6 @@ def createSuper():
         SuperWriter.writerow([":MemoryMsg", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority",
                               "RetentiveValue", "MaxLength", "InitialMessage", "AlarmComment", "SymbolicName", "LocalTag"])
         for i in range(rowCount):
-            if NewSupers[i].LOTOTO:
-                NewSupers[i].Type = NewSupers[i].Type + "_lototo"
             SuperWriter.writerow([NewSupers[i].Name+"\OBJ", NewSupers[i].Group, NewSupers[i].Comment,
                                  "No", "No", "0", "No", "131", NewSupers[i].Type.upper(), "", "", "No"])
 
@@ -84,17 +81,17 @@ def createSuper():
 
 
 def newSuperLoop(SuperWriter, NewSupers, i, section):
-    if NewSupers[i].Type in ["op_di_3", "op_di_10", "op_do_10"]:
+    if NewSupers[i].Type.startswith(("op_di_", "op_do_")):
         createDx(SuperWriter, NewSupers, i, section)
-    elif NewSupers[i].Type in ["op_m_10", "op_mr_10", "op_mv_10"]:
-        createM(SuperWriter, NewSupers, i, section)
-    elif NewSupers[i].Type in ["op_mf_10"]:
+    elif NewSupers[i].Type.startswith(("op_m_", "op_mr_", "op_mv_")):
+        createMx(SuperWriter, NewSupers, i, section)
+    elif NewSupers[i].Type.startswith(("op_mf_")):
         createMF(SuperWriter, NewSupers, i, section)
-    elif NewSupers[i].Type in ["op_fv1_10", "op_fv2_10"]:
+    elif NewSupers[i].Type.startswith(("op_fv1_", "op_fv2_")):
         createFV1(SuperWriter, NewSupers, i, section)
-    elif NewSupers[i].Type in ["op_pmc_10"]:
+    elif NewSupers[i].Type.startswith(("op_pmc_")):
         createPMC(SuperWriter, NewSupers, i, section)
-    elif NewSupers[i].Type in ["op_ai_10"]:
+    elif NewSupers[i].Type.startswith(("op_ai_")):
         createAI(SuperWriter, NewSupers, i, section)
 
 
@@ -135,7 +132,7 @@ def createDx(SuperWriter, NewSupers, i, section):
                               "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".MAINT.OPE", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
 
 
-def createM(SuperWriter, NewSupers, i, section):
+def createMx(SuperWriter, NewSupers, i, section):
     """Creates a new M_10 supertag"""
     if section == "iodisc":
         SuperWriter.writerow([NewSupers[i].Name+"\GI", NewSupers[i].Group, NewSupers[i].Comment+" - General Inhibit", "No", "No", "0", "No", "Off", "", "", "None",

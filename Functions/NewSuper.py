@@ -12,6 +12,10 @@ class NewSuper:
         self.Comment = comment
         self.Group = group
         self.AccessName = accessName
+        self.LOTOTO = False
+        if self.Type.endswith("_lototo"):
+            self.LOTOTO = True
+            self.Type = self.Type[:-7]
 
 
 def createSuper():
@@ -46,7 +50,7 @@ def createSuper():
                               "MinorDevAlarmPri", "MajorDevAlarmState", "MajorDevAlarmValue", "MajorDevAlarmPri", "DevTarget", "ROCAlarmState", "ROCAlarmValue", "ROCAlarmPri", "ROCTimeBase", "AlarmComment", "AlarmAckModel", "LoLoAlarmDisable", "LoAlarmDisable", "HiAlarmDisable", "HiHiAlarmDisable", "MinDevAlarmDisable", "MajDevAlarmDisable", "RocAlarmDisable", "LoLoAlarmInhibitor", "LoAlarmInhibitor", "HiAlarmInhibitor", "HiHiAlarmInhibitor", "MinDevAlarmInhibitor", "MajDevAlarmInhibitor", "RocAlarmInhibitor", "SymbolicName", "LocalTag"])
         for i in range(rowCount):
             newSuperLoop(SuperWriter, NewSupers, i, "memint")
-            if NewSupers[i].Type.endswith("_lototo"):
+            if NewSupers[i].LOTOTO:
                 SuperWriter.writerow([NewSupers[i].Name+"\LOTOTOHMIW", NewSupers[i].Group, NewSupers[i].Comment+" - LOTOTO Word", "No", "No", "0", "No", "No", "0", "0", "", "1", "0", "65535", "0", "1", "Off", "0", "1",
                                       "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
             SuperWriter.writerow([NewSupers[i].Name+"\Precision", NewSupers[i].Group, NewSupers[i].Comment+" - Precision", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "9999", "0", "1", "Off", "0", "1",
@@ -70,6 +74,8 @@ def createSuper():
         SuperWriter.writerow([":MemoryMsg", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority",
                               "RetentiveValue", "MaxLength", "InitialMessage", "AlarmComment", "SymbolicName", "LocalTag"])
         for i in range(rowCount):
+            if NewSupers[i].LOTOTO:
+                NewSupers[i].Type = NewSupers[i].Type + "_lototo"
             SuperWriter.writerow([NewSupers[i].Name+"\OBJ", NewSupers[i].Group, NewSupers[i].Comment,
                                  "No", "No", "0", "No", "131", NewSupers[i].Type.upper(), "", "", "No"])
 
@@ -79,11 +85,11 @@ def createSuper():
 def newSuperLoop(SuperWriter, NewSupers, i, section):
     if NewSupers[i].Type in ["op_di_3", "op_di_10", "op_do_10"]:
         createDx(SuperWriter, NewSupers, i, section)
-    elif NewSupers[i].Type in ["op_m_10", "op_m_10_lototo", "op_mr_10", "op_mv_10"]:
+    elif NewSupers[i].Type in ["op_m_10", "op_mr_10", "op_mv_10"]:
         createM(SuperWriter, NewSupers, i, section)
     elif NewSupers[i].Type in ["op_mf_10"]:
         createMF(SuperWriter, NewSupers, i, section)
-    elif NewSupers[i].Type in ["op_fv1_10", "op_fv1_10_lototo", "op_fv2_10"]:
+    elif NewSupers[i].Type in ["op_fv1_10", "op_fv2_10"]:
         createFV1(SuperWriter, NewSupers, i, section)
     elif NewSupers[i].Type in ["op_pmc_10"]:
         createPMC(SuperWriter, NewSupers, i, section)

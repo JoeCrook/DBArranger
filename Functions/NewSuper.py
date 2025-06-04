@@ -83,10 +83,8 @@ def createSuper():
 def newSuperLoop(SuperWriter, NewSupers, i, section):
     if NewSupers[i].Type.startswith(("op_di_", "op_do_")):
         createDx(SuperWriter, NewSupers, i, section)
-    elif NewSupers[i].Type.startswith(("op_m_", "op_mr_", "op_mv_")):
+    elif NewSupers[i].Type.startswith(("op_m_", "op_mr_", "op_mv_", "op_mf_")):
         createMx(SuperWriter, NewSupers, i, section)
-    elif NewSupers[i].Type.startswith(("op_mf_")):
-        createMF(SuperWriter, NewSupers, i, section)
     elif NewSupers[i].Type.startswith(("op_fv1_", "op_fv2_")):
         createFV1(SuperWriter, NewSupers, i, section)
     elif NewSupers[i].Type.startswith(("op_pmc_")):
@@ -120,10 +118,10 @@ def createDx(SuperWriter, NewSupers, i, section):
                              "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CFGW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
         SuperWriter.writerow([NewSupers[i].Name+"\HMIFIELDW", NewSupers[i].Group, NewSupers[i].Comment+" - HMIFIELDW", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
                              "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.FIELDW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        if NewSupers[i].Type in ["op_do_10"]:
+        if NewSupers[i].Type.startswith(("op_do_")):
             SuperWriter.writerow([NewSupers[i].Name+"\MAINTHMIW", NewSupers[i].Group, NewSupers[i].Comment+" - Maintenance Word", "No", "No", "0", "No", "No", "0", "0", " ", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
                                  "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".MAINT.HMIW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-    elif section == "ioreal" and NewSupers[i].Type in ["op_do_10"]:
+    elif section == "ioreal" and NewSupers[i].Type.startswith(("op_do_")):
         SuperWriter.writerow([NewSupers[i].Name+"\MAINTOPESP", NewSupers[i].Group, NewSupers[i].Comment+" - Maintenance Operating Time Setpoint", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
                               "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".MAINT.OPE_SP", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
         SuperWriter.writerow([NewSupers[i].Name+"\MAINTOPETOT", NewSupers[i].Group, NewSupers[i].Comment+" - Total Operating Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
@@ -135,10 +133,11 @@ def createDx(SuperWriter, NewSupers, i, section):
 def createMx(SuperWriter, NewSupers, i, section):
     """Creates a new M_10 supertag"""
     if section == "iodisc":
+        if not NewSupers.Type.startswith("op_mf_"):
+            SuperWriter.writerow([NewSupers[i].Name+"\OLA", NewSupers[i].Group, NewSupers[i].Comment+" - Overload Alarm", "No", "No", "0", "No", "Off", "", "", "On",
+                                  "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.9", "No", NewSupers[i].Comment+" - Overload Alarm", "0", "0", "", ""])
         SuperWriter.writerow([NewSupers[i].Name+"\GI", NewSupers[i].Group, NewSupers[i].Comment+" - General Inhibit", "No", "No", "0", "No", "Off", "", "", "None",
                               "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.09", "No", NewSupers[i].Comment+" - General Inhibit", "0", "0", "", ""])
-        SuperWriter.writerow([NewSupers[i].Name+"\OLA", NewSupers[i].Group, NewSupers[i].Comment+" - Overload Alarm", "No", "No", "0", "No", "Off", "", "", "On",
-                              "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.9", "No", NewSupers[i].Comment+" - Overload Alarm", "0", "0", "", ""])
         SuperWriter.writerow([NewSupers[i].Name+"\GEE", NewSupers[i].Group, NewSupers[i].Comment+" - Equipment Energize", "Yes", "No", "0", "No", "Off", "", "", "None",
                               "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.STW.3", "No", NewSupers[i].Comment+" - Equipment Energize", "0", "0", "", ""])
         SuperWriter.writerow([NewSupers[i].Name+"\GA", NewSupers[i].Group, NewSupers[i].Comment+" - General Alarm", "Yes", "Yes", "3", "No", "Off", "", "", "None",
@@ -147,19 +146,25 @@ def createMx(SuperWriter, NewSupers, i, section):
                               "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.11", "No", NewSupers[i].Comment+" - Isolated", "0", "0", "", ""])
         SuperWriter.writerow([NewSupers[i].Name+"\CBA", NewSupers[i].Group, NewSupers[i].Comment+" - Tripped", "No", "No", "0", "No", "Off", "", "",
                               "On", "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.8", "No", NewSupers[i].Comment+" - Tripped", "0", "0"])
-        if NewSupers[i].Type in ["op_m_10", "op_mr_10", "op_m_10_lototo"]:
+        if NewSupers[i].Type.startswith(("op_m_", "op_mr_", "op_mf_")):
             SuperWriter.writerow([NewSupers[i].Name+"\CRA", NewSupers[i].Group, NewSupers[i].Comment+" - Run Alarm", "No", "No", "0", "No", "Off", "", "", "On",
                                   "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.10", "No", NewSupers[i].Comment+" - Run Alarm", "0", "0", "", ""])
+        if NewSupers[i].Type.startswith(("op_m_", "op_mr_")):
             SuperWriter.writerow([NewSupers[i].Name+"\BPA", NewSupers[i].Group, NewSupers[i].Comment+" - Stop Button", "No", "No", "0", "No", "Off", "", "", "On",
                                   "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.12", "No", NewSupers[i].Comment+" - Stop Button", "0", "0", "", ""])
-        elif NewSupers[i].Type in ["op_mv_10"]:
+        if NewSupers[i].Type.startswith(("op_mv_", "op_mf_")):
             SuperWriter.writerow([NewSupers[i].Name+"\RUNA", NewSupers[i].Group, NewSupers[i].Comment+" - Run Alarm", "No", "No", "0", "No", "Off", "", "", "On",
                                   "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.10", "No", NewSupers[i].Comment+" - Run Alarm", "0", "0", "", ""])
+        if NewSupers[i].Type.startswith(("op_mv_")):
             SuperWriter.writerow([NewSupers[i].Name+"\ZSCA", NewSupers[i].Group, NewSupers[i].Comment+" - Limit Switch Close Alarm", "No", "No", "0", "No", "Off", "", "", "On",
                                   "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.12", "No", NewSupers[i].Comment+" - Limit Switch Close Alarm", "0", "0", "", ""])
             SuperWriter.writerow([NewSupers[i].Name+"\ZSOA", NewSupers[i].Group, NewSupers[i].Comment+" - Limit Switch Open Alarm", "No", "No", "0", "No", "Off", "", "", "On",
                                   "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.12", "No", NewSupers[i].Comment+" - Limit Switch Open Alarm", "0", "0", "", ""])
-
+        if NewSupers[i].Type.startswith(("op_mf_")):
+            SuperWriter.writerow([NewSupers[i].Name+"\RDYA", NewSupers[i].Group, NewSupers[i].Comment+" - Ready Status Alarm", "No", "No", "0", "No", "Off", "", "", "On",
+                                  "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.9", "No", NewSupers[i].Comment+" - Ready Status Alarm", "0", "0", "", "", "No"])
+            SuperWriter.writerow([NewSupers[i].Name+"\ERRA", NewSupers[i].Group, NewSupers[i].Comment+" - Error", "No", "No", "0", "No", "Off", "", "", "On",
+                                  "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.13", "No", NewSupers[i].Comment+" - Error", "0", "0", "", "", "No"])
     elif section == "ioint":
         SuperWriter.writerow([NewSupers[i].Name+"\HMICFGW", NewSupers[i].Group, NewSupers[i].Comment+" - Config Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
                               "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CFGW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
@@ -176,70 +181,28 @@ def createMx(SuperWriter, NewSupers, i, section):
         SuperWriter.writerow([NewSupers[i].Name+"\HMICMDW", NewSupers[i].Group, NewSupers[i].Comment+" - Alarm Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
                               "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
     elif section == "ioreal":
-        SuperWriter.writerow([NewSupers[i].Name+"\MAINTOPESP", NewSupers[i].Group, NewSupers[i].Comment+" - Maintenance Operating Time Setpoint", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
-                              "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".MAINT.OPE_SP", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\MAINTOPETOT", NewSupers[i].Group, NewSupers[i].Comment+" - Total Operating Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
-                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".MAINT.OPE_TOT", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\MAINTOPE", NewSupers[i].Group, NewSupers[i].Comment+" - Maintenance Operating Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
-                              "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".MAINT.OPE", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\IPV", NewSupers[i].Group, NewSupers[i].Comment+" - Current", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
-                              "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".IPV", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-
-
-def createMF(SuperWriter, NewSupers, i, section):
-    if section == "iodisc":
-        SuperWriter.writerow([NewSupers[i].Name+"\RUNA", NewSupers[i].Group, NewSupers[i].Comment+" - Run Alarm", "No", "No", "0", "No", "Off", "", "", "On",
-                              "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.10", "No", NewSupers[i].Comment+" - Run Alarm", "0", "0", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\RDYA", NewSupers[i].Group, NewSupers[i].Comment+" - Ready Status Alarm", "No", "No", "0", "No", "Off", "", "", "On",
-                              "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.9", "No", NewSupers[i].Comment+" - Ready Status Alarm", "0", "0", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\GI", NewSupers[i].Group, NewSupers[i].Comment+" - General Inhibit", "Yes", "No", "0", "No", "Off", "", "", "None",
-                              "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.STW.02", "No", NewSupers[i].Comment+" - General Inhibit", "0", "0", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\GEE", NewSupers[i].Group, NewSupers[i].Comment+" - Equipment Energize", "No", "No", "0", "No", "Off", "", "", "None",
-                              "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.STW.3", "No", NewSupers[i].Comment+" - Equipment Energize", "0", "0", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\GA", NewSupers[i].Group, NewSupers[i].Comment+" - General Alarm", "Yes", "No", "0", "No", "Off", "", "", "None",
-                              "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.STW.05", "No", NewSupers[i].Comment+" - General Alarm", "0", "0", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\ERRA", NewSupers[i].Group, NewSupers[i].Comment+" - Error", "No", "No", "0", "No", "Off", "", "", "On",
-                              "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.13", "No", NewSupers[i].Comment+" - Error", "0", "0", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\CIA", NewSupers[i].Group, NewSupers[i].Comment+" - Isolated", "No", "No", "0", "No", "Off", "", "", "On", "3",
-                              "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.11", "No", NewSupers[i].Comment+" - Isolated", "0", "0", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\CBA", NewSupers[i].Group, NewSupers[i].Comment+" - Tripped", "No", "No", "0", "No", "Off", "", "", "On",
-                              "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.8", "No", NewSupers[i].Comment+" - Tripped", "0", "0", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\BPA", NewSupers[i].Group, NewSupers[i].Comment+" - Stop Button", "No", "No", "0", "No", "Off", "", "", "On", "3",
-                              "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.12", "No", NewSupers[i].Comment+" - Stop Button", "0", "0", "", "", "No"])
-    elif section == "ioint":
-        SuperWriter.writerow([NewSupers[i].Name+"\HMICFGW", NewSupers[i].Group, NewSupers[i].Comment+" - Config Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
-                              "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CFGW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\MAINTHMIW", NewSupers[i].Group, NewSupers[i].Comment+" - Maintenance Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
-                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".MAINT.HMIW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\HMISTW", NewSupers[i].Group, NewSupers[i].Comment+" - Status Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
-                              "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.STW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\HMIHMIW", NewSupers[i].Group, NewSupers[i].Comment+" - Command Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
-                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.HMIW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\HMIFIELDW", NewSupers[i].Group, NewSupers[i].Comment+" - Field Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
-                              "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.FIELDW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\HMICUSW", NewSupers[i].Group, NewSupers[i].Comment+" - Custom Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
-                              "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CUSW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\HMICMDW", NewSupers[i].Group, NewSupers[i].Comment+" - Alarm Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
-                              "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-    elif section == "ioreal":
-        SuperWriter.writerow([NewSupers[i].Name+"\MAINTOPESP", NewSupers[i].Group, NewSupers[i].Comment+" - Maintenance Operating Time Setpoint", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
-                              "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".MAINT.OPE_SP", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\MAINTOPETOT", NewSupers[i].Group, NewSupers[i].Comment+" - Total Operating Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
-                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".MAINT.OPE_TOT", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\MAINTOPE", NewSupers[i].Group, NewSupers[i].Comment+" - Maintenance Operating Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
-                              "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".MAINT.OPE", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\AO", NewSupers[i].Group, NewSupers[i].Comment+" - Output", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
-                              "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".AO", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\JPV", NewSupers[i].Group, NewSupers[i].Comment+" - Power", "Yes", "No", "0", "No", "No", "0", "0", "kW", "0", "0", "35", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
-                              "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "35", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".JPV", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\SPV", NewSupers[i].Group, NewSupers[i].Comment+" - Speed", "Yes", "No", "0", "No", "No", "0", "0", "rpm", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
-                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".SPV", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\SPM", NewSupers[i].Group, NewSupers[i].Comment+" - Setpoint Manual", "Yes", "No", "0", "No", "No", "0", "0", "%", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
-                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".SPM", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\SP", NewSupers[i].Group, NewSupers[i].Comment+" - Setpoint", "Yes", "No", "0", "No", "No", "0", "0", "%", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
-                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".SP", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\PV", NewSupers[i].Group, NewSupers[i].Comment+" - Process Value", "Yes", "No", "0", "No", "No", "0", "0", "%", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
-                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".PV", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        if not NewSupers.Type.startswith("op_mf_"):
+            SuperWriter.writerow([NewSupers[i].Name+"\MAINTOPESP", NewSupers[i].Group, NewSupers[i].Comment+" - Maintenance Operating Time Setpoint", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                                  "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".MAINT.OPE_SP", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            SuperWriter.writerow([NewSupers[i].Name+"\MAINTOPETOT", NewSupers[i].Group, NewSupers[i].Comment+" - Total Operating Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                                  "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".MAINT.OPE_TOT", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            SuperWriter.writerow([NewSupers[i].Name+"\MAINTOPE", NewSupers[i].Group, NewSupers[i].Comment+" - Maintenance Operating Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                                  "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".MAINT.OPE", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            SuperWriter.writerow([NewSupers[i].Name+"\IPV", NewSupers[i].Group, NewSupers[i].Comment+" - Current", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
+                                  "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".IPV", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        else:
+            SuperWriter.writerow([NewSupers[i].Name+"\AO", NewSupers[i].Group, NewSupers[i].Comment+" - Output", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
+                                  "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".AO", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            SuperWriter.writerow([NewSupers[i].Name+"\JPV", NewSupers[i].Group, NewSupers[i].Comment+" - Power", "Yes", "No", "0", "No", "No", "0", "0", "kW", "0", "0", "35", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
+                                  "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "35", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".JPV", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            SuperWriter.writerow([NewSupers[i].Name+"\SPV", NewSupers[i].Group, NewSupers[i].Comment+" - Speed", "Yes", "No", "0", "No", "No", "0", "0", "rpm", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                                  "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".SPV", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            SuperWriter.writerow([NewSupers[i].Name+"\SPM", NewSupers[i].Group, NewSupers[i].Comment+" - Setpoint Manual", "Yes", "No", "0", "No", "No", "0", "0", "%", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                                  "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".SPM", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            SuperWriter.writerow([NewSupers[i].Name+"\SP", NewSupers[i].Group, NewSupers[i].Comment+" - Setpoint", "Yes", "No", "0", "No", "No", "0", "0", "%", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                                  "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".SP", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            SuperWriter.writerow([NewSupers[i].Name+"\PV", NewSupers[i].Group, NewSupers[i].Comment+" - Process Value", "Yes", "No", "0", "No", "No", "0", "0", "%", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+                                  "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".PV", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
 
 
 def createFV1(SuperWriter, NewSupers, i, section):

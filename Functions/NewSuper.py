@@ -14,6 +14,7 @@ class NewSuper:
         self.AccessName = accessName
         self.LOTOTO = False
         if self.Type.endswith("_lototo"):
+            # TODO: Make this LOTOTO handling cleaner
             self.LOTOTO = True
             self.Type = self.Type[:-7]
 

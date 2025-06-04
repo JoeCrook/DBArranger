@@ -1,16 +1,18 @@
 from os.path import isfile
 
 
-def findFile():
+def findFile(fileName=None):
     """Finds the base CSV file and loops if not correct"""
     while True:
         # Gathers the name of the csv file to be checked
-        fileName = input("Name of the input CSV file: ").lower()
+        if fileName == None:
+            fileName = input("Name of the input CSV file: ").lower()
         if fileName.endswith(".csv"):
             fileName = fileName[:-4]
         # Loops asking for the file name if the given one doesn't exist
         if not isfile(fileName + ".csv"):
-            print("File doesn't exist!")
+            print("File \"" + fileName + ".csv\" doesn't exist!")
+            fileName = None
         else:
             break
     return fileName

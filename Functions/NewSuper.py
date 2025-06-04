@@ -20,11 +20,11 @@ class NewSuper:
 
 def createSuper():
     """Creates a new Super supertag"""
-    print("Input file must have no headers, and have each new Super on it's own line, with info in the order: Supertag Type, PLC Name, Comment, Group, AccessName")
+    print("Input file, \"base.csv\" by default, must have no headers, and have each new Super on it's own line, with info in the order: Supertag Type, PLC Name, Comment, Group, AccessName")
     # Creates the number of classes required and gathers required info
     NewSupers = []
     # Input file must have no headers, and have each new Super on it's own line, with info in the order: Supertag Type, Item Name, Comment, Group, AccessName
-    with open(findFile() + ".csv", newline='', encoding='utf-8-sig') as SuperInput:
+    with open(findFile("base") + ".csv", newline='', encoding='utf-8-sig') as SuperInput:
         SuperReader = reader(SuperInput, delimiter=',')
         next(SuperReader)
         for rowCount, row in enumerate(SuperReader):

@@ -16,24 +16,10 @@ def findFunction(functionCheck):
         print(selectSection())
 
     elif functionCheck in ["super"]:
-
         print(createSuper())
 
     elif functionCheck in ["tesys"]:
-        tesysLoop = True
-        tesysList = []
-        tesysNum = 1
-        while tesysLoop == True:
-            tesysListTemp = {}
-            tesysListTemp["Tag"] = input("Tag #"+str(tesysNum)+": ")
-            tesysListTemp["Comment"] = input("Comment #"+str(tesysNum)+": ")
-            tesysListTemp["AccessName"] = input(
-                "AccessName #"+str(tesysNum)+": ")
-            tesysList.append(tesysListTemp)
-            tesysNum += 1
-            tesysLoop = checkAnother("set of tags")
-
-        print(createTesys(createFile(True), tesysList))
+        print(createTesys())
 
     # Loops if the given function doesn't exist/isn't recognised
     else:

@@ -1,8 +1,23 @@
 from csv import writer
+from Functions.Misc import checkAnother, createFile
 
 
-def createTesys(tesysFileName, tesysList):
+def createTesys():
     """Creates all the tags needed on SCADA from a Tesys unit"""
+    tesysFileName = createFile(True)
+    tesysLoop = True
+    tesysList = []
+    tesysNum = 1
+    while tesysLoop == True:
+        tesysListTemp = {}
+        tesysListTemp["Tag"] = input("Tag #"+str(tesysNum)+": ")
+        tesysListTemp["Comment"] = input("Comment #"+str(tesysNum)+": ")
+        tesysListTemp["AccessName"] = input(
+            "AccessName #"+str(tesysNum)+": ")
+        tesysList.append(tesysListTemp)
+        tesysNum += 1
+        tesysLoop = checkAnother("set of tags")
+
     with open(tesysFileName+".csv", "w", newline="") as tesysOutput:
         tesysWriter = writer(tesysOutput)
         tesysWriter.writerow([":mode=ask"])

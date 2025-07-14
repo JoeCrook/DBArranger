@@ -1,4 +1,4 @@
-from Functions.Misc import checkAnother, createFile, findFile
+from Functions.Misc import checkAnother
 from Functions.NewSuper import createSuper
 from Functions.FindTag import findTag
 from Functions.SelectSection import selectSection

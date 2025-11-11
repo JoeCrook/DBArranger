@@ -20,7 +20,7 @@ class NewSuper:
 
 def createSuper():
     """Creates a new Super supertag"""
-    print("Input file, \"base.csv\" by default, must have no headers, and have each new Super on it's own line, with info in the order: Supertag Type, PLC Name, Comment, Group, AccessName")
+    print("Input file, \"base.csv\" by default, must have no headers, and have each new Super on it's own line, with info in the order: Supertag Type, Item Name, Comment, Group, AccessName")
     # Creates the number of classes required and gathers required info
     NewSupers = []
     # Input file must have no headers, and have each new Super on it's own line, with info in the order: Supertag Type, Item Name, Comment, Group, AccessName
@@ -133,7 +133,7 @@ def createDx(SuperWriter, NewSupers, i, section):
 def createMx(SuperWriter, NewSupers, i, section):
     """Creates a new M_10 supertag"""
     if section == "iodisc":
-        if not NewSupers.Type.startswith("op_mf_"):
+        if not NewSupers[i].Type.startswith("op_mf_"):
             SuperWriter.writerow([NewSupers[i].Name+"\OLA", NewSupers[i].Group, NewSupers[i].Comment+" - Overload Alarm", "No", "No", "0", "No", "Off", "", "", "On",
                                   "3", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.9", "No", NewSupers[i].Comment+" - Overload Alarm", "0", "0", "", ""])
         SuperWriter.writerow([NewSupers[i].Name+"\GI", NewSupers[i].Group, NewSupers[i].Comment+" - General Inhibit", "No", "No", "0", "No", "Off", "", "", "None",
@@ -181,7 +181,7 @@ def createMx(SuperWriter, NewSupers, i, section):
         SuperWriter.writerow([NewSupers[i].Name+"\HMICMDW", NewSupers[i].Group, NewSupers[i].Comment+" - Alarm Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
                               "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
     elif section == "ioreal":
-        if not NewSupers.Type.startswith("op_mf_"):
+        if not NewSupers[i].Type.startswith("op_mf_"):
             SuperWriter.writerow([NewSupers[i].Name+"\MAINTOPESP", NewSupers[i].Group, NewSupers[i].Comment+" - Maintenance Operating Time Setpoint", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
                                   "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".MAINT.OPE_SP", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
             SuperWriter.writerow([NewSupers[i].Name+"\MAINTOPETOT", NewSupers[i].Group, NewSupers[i].Comment+" - Total Operating Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",

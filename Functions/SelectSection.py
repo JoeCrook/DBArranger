@@ -10,7 +10,8 @@ def selectSection():
     moreSections = True
     sections = []
     while moreSections == True:
-        sections.append(input("Which section to keep: ").lower())
+        sections.append(
+            input("Which section to keep: ").lower().replace(":", ""))
         moreSections = checkAnother("section")
     correctSection = False
     with open(fileName+".csv", newline="") as DBInput:

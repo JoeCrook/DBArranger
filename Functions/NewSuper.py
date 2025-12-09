@@ -5,13 +5,14 @@ from Functions.Misc import findFile, createFile
 class NewSuper:
     """A Class to store information about a new supertag"""
 
-    def __init__(self, type, itemName, comment, group, accessName):
+    def __init__(self, type, itemName, comment, group, accessName, unit=""):
         self.Type = type.lower()
         self.ItemName = itemName
         self.Name = itemName
         self.Comment = comment
         self.Group = group
         self.AccessName = accessName
+        self.Unit = unit
         if self.Type.endswith("_lototo"):
             self.LOTOTO = True
         else:
@@ -28,8 +29,12 @@ def createSuper():
         SuperReader = reader(SuperInput, delimiter=',')
         next(SuperReader)
         for rowCount, row in enumerate(SuperReader):
-            NewSupers.append(NewSuper(str(row[0]), str(
-                row[1]), str(row[2]), str(row[3]), str(row[4])))
+            if "ai" in row[0].lower():
+                NewSupers.append(NewSuper(str(row[0]), str(row[1]), str(row[2]), str(
+                    row[3]), str(row[4]), input("What is the PV unit for " + str(row[1]) + ": ")))
+            else:
+                NewSupers.append(NewSuper(str(row[0]), str(
+                    row[1]), str(row[2]), str(row[3]), str(row[4])))
 
     newFileName = createFile(True)
     rowCount = rowCount + 1
@@ -302,37 +307,37 @@ def createAI(SuperWriter, NewSupers, i, section):
         SuperWriter.writerow([NewSupers[i].Name+"\HMISTW", NewSupers[i].Group, NewSupers[i].Comment+" - Status Word", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".HMI.STW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
     elif section == "ioreal":
-        SuperWriter.writerow([NewSupers[i].Name+"\AI", NewSupers[i].Group, NewSupers[i].Comment+" - Process Value", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+        SuperWriter.writerow([NewSupers[i].Name+"\AI", NewSupers[i].Group, "Input Value", "No", "No", "0", "No", "No", "0", "0", NewSupers[i].Unit, "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".AI", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGAHTIME", NewSupers[i].Group, NewSupers[i].Comment+" - Alarm High Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGAHTIME", NewSupers[i].Group, "Alarm High Time", "No", "No", "0", "No", "No", "0", "0", "s", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".DEVCFG.AH_TIME", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGALTIME", NewSupers[i].Group, NewSupers[i].Comment+" - Alarm Low Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGALTIME", NewSupers[i].Group, "Alarm Low Time", "No", "No", "0", "No", "No", "0", "0", "s", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".DEVCFG.AL_TIME", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGLAH", NewSupers[i].Group, NewSupers[i].Comment+" - Alarm High Limit", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGLAH", NewSupers[i].Group, "Alarm High Limit", "No", "No", "0", "No", "No", "0", "0", NewSupers[i].Unit, "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
                              "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".DEVCFG.LAH", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGLAHD", NewSupers[i].Group, NewSupers[i].Comment+" - Alarm High Limit", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGLAHD", NewSupers[i].Group, "Alarm High Limit", "No", "No", "0", "No", "No", "0", "0", NewSupers[i].Unit, "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
                              "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".DEVCFG.LAHD", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGLAL", NewSupers[i].Group, NewSupers[i].Comment+" - Alarm Low Limit", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGLAL", NewSupers[i].Group, "Alarm Low Limit", "No", "No", "0", "No", "No", "0", "0", NewSupers[i].Unit, "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".DEVCFG.LAL", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGLALD", NewSupers[i].Group, NewSupers[i].Comment+" - Alarm Low Limit", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGLALD", NewSupers[i].Group, "Alarm Low Limit", "No", "No", "0", "No", "No", "0", "0", NewSupers[i].Unit, "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".DEVCFG.LALD", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGLWH", NewSupers[i].Group, NewSupers[i].Comment+" - Warning High Limit", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGLWH", NewSupers[i].Group, "Warning High Limit", "No", "No", "0", "No", "No", "0", "0", NewSupers[i].Unit, "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
                              "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".DEVCFG.LWH", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGLWHD", NewSupers[i].Group, NewSupers[i].Comment+" - Warning High Limit", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGLWHD", NewSupers[i].Group, "Warning High Limit", "No", "No", "0", "No", "No", "0", "0", NewSupers[i].Unit, "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
                              "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".DEVCFG.LWHD", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGLWL", NewSupers[i].Group, NewSupers[i].Comment+" - Warning Low Limit", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGLWL", NewSupers[i].Group, "Warning Low Limit", "No", "No", "0", "No", "No", "0", "0", NewSupers[i].Unit, "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
                              "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".DEVCFG.LWL", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGLWLD", NewSupers[i].Group, NewSupers[i].Comment+" - Warning Low Limit", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGLWLD", NewSupers[i].Group, "Warning Low Limit", "No", "No", "0", "No", "No", "0", "0", NewSupers[i].Unit, "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
                              "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".DEVCFG.LWLD", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGRH", NewSupers[i].Group, NewSupers[i].Comment+" - Range High", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGRH", NewSupers[i].Group, "Range High", "No", "No", "0", "No", "No", "0", "0", NewSupers[i].Unit, "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".DEVCFG.RH", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGRL", NewSupers[i].Group, NewSupers[i].Comment+" - Range Low", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGRL", NewSupers[i].Group, "Range Low", "No", "No", "0", "No", "No", "0", "0", NewSupers[i].Unit, "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".DEVCFG.RL", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGWHTIME", NewSupers[i].Group, NewSupers[i].Comment+" - Warning High Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGWHTIME", NewSupers[i].Group, "Warning High Time", "No", "No", "0", "No", "No", "0", "0", "s", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
                              "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".DEVCFG.WH_TIME", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGWLTIME", NewSupers[i].Group, NewSupers[i].Comment+" - Warning Low Time", "No", "No", "0", "No", "No", "0", "0", "", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+        SuperWriter.writerow([NewSupers[i].Name+"\DEVCFGWLTIME", NewSupers[i].Group, "Warning Low Time", "No", "No", "0", "No", "No", "0", "0", "s", "0", "-9999", "9999", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "-9999", "9999", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".DEVCFG.WL_TIME", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\PV", NewSupers[i].Group, NewSupers[i].Comment+" - Process Value", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+        SuperWriter.writerow([NewSupers[i].Name+"\PV", NewSupers[i].Group, "Process Value", "Yes", "No", "0", "No", "No", "0", "0", NewSupers[i].Unit, "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".PV", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-        SuperWriter.writerow([NewSupers[i].Name+"\SP", NewSupers[i].Group, NewSupers[i].Comment+" - Setpoint", "Yes", "No", "0", "No", "No", "0", "0", "", "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
+        SuperWriter.writerow([NewSupers[i].Name+"\SP", NewSupers[i].Group, "Setpoint", "Yes", "No", "0", "No", "No", "0", "0", NewSupers[i].Unit, "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".SP", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])

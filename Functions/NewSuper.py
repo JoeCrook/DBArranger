@@ -110,6 +110,8 @@ def createDx(SuperWriter, NewSupers, i, section):
                               "1", "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".GA", "No", NewSupers[i].Comment+" - General Alarm", "0", "0", "", "", "No"])
         SuperWriter.writerow([NewSupers[i].Name+"\DIA", NewSupers[i].Group, NewSupers[i].Comment+" - Digital Input Alarm", "No", "Yes", "1", "No", "Off", "", "", "On", "3",
                               "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW.08", "No", NewSupers[i].Comment+" - Digital Input Alarm", "0", "0", "", "", "No"])
+        SuperWriter.writerow([NewSupers[i].Name+"\Switch_Type", NewSupers[i].Group, NewSupers[i].Comment+" - Switch Type", "No", "No", "1", "No", "Off", "", "", "None", "1",
+                              "Direct", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".DEVCFG.Switch_Type", "No", NewSupers[i].Comment+" - Switch Type", "0", "0", "", "", "No"])
     elif section == "ioint":
         SuperWriter.writerow([NewSupers[i].Name+"\HMICMDW", NewSupers[i].Group, NewSupers[i].Comment+" - HMICMDW", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "65535", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1",
                              "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "65535", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".HMI.CMDW", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])

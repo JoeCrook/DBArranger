@@ -1,4 +1,4 @@
 *.csv
-test.py
+test.*
 .vscode/
 __pycache__/

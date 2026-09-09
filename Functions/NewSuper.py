@@ -5,7 +5,7 @@ from Functions.Misc import findFile, createFile
 class NewSuper:
     """A Class to store information about a new supertag"""
 
-    def __init__(self, type, itemName, comment, group, accessName, unit=""):
+    def __init__(self, type, itemName, comment, group, accessName, unit="", rangehigh="", rangelow=""):
         self.Type = type.lower()
         self.ItemName = itemName
         self.Name = itemName
@@ -13,6 +13,8 @@ class NewSuper:
         self.Group = group
         self.AccessName = accessName
         self.Unit = unit
+        self.RangeHigh = rangehigh
+        self.RangeLow = rangelow
         if self.Type.endswith("_lototo"):
             self.LOTOTO = True
         else:
@@ -32,6 +34,9 @@ def createSuper():
             if "ai" in row[0].lower():
                 NewSupers.append(NewSuper(str(row[0]), str(row[1]), str(row[2]), str(
                     row[3]), str(row[4]), input("What is the PV unit for " + str(row[1]) + ": ")))
+            elif "real" in row[0].lower():
+                NewSupers.append(NewSuper(str(row[0]), str(row[1]), str(row[2]), str(
+                    row[3]), str(row[4]), input("What is the PV unit for " + str(row[1]) + ": "), input("What is the PV high range for " + str(row[1]) + ": "), input("What is the PV low range for " + str(row[1]) + ": ")))
             else:
                 NewSupers.append(NewSuper(str(row[0]), str(
                     row[1]), str(row[2]), str(row[3]), str(row[4])))
@@ -58,10 +63,11 @@ def createSuper():
             if NewSupers[i].LOTOTO:
                 SuperWriter.writerow([NewSupers[i].Name+"\LOTOTOHMIW", NewSupers[i].Group, NewSupers[i].Comment+" - LOTOTO Word", "No", "No", "0", "No", "No", "0", "0", "", "1", "0", "65535", "0", "1", "Off", "0", "1",
                                       "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-            SuperWriter.writerow([NewSupers[i].Name+"\Precision", NewSupers[i].Group, NewSupers[i].Comment+" - Precision", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "9999", "0", "1", "Off", "0", "1",
-                                  "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
-            SuperWriter.writerow([NewSupers[i].Name+"\AccessLevel", NewSupers[i].Group, NewSupers[i].Comment+" - AccessLevel", "No", "No", "0", "No", "No", "0", "0", "", "900", "0", "9999", "0", "1", "Off", "0",
-                                  "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+            if not NewSupers[i].Type.startswith(("op_real")):
+                SuperWriter.writerow([NewSupers[i].Name+"\Precision", NewSupers[i].Group, NewSupers[i].Comment+" - Precision", "No", "No", "0", "No", "No", "0", "0", "", "0", "0", "9999", "0", "1", "Off", "0", "1",
+                                      "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+                SuperWriter.writerow([NewSupers[i].Name+"\AccessLevel", NewSupers[i].Group, NewSupers[i].Comment+" - AccessLevel", "No", "No", "0", "No", "No", "0", "0", "", "900", "0", "9999", "0", "1", "Off", "0",
+                                      "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
 
         # Writes all the IOInt tags
         SuperWriter.writerow([":IOInt", "Group", "Comment", "Logged", "EventLogged", "EventLoggingPriority", "RetentiveValue", "RetentiveAlarmParameters", "AlarmValueDeadband", "AlarmDevDeadband", "EngUnits", "InitialValue", "MinEU", "MaxEU", "Deadband", "LogDeadband", "LoLoAlarmState", "LoLoAlarmValue", "LoLoAlarmPri", "LoAlarmState", "LoAlarmValue", "LoAlarmPri", "HiAlarmState", "HiAlarmValue", "HiAlarmPri", "HiHiAlarmState", "HiHiAlarmValue", "HiHiAlarmPri", "MinorDevAlarmState", "MinorDevAlarmValue", "MinorDevAlarmPri", "MajorDevAlarmState",
@@ -96,6 +102,8 @@ def newSuperLoop(SuperWriter, NewSupers, i, section):
         createPMC(SuperWriter, NewSupers, i, section)
     elif NewSupers[i].Type.startswith(("op_ai_")):
         createAI(SuperWriter, NewSupers, i, section)
+    elif NewSupers[i].Type.startswith(("op_real")):
+        createReal(SuperWriter, NewSupers, i, section)
 
 
 def createDx(SuperWriter, NewSupers, i, section):
@@ -343,3 +351,11 @@ def createAI(SuperWriter, NewSupers, i, section):
                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".PV", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
         SuperWriter.writerow([NewSupers[i].Name+"\SP", NewSupers[i].Group, "Setpoint", "Yes", "No", "0", "No", "No", "0", "0", NewSupers[i].Unit, "0", "0", "100", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0",
                              "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", "0", "100", "Linear", NewSupers[i].AccessName, "No", NewSupers[i].Name+".SP", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+
+
+def createReal(SuperWriter, NewSupers, i, section):
+    if section == "ioreal":
+        SuperWriter.writerow([NewSupers[i].Name+"\PV", NewSupers[i].Group, NewSupers[i].Comment+" - Process Value", "Yes", "No", "0", "No", "No", "0", "0", NewSupers[i].Unit, "0", NewSupers[i].RangeLow, NewSupers[i].RangeHigh, "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                              "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", NewSupers[i].RangeLow, NewSupers[i].RangeHigh, "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".PV", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
+        SuperWriter.writerow([NewSupers[i].Name+"\SP", NewSupers[i].Group, NewSupers[i].Comment+" - Setpoint", "Yes", "No", "0", "No", "No", "0", "0", NewSupers[i].Unit, "0", NewSupers[i].RangeLow, NewSupers[i].RangeHigh, "0", "1", "Off", "0", "1", "Off", "0", "1", "Off", "0", "1", "Off",
+                              "0", "1", "Off", "0", "1", "Off", "0", "1", "0", "Off", "0", "1", "Min", NewSupers[i].RangeLow, NewSupers[i].RangeHigh, "Linear", NewSupers[i].AccessName, "No", NewSupers[i].ItemName+".SP", "No", "", "0", "0", "0", "0", "0", "0", "0", "0", "", "", "", "", "", "", "", "", "No"])
